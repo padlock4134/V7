@@ -1,0 +1,88 @@
+import React, { useState } from 'react';
+import logo from '../images/logo.png.png';
+import { useNavigate, Link } from 'react-router-dom';
+import { supabase } from '../api/supabaseClient';
+import PaymentModal from '../components/PaymentModal';
+import PlanSelectionModal from '../components/PlanSelectionModal';
+
+const SignUp = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [showPlanModal, setShowPlanModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'yearly' | null>(null);
+  const navigate = useNavigate();
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) {
+      setError(error.message);
+      return;
+    }
+    // Wait for user to be available
+    const user = data?.user;
+    if (user) {
+      setShowPlanModal(true); // Only show the plan modal, do not navigate away
+    }
+  };
+
+
+  return (
+    <>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-sand">
+        <div className="w-full max-w-sm">
+          <div className="bg-maineBlue rounded-t-lg flex flex-col items-center justify-center py-6">
+            <img src={logo} alt="PorkChop Logo" className="h-16 w-16 object-contain mb-2" />
+          </div>
+          <form onSubmit={handleSignUp} className="bg-white p-8 rounded-b-lg shadow max-w-sm w-full">
+            <h2 className="text-2xl font-bold mb-6 text-maineBlue">Sign Up</h2>
+            {error && <div className="mb-4 text-red-500">{error}</div>}
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              className="w-full mb-3 p-2 border rounded"
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              className="w-full mb-4 p-2 border rounded"
+              required
+            />
+            <button type="submit" className="w-full bg-maineBlue text-seafoam py-2 rounded font-semibold hover:bg-seafoam hover:text-maineBlue transition-colors">Sign Up</button>
+            <div className="mt-4 text-center text-sm">
+              Already have an account? <Link to="/signin" className="text-maineBlue underline">Sign In</Link>
+            </div>
+          </form>
+        </div>
+      </div>
+      <PlanSelectionModal
+        open={showPlanModal}
+        onClose={() => {}}
+        onSelectPlan={plan => {
+          setSelectedPlan(plan);
+          setShowPlanModal(false);
+          setShowPaymentModal(true);
+        }}
+      />
+      <PaymentModal
+        open={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        onDevBypass={() => {
+          setShowPaymentModal(false);
+          navigate('/my-kitchen'); // Ensure this goes to dashboard, not sign-in
+        }}
+        // Pass selectedPlan as a prop if you want to use it for payment logic later
+      />
+    </>
+  );
+};
+
+export default SignUp;
