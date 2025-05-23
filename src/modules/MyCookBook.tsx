@@ -34,7 +34,7 @@ function getChefQuoteOfTheDay() {
   return chefQuotes[idx];
 }
 
-interface Recipe {
+export interface Recipe {
   name: string;
   description: string;
   photo?: string;
@@ -46,8 +46,22 @@ interface Recipe {
 const emptyRecipe: Recipe = { name: '', description: '' };
 
 import { useFreddieContext } from '../components/FreddieContext';
+import { getMealVideoQuery, getMainIngredientPrepQuery } from '../utils/videoSourcing';
 import { useRecipeContext } from '../components/RecipeContext';
 import { useNavigate } from 'react-router-dom';
+
+// Helper: get main ingredient (first in array)
+function getMainIngredient(ingredients?: string[]): string {
+  return ingredients && ingredients.length > 0 ? ingredients[0] : '';
+}
+
+// Get the two video queries for a recipe
+export function getVideoQueriesForRecipe(recipe: Recipe): [string, string] {
+  const mealQuery = getMealVideoQuery(recipe.name);
+  const mainIng = getMainIngredient(recipe.ingredients);
+  const prepQuery = getMainIngredientPrepQuery(mainIng, recipe.name);
+  return [mealQuery, prepQuery];
+}
 
 // Main MyCookBook component starts here
 
@@ -259,8 +273,8 @@ const MyCookBook = () => {
                       desc: `Learn how to use the main equipment needed for this dish.`
                     },
                     {
-                      title: `Protein Prep: Preparing the main ingredient`,
-                      desc: `How to prep the main protein (e.g., fish, chicken, clams) for this recipe.`
+                      title: `Ingredient Prep: Preparing the main ingredient`,
+                      desc: `How to prep the main ingredient for this recipe.`
                     },
                     {
                       title: `Recipe: ${current.name}`,
@@ -327,9 +341,9 @@ const MyCookBook = () => {
   );
 }
 
-// RecipeCard component for flipping recipe cards
-// (No changes needed here)
+import MyCookBookVideoModals from './MyCookBookVideoModals';
 
+// RecipeCard component for flipping recipe cards
 function RecipeCard({ recipe }: { recipe: Recipe }) {
   return (
     <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden w-full max-w-3xl min-h-[350px]">
@@ -340,7 +354,6 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
             src={recipe.photo}
             alt={recipe.name}
             className="rounded-lg w-full h-32 object-cover mb-4"
-            style={{ objectFit: 'cover' }}
           />
         )}
         <h3 className="font-bold text-xl mb-1 text-maineBlue">{recipe.name}</h3>

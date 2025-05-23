@@ -13,6 +13,8 @@ import Dashboard from './components/Dashboard';
 import ChefFreddieWidget from './components/ChefFreddieWidget';
 import { FreddieProvider } from './components/FreddieContext';
 import { RecipeProvider } from './components/RecipeContext';
+import LandingPage from './components/LandingPage';
+import './components/LandingPage.css';
 
 import { useEffect, useState } from 'react';
 
@@ -45,7 +47,7 @@ const App = () => {
               <Route path="/chefs-corner" element={isAuth ? <ChefsCorner /> : <Navigate to="/signin" />} />
               <Route path="/culinary-school" element={isAuth ? <CulinarySchool /> : <Navigate to="/signin" />} />
               <Route path="/profile" element={isAuth ? <Profile /> : <Navigate to="/signin" />} />
-              <Route path="/" element={<Navigate to={isAuth ? "/dashboard" : "/signin"} />} />
+              <Route path="/" element={isAuth ? <Navigate to="/dashboard" /> : <LandingPage />} />
             </Routes>
           </main>
           {!hideChefFreddie && <ChefFreddieWidget />}

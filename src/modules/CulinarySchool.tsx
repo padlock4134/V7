@@ -4,6 +4,7 @@ import { useFreddieContext } from '../components/FreddieContext';
 import VideoModal from '../components/VideoModal';
 import { useRecipeContext } from '../components/RecipeContext';
 import { getTutorialVideo, TutorialVideoResult } from '../utils/videoSearch';
+import { getMainEquipment, getMainIngredient } from '../utils/mainSelectors';
 
 const generalLessons = [
   { title: 'Knife Skills 101', desc: 'Learn how to chop, dice, and julienne like a pro.' },
@@ -16,34 +17,25 @@ const generalLessons = [
 
 const defaultTutorials = [
   {
-    title: 'Equipment: Knife Skills 101',
-    desc: 'Learn how to safely and efficiently chop, dice, and julienne with the right knife.'
+    title: 'How to Make the Meal',
+    desc: 'Watch a video on how to make the entire recipe.'
   },
   {
-    title: 'Protein Prep: Seafood & Poultry Safety',
-    desc: 'How to select, prep, and handle proteins for any dish.'
-  },
-  {
-    title: 'Recipe: Master Any Dish',
-    desc: 'Step-by-step guidance for building flavor and technique in any recipe.'
+    title: 'Main Ingredient Prep',
+    desc: 'How to prepare the main ingredient for this dish.'
   }
 ];
 
-function getThreeTutorials(recipe) {
-  if (recipe && Array.isArray(recipe.tutorials) && recipe.tutorials.length === 3) return recipe.tutorials;
+function getTwoTutorials(recipe) {
   if (!recipe) return [];
   return [
     {
-      title: `Equipment: Using the right tools for ${recipe.title}`,
-      desc: `Learn how to use the main equipment needed for this dish.`
+      title: `How to Make ${recipe.title}`,
+      desc: `Watch a video on how to make the entire recipe.`
     },
     {
-      title: `Protein Prep: Preparing the main ingredient`,
-      desc: `How to prep the main protein (e.g., fish, chicken, clams) for this recipe.`
-    },
-    {
-      title: `Recipe: ${recipe.title}`,
-      desc: recipe.instructions || ''
+      title: `Main Ingredient Prep: Preparing the main ingredient`,
+      desc: `How to prep the main ingredient (e.g., fish, chicken, clams) for this recipe.`
     }
   ];
 }
@@ -53,14 +45,14 @@ const CulinarySchool = () => {
   const { updateContext } = useFreddieContext();
   const { selectedRecipe } = useRecipeContext();
   const [modalIdx, setModalIdx] = useState<null | number>(null);
-  const [showFreddiePopup, setShowFreddiePopup] = useState(false);
+
   useEffect(() => {
     updateContext({ page: 'CulinarySchool' });
   }, [updateContext]);
 
   const isRecipeSelected = !!selectedRecipe;
-  const tutorials = isRecipeSelected ? getThreeTutorials(selectedRecipe) : [];
-  const [videoUrls, setVideoUrls] = useState<(string | null)[]>([null, null, null]);
+  const tutorials = isRecipeSelected ? getTwoTutorials(selectedRecipe) : [];
+  const [videoUrls, setVideoUrls] = useState<(string | null)[]>([null, null]);
 
   // Helper: extract main protein from ingredients
   function getMainProtein(ingredients: string[] = []) {
@@ -135,26 +127,22 @@ const CulinarySchool = () => {
     let cancelled = false;
     async function fetchVideos() {
       if (!isRecipeSelected) return;
-      setShowFreddiePopup(true); // Show Freddie proactively
-      const newUrls: (string | null)[] = [null, null, null];
+
+      const newUrls: (string | null)[] = [null, null];
       await Promise.all(tutorials.map(async (tut, idx) => {
-        if (tut.videoUrl) {
-          newUrls[idx] = tut.videoUrl;
-        } else {
-          // Generate distinct queries for each tutorial step
-          let query = '';
-          if (idx === 0) {
-            // Step 1: Equipment
-            const mainEquipment = getMainEquipment(selectedRecipe.equipment || []);
-            query = mainEquipment ? `How to use ${mainEquipment}` : tut.title;
-          } else if (idx === 1) {
-            // Step 2: Protein Prep
-            const mainProtein = getMainProtein(selectedRecipe.ingredients || []);
-            query = mainProtein ? `How to prep ${mainProtein}` : tut.title;
-          } else if (idx === 2) {
-            // Step 3: Recipe
-            query = selectedRecipe.title || tut.title;
-          }
+        // No more tut.videoUrl, just fetch video for each tutorial
+        // Generate distinct queries for each tutorial step
+        let query = '';
+        if (idx === 0) {
+          // Step 1: How to make the meal
+          query = selectedRecipe.title ? `how to make ${selectedRecipe.title}` : tut.title;
+        } else if (idx === 1) {
+          // Step 2: Main Ingredient Prep
+          const mainIngredient = getMainIngredient(selectedRecipe.ingredients || []);
+          query = mainIngredient && selectedRecipe.title
+            ? `how to prepare ${mainIngredient} for ${selectedRecipe.title}`
+            : tut.title;
+
           const result: TutorialVideoResult = await getTutorialVideo(query);
           // Debug: log the query and result
           console.log(`[CulinarySchool] Tutorial step`, { query, result });
@@ -170,7 +158,7 @@ const CulinarySchool = () => {
         }
       }));
       if (!cancelled) setVideoUrls(newUrls);
-      setTimeout(() => setShowFreddiePopup(false), 3500);
+
     }
     fetchVideos();
     return () => { cancelled = true; };
@@ -179,13 +167,8 @@ const CulinarySchool = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-4 pt-8 pb-8 bg-sand min-h-screen">
-      {showFreddiePopup && (
-        <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-white border-2 border-maineBlue rounded-lg shadow-lg px-6 py-4 flex items-center z-50">
-          <img src="/chef-freddie.png" alt="Chef Freddie" className="w-12 h-12 rounded-full mr-4" />
-          <span className="text-lg font-retro text-maineBlue">Here are the videos I found for your recipe!</span>
-        </div>
-      )}
-      <div className="max-w-2xl mx-auto bg-white rounded shadow p-6">
+
+        <div className="max-w-2xl mx-auto bg-white rounded shadow p-6">
         <h2 className="text-xl font-retro mb-4">Culinary School</h2>
         {/* Always render a VideoModal for the currently displayed tutorial list */}
         {(isRecipeSelected ? tutorials : defaultTutorials).map((tut, idx) => (
@@ -194,7 +177,7 @@ const CulinarySchool = () => {
             open={modalIdx === idx}
             onClose={() => setModalIdx(null)}
             title={tut.title}
-            videoUrl={isRecipeSelected ? (videoUrls[idx] || tut.videoUrl || '') : (tut.videoUrl || '')}
+            videoUrl={videoUrls[idx] || ''}
           />
         ))}
         {isRecipeSelected && selectedRecipe ? (
