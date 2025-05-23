@@ -10,7 +10,7 @@ export async function getWeeklyChallengeRecipe(prompt: string): Promise<{
   const apiKey = import.meta.env.VITE_ANTHROPIC_CHALLENGE_KEY;
   if (!apiKey) throw new Error('Anthropic Challenge API key missing');
 
-  // Example payload for Haiku/Anthropic API (adjust as needed for your endpoint)
+  // TODO: Add real payload for Haiku/Anthropic API.
   const response = await fetch('https://api.anthropic.com/v1/complete', {
     method: 'POST',
     headers: {

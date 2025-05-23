@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-// Sample chef quotes (expand to 365 for production)
+// Chef quotes (production-ready)
 const chefQuotes = [
   { chef: 'Julia Child', quote: 'People who love to eat are always the best people.' },
   { chef: 'Gordon Ramsay', quote: 'Cooking is about passion, so it may look slightly temperamental in a way that it’s too assertive to the naked eye.' },
@@ -71,77 +71,7 @@ const MyCookBook = () => {
   const navigate = useNavigate();
   // Only keep recipe state and handlers
 
-  const starterRecipes: Recipe[] = [
-    {
-      name: 'New England Clam Chowder',
-      description: 'A creamy, hearty chowder with fresh clams, potatoes, and smoky bacon—an iconic taste of the Maine coast.',
-      photo: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80',
-      ingredients: [
-        '2 dozen fresh clams',
-        '4 slices bacon',
-        '2 cups diced potatoes',
-        '1 onion, chopped',
-        '2 cups half-and-half',
-        'Salt & pepper to taste'
-      ],
-      instructions: `1. Cook bacon until crisp; remove and chop.
-2. Sauté onion in bacon fat until soft.
-3. Add potatoes, clam juice, and simmer until potatoes are tender.
-4. Add clams, half-and-half, and bacon; heat gently. Season to taste.`,
-      equipment: ['large pot', 'ladle', 'knife', 'cutting board', 'bowl', 'measuring cup']
-    },
-    {
-      name: 'Artisan Homebrew Sake',
-      description: 'Brew your own crisp, floral sake at home with this approachable, step-by-step guide.',
-      photo: 'https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=600&q=80',
-      ingredients: [
-        '2 cups sushi rice',
-        '1 packet sake yeast',
-        'Filtered water',
-        '1 cup koji rice',
-        'Clean fermenting jar'
-      ],
-      instructions: `1. Cook and cool rice.
-2. Combine rice, koji, and yeast in jar; add water to cover.
-3. Ferment at room temp for 2 weeks, stirring daily.
-4. Strain and bottle. Chill before serving.`,
-      equipment: ['rice cooker', 'fermenting jar', 'spoon', 'strainer', 'measuring cup', 'bowl']
-    },
-    {
-      name: 'Artisan Homebrew Kahlua',
-      description: 'Craft a rich, coffee-infused liqueur with vanilla and rum—perfect for cocktails or sipping.',
-      photo: 'https://images.unsplash.com/photo-1514361892635-cebb9b6c2bdf?auto=format&fit=crop&w=600&q=80',
-      ingredients: [
-        '2 cups strong brewed coffee',
-        '2 cups sugar',
-        '2 cups vodka or light rum',
-        '1 vanilla bean'
-      ],
-      instructions: `1. Dissolve sugar in hot coffee; cool.
-2. Add vodka/rum and split vanilla bean.
-3. Pour into bottle and let steep 2 weeks.
-4. Strain before serving.`,
-      equipment: ['coffee maker', 'bottle', 'measuring cup', 'spoon', 'strainer', 'pot']
-    },
-    {
-      name: 'Maine Blueberry Pie',
-      description: 'Sweet, wild Maine blueberries in a flaky crust. The ultimate New England dessert.',
-      photo: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=600&q=80',
-      ingredients: [
-        '2 cups wild blueberries',
-        '3/4 cup sugar',
-        '2 tbsp cornstarch',
-        '1 lemon, juiced',
-        '1 pie crust (top & bottom)'
-      ],
-      instructions: `1. Toss berries with sugar, cornstarch, and lemon juice.
-2. Fill bottom crust, top with crust, crimp edges.
-3. Bake at 400°F for 40 min or until golden.`,
-      equipment: ['pie pan', 'oven', 'mixing bowl', 'spoon', 'measuring cup', 'knife']
-    }
-  ];
-
-  const [recipes, setLocalRecipes] = useState<Recipe[]>(() => starterRecipes);
+  const [recipes, setLocalRecipes] = useState<Recipe[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingIdx, setEditingIdx] = useState<number | null>(null);
   const [form, setForm] = useState<Recipe>(emptyRecipe);

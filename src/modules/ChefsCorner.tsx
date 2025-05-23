@@ -13,7 +13,7 @@ const ChefsCorner = () => {
     updateContext({ page: 'ChefsCorner' });
   }, [updateContext]);
 
-  // Shopping list state (mock for now)
+  // Shopping list state
   const [shoppingList, setShoppingList] = useState<string[]>([]);
 
 

@@ -7,16 +7,56 @@ import RecipeMatcherModal, { RecipeCard } from '../components/RecipeMatcherModal
 
 
 
-const CATEGORIES = ["Vegetable", "Protein", "Spice", "Other"];
+const CATEGORIES = [
+  "Vegetable",
+  "Fruit",
+  "Protein",
+  "Dairy",
+  "Grain",
+  "Spice",
+  "Canned/Preserved",
+  "Condiment/Sauce",
+  "Frozen",
+  "Other"
+];
 
 
 import { useFreddieContext } from '../components/FreddieContext';
+
+// Categorize ingredient names to best-fit category
+function categorizeIngredient(name: string): string {
+  const n = name.toLowerCase();
+  if (/(lettuce|spinach|carrot|broccoli|onion|pepper|cabbage|kale|tomato|bean|pea|potato|corn|mushroom|zucchini|cucumber|asparagus|squash|celery|radish|beet|turnip|eggplant|avocado)/.test(n)) return "Vegetable";
+  if (/(apple|banana|orange|lemon|lime|berry|grape|melon|peach|pear|plum|kiwi|mango|pineapple|apricot|cherry|fig|date|papaya|guava|coconut)/.test(n)) return "Fruit";
+  if (/(chicken|beef|pork|lamb|turkey|fish|salmon|shrimp|egg|duck|bacon|ham|sausage|steak|tofu|tempeh|seitan|crab|lobster|clam|mussel|scallop|oyster)/.test(n)) return "Protein";
+  if (/(milk|cheese|yogurt|cream|butter|ghee|custard|paneer|ricotta|mozzarella|parmesan|brie|feta|goat cheese)/.test(n)) return "Dairy";
+  if (/(rice|bread|pasta|noodle|quinoa|barley|oat|wheat|cornmeal|tortilla|cracker|bun|roll|bagel|cereal)/.test(n)) return "Grain";
+  if (/(salt|pepper|cumin|coriander|turmeric|saffron|paprika|chili|cinnamon|nutmeg|clove|ginger|garlic|herb|basil|oregano|thyme|rosemary|sage|dill|parsley|mint|bay)/.test(n)) return "Spice";
+  if (/(can|canned|jar|preserve|pickle|jam|jelly|sardine|anchovy|soup|beans|olives|sauerkraut)/.test(n)) return "Canned/Preserved";
+  if (/(ketchup|mustard|mayo|mayonnaise|sauce|dressing|vinegar|soy sauce|hot sauce|bbq|aioli|salsa|chutney|relish|gravy|honey)/.test(n)) return "Condiment/Sauce";
+  if (/(frozen|ice cream|ice|peas|spinach|pizza|waffle|fries|nugget|berries|corn|broccoli|shrimp|fish stick)/.test(n)) return "Frozen";
+  return "Other";
+}
 
 const MyKitchen = () => {
   // ...existing state
   const [scanLoading, setScanLoading] = useState(false);
   const [scanError, setScanError] = useState('');
   const [scanStatus, setScanStatus] = useState<string | null>(null); // persistent feedback
+  // Optionally, map category to emoji for pills
+  const CATEGORY_ICONS: Record<string, string> = {
+    Vegetable: '🥦',
+    Fruit: '🍎',
+    Protein: '🍗',
+    Dairy: '🧀',
+    Grain: '🌾',
+    Spice: '🌶️',
+    'Canned/Preserved': '🥫',
+    'Condiment/Sauce': '🥄',
+    Frozen: '🧊',
+    Other: '🍽️',
+  };
+
   const [detectedIngredients, setDetectedIngredients] = useState<string[]>([]);
 
   // Recipe Matcher modal state
@@ -34,7 +74,6 @@ const MyKitchen = () => {
   const [input, setInput] = useState('');
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [filterText, setFilterText] = useState('');
-  const [filterCategory, setFilterCategory] = useState('All');
 
   const addIngredient = () => {
     if (input.trim()) {
@@ -59,11 +98,9 @@ const MyKitchen = () => {
       .catch(err => setKitchenError('Failed to load your kitchen.'));
   }, [updateContext]);
 
-  // Filtering logic
+  // Filtering logic (only by search text)
   const filteredIngredients = ingredients.filter(ing => {
-    const matchesText = ing.name.toLowerCase().includes(filterText.toLowerCase());
-    const matchesCat = filterCategory === 'All' || ing.category === filterCategory;
-    return matchesText && matchesCat;
+    return ing.name.toLowerCase().includes(filterText.toLowerCase());
   });
 
   const visionKey = (import.meta as any).env.VITE_GOOGLE_VISION_API_KEY;
@@ -142,7 +179,7 @@ const MyKitchen = () => {
                     }
                     const updatedIngredients = [
                       ...ingredients,
-                      ...newIngredients.map(name => ({ name, category: "Other" }))
+                      ...newIngredients.map(name => ({ name, category: categorizeIngredient(name) }))
                     ];
                     setIngredients(updatedIngredients);
                     try {
@@ -245,38 +282,21 @@ const MyKitchen = () => {
           </button>
         )}
       </div>
-      {/* Filter Bar */}
-      <div className="flex flex-col sm:flex-row gap-2 mb-4 items-center">
+      {/* Add Ingredient Bar */}
+      <div className="flex flex-col sm:flex-row gap-2 mb-4 w-full">
+        {/* Search cupboard input */}
         <input
           type="text"
-          className="border px-3 py-2 rounded w-full sm:w-auto"
+          className="border px-3 py-2 rounded w-full sm:w-1/3"
           placeholder="Search cupboard..."
           value={filterText}
           onChange={e => setFilterText(e.target.value)}
+          style={{ minWidth: 120 }}
         />
-        <div className="flex gap-2">
-          <button
-            className={`px-2 py-1 rounded text-xs font-bold border ${filterCategory === 'All' ? 'bg-seafoam text-maineBlue' : 'bg-weatheredWhite text-maineBlue border-seafoam'} hover:bg-seafoam hover:text-maineBlue`}
-            onClick={() => setFilterCategory('All')}
-          >
-            All
-          </button>
-          {CATEGORIES.map(cat => (
-            <button
-              key={cat}
-              className={`px-2 py-1 rounded text-xs font-bold border ${filterCategory === cat ? 'bg-seafoam text-maineBlue' : 'bg-weatheredWhite text-maineBlue border-seafoam'} hover:bg-seafoam hover:text-maineBlue`}
-              onClick={() => setFilterCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-      </div>
-      {/* Add Ingredient Bar */}
-      <div className="flex gap-2 mb-4">
+        {/* Add ingredient input */}
         <input
           type="text"
-          className="border px-3 py-2 rounded w-full"
+          className="border px-3 py-2 rounded w-full sm:w-1/3"
           placeholder="Add an ingredient..."
           value={input}
           onChange={e => setInput(e.target.value)}

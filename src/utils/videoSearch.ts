@@ -17,7 +17,7 @@ export async function searchYouTube(query: string): Promise<TutorialVideoResult 
     const data = await res.json();
     if (!data.items || !data.items.length) return null;
     // Optionally: filter by view count, channel, etc.
-    // For demo, just use the first result
+    // TODO: Implement production video search logic.
     const video = data.items[0];
     return {
       title: video.snippet.title,
