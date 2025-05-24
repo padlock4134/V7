@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from '../images/logo.png.png';
+import logo from '../images/logo.png';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../api/supabaseClient';
 

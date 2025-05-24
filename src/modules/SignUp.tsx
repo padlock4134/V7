@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from '../images/logo.png.png';
+import logo from '../images/logo.png';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../api/supabaseClient';
 import PaymentModal from '../components/PaymentModal';
@@ -12,12 +12,24 @@ const SignUp = () => {
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'yearly' | null>(null);
+  const [groceryStore, setGroceryStore] = useState('');
+  const [customStore, setCustomStore] = useState('');
   const navigate = useNavigate();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const storeToSave = groceryStore === 'Other' ? customStore : groceryStore;
+    // Add storeToSave to user metadata or a separate table as needed
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          grocery_store: storeToSave,
+        },
+      },
+    });
     if (error) {
       setError(error.message);
       return;
@@ -28,6 +40,7 @@ const SignUp = () => {
       setShowPlanModal(true); // Only show the plan modal, do not navigate away
     }
   };
+
 
 
   return (
@@ -53,9 +66,36 @@ const SignUp = () => {
               placeholder="Password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full mb-4 p-2 border rounded"
+              className="w-full mb-3 p-2 border rounded"
               required
             />
+            <label className="block mb-2 font-semibold">Preferred Grocery Store</label>
+            <select
+              className="w-full mb-3 p-2 border rounded"
+              value={groceryStore}
+              onChange={e => setGroceryStore(e.target.value)}
+              required
+            >
+              <option value="">Select a store...</option>
+              <option value="Stop & Shop">Stop & Shop</option>
+              <option value="Hannaford">Hannaford</option>
+              <option value="Wegmans">Wegmans</option>
+              <option value="Shaw's">Shaw's</option>
+              <option value="Market Basket">Market Basket</option>
+              <option value="Whole Foods">Whole Foods</option>
+              <option value="Trader Joe's">Trader Joe's</option>
+              <option value="Other">Other</option>
+            </select>
+            {groceryStore === 'Other' && (
+              <input
+                type="text"
+                className="w-full mb-4 p-2 border rounded"
+                placeholder="Enter your store name"
+                value={customStore}
+                onChange={e => setCustomStore(e.target.value)}
+                required
+              />
+            )}
             <button type="submit" className="w-full bg-maineBlue text-seafoam py-2 rounded font-semibold hover:bg-seafoam hover:text-maineBlue transition-colors">Sign Up</button>
             <div className="mt-4 text-center text-sm">
               Already have an account? <Link to="/signin" className="text-maineBlue underline">Sign In</Link>

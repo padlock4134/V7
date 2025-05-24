@@ -2,8 +2,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  background: #f9fafb; /* weatheredWhite */
+  font-family: 'Bree Serif', 'Inter', 'Segoe UI', 'Roboto', sans-serif;
 }
 .landing-nav {
   display: flex;
@@ -16,8 +16,9 @@
 .landing-logo {
   font-size: 2rem;
   font-weight: bold;
-  color: #ff7043;
+  color: #e94e3c; /* lobsterRed */
   letter-spacing: 2px;
+  font-family: 'Bree Serif', serif;
 }
 .landing-nav-btn {
   margin-left: 1.5rem;
@@ -25,10 +26,22 @@
   border-radius: 24px;
   border: none;
   background: none;
-  color: #333;
-  font-weight: 500;
+  color: #24344d; /* navy */
+  font-weight: 600;
   text-decoration: none;
+  font-family: 'Inter', sans-serif;
   transition: background 0.2s, color 0.2s;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px rgba(42,77,105,0.07);
+}
+.landing-nav-btn.primary {
+  background: #e94e3c; /* lobsterRed */
+  color: #f9fafb; /* weatheredWhite */
+  font-weight: 700;
+}
+.landing-nav-btn:hover {
+  background: #63ace5; /* seafoam */
+  color: #2a4d69; /* maineBlue */
 }
 .landing-nav-btn.primary {
   background: #ff7043;
@@ -45,6 +58,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  background: #f9fafb;
 }
 .landing-hero {
   margin-top: 7vh;
@@ -52,14 +66,16 @@
 }
 .landing-hero h1 {
   font-size: 3rem;
-  color: #ff7043;
+  color: #2a4d69; /* maineBlue */
   margin-bottom: 0.6rem;
   letter-spacing: 1px;
+  font-family: 'Bree Serif', serif;
 }
 .landing-tagline {
   font-size: 1.25rem;
-  color: #333;
+  color: #24344d; /* navy */
   margin-bottom: 2rem;
+  font-family: 'Inter', sans-serif;
 }
 .landing-cta {
   display: flex;
@@ -71,17 +87,22 @@
   padding: 0.9rem 2.2rem;
   border-radius: 30px;
   border: none;
-  background: #fff;
-  color: #ff7043;
-  font-size: 1.1rem;
-  font-weight: 600;
+  background: #63ace5; /* seafoam */
+  color: #2a4d69; /* maineBlue */
+  font-size: 1.2rem;
+  font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 16px rgba(42,77,105,0.09);
   transition: background 0.2s, color 0.2s;
+  font-family: 'Inter', sans-serif;
 }
 .landing-cta-btn.primary {
-  background: #ff7043;
-  color: #fff;
+  background: #e94e3c; /* lobsterRed */
+  color: #f9fafb; /* weatheredWhite */
+}
+.landing-cta-btn:hover {
+  background: #63ace5;
+  color: #2a4d69;
 }
 .landing-features {
   display: flex;
@@ -91,26 +112,91 @@
   margin: 4rem 0 2rem 0;
 }
 .feature-card {
-  background: rgba(255,255,255,0.9);
-  border-radius: 20px;
+  background: #f9fafb;
+  border-radius: 1.25rem;
   padding: 2rem 1.5rem;
-  width: 270px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  width: 18rem;
+  box-shadow: 0 4px 16px rgba(42,77,105,0.09);
   text-align: center;
+  border: 2px solid #63ace5; /* seafoam */
+  margin-bottom: 2rem;
 }
 .feature-card h2 {
-  color: #ff7043;
+  color: #2a4d69; /* maineBlue */
   margin-bottom: 0.7rem;
+  font-family: 'Bree Serif', serif;
+  font-size: 1.25rem;
 }
 .feature-card p {
-  color: #555;
+  color: #24344d; /* navy */
   font-size: 1rem;
+  font-family: 'Inter', sans-serif;
 }
 .landing-footer {
   text-align: center;
   padding: 1.2rem 0;
-  background: rgba(255,255,255,0.85);
-  color: #888;
+  background: #f9fafb;
+  color: #24344d;
   font-size: 1rem;
   margin-top: auto;
+  border-radius: 1.25rem 1.25rem 0 0;
+  box-shadow: 0 -2px 12px rgba(42,77,105,0.04) inset;
+  font-family: 'Inter', sans-serif;
 }
+
+/* App color palette as CSS variables for easy reference */
+:root {
+  --maineBlue: #2a4d69;
+  --seafoam: #63ace5;
+  --sand: #f5e9da;
+  --lobsterRed: #e94e3c;
+  --navy: #24344d;
+  --weatheredWhite: #f9fafb;
+}
+
+.font-retro {
+  font-family: 'Bree Serif', serif;
+}
+.font-sans {
+  font-family: 'Inter', sans-serif;
+}
+.text-maineBlue {
+  color: var(--maineBlue);
+}
+.text-seafoam {
+  color: var(--seafoam);
+}
+.text-sand {
+  color: var(--sand);
+}
+.text-lobsterRed {
+  color: var(--lobsterRed);
+}
+.text-navy {
+  color: var(--navy);
+}
+.text-weatheredWhite {
+  color: var(--weatheredWhite);
+}
+.bg-maineBlue {
+  background: var(--maineBlue);
+}
+.bg-seafoam {
+  background: var(--seafoam);
+}
+.bg-sand {
+  background: var(--sand);
+}
+.bg-lobsterRed {
+  background: var(--lobsterRed);
+}
+.bg-navy {
+  background: var(--navy);
+}
+.bg-weatheredWhite {
+  background: var(--weatheredWhite);
+}
+.border-seafoam {
+  border-color: var(--seafoam) !important;
+}
+

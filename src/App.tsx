@@ -20,7 +20,7 @@ import { useEffect, useState } from 'react';
 
 const App = () => {
   const location = useLocation();
-  const hideChefFreddie = location.pathname === '/signup' || location.pathname === '/signin';
+  const hideOnPublic = ['/', '/signup', '/signin'].includes(location.pathname);
   const [isAuth, setIsAuth] = useState<boolean>(false);
   useEffect(() => {
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -35,7 +35,7 @@ const App = () => {
     <RecipeProvider>
       <FreddieProvider>
         <div className="min-h-screen bg-sand">
-          {location.pathname !== '/signin' && location.pathname !== '/signup' && <NavBar />}
+          {!hideOnPublic && <NavBar />}
           <main className="max-w-5xl mx-auto px-4 pt-8 pb-8">
             <Routes>
               <Route path="/signin" element={<SignIn />} />
@@ -50,7 +50,7 @@ const App = () => {
               <Route path="/" element={isAuth ? <Navigate to="/dashboard" /> : <LandingPage />} />
             </Routes>
           </main>
-          {!hideChefFreddie && <ChefFreddieWidget />}
+          {!hideOnPublic && <ChefFreddieWidget />}
         </div>
       </FreddieProvider>
     </RecipeProvider>

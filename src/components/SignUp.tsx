@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from '../images/logo.png.png';
+import logo from '../images/logo.png';
 import { Link } from 'react-router-dom';
 
 const SignUp = () => {
@@ -50,6 +50,9 @@ const SignUp = () => {
           <button type="submit" className="w-full bg-lobsterRed text-weatheredWhite py-2 rounded font-semibold hover:bg-seafoam hover:text-maineBlue transition-colors" disabled={loading}>
             {loading ? 'Signing Up...' : 'Sign Up (7-day free trial)'}
           </button>
+          <div className="mt-2 text-center text-xs text-gray-500">
+            By signing up, you agree to our <Link to="/terms" className="underline text-maineBlue hover:text-lobsterRed">Terms of Service</Link>.
+          </div>
           <div className="mt-4 text-center text-sm">
             Already have an account? <Link to="/signin" className="text-maineBlue underline">Sign In</Link>
           </div>

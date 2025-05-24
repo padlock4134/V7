@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // @ts-ignore
-import chefFreddiePng from '../images/logo.png.png';
+import chefFreddiePng from '../images/logo.png';
 import { useFreddieContext } from './FreddieContext';
 import { askChefFreddie } from '../api/chefFreddie';
 
@@ -10,18 +10,18 @@ interface Message {
 }
 
 const getProactiveMessage = (page: string) => {
-  if (page === 'MyKitchen') {
-    return 'You’re in MyKitchen—need help matching ingredients or using the Google Vision scanner?';
-  } else if (page === 'MyCookBook') {
-    return 'Welcome to MyCookBook! Want a tip on organizing your recipes or finding something new?';
-  } else if (page === 'ChefsCorner') {
-    return 'You’re in Chefs Corner! Need help with groups, events, or posting to the feed?';
-  } else if (page === 'CulinarySchool') {
-    return 'Welcome to Culinary School! Want advice on classes, learning seafood techniques, or earning badges?';
-  } else if (page) {
-    return `You’re in ${page}. Need any help?`;
+  switch (page) {
+    case 'MyKitchen':
+      return "Welcome to My Kitchen! Want tips on making the most of what you have in your pantry today?";
+    case 'MyCookBook':
+      return "Looking to organize your favorite recipes or find something new to try? I’m here to help!";
+    case 'ChefsCorner':
+      return "Ready to connect with fellow cooks or share your latest creation? Ask me anything!";
+    case 'CulinarySchool':
+      return "Curious about learning new skills or earning badges? I can guide you through our Culinary School!";
+    default:
+      return "Need a hand with anything on PorkChop? I’m always here to help you cook up something great!";
   }
-  return '';
 };
 
 
@@ -82,16 +82,17 @@ const ChefFreddieWidget = () => {
     // eslint-disable-next-line
   }, [context.page, open]);
 
-  // Inject proactive message into chat when opened
+  // Inject proactive message into chat when opened or page changes, but prevent duplicates
   useEffect(() => {
     if (open) {
       const proactive = getProactiveMessage(context.page);
       setMessages(msgs => {
+        // Only add if the last message is NOT the same proactive message from Freddie
         if (
           proactive &&
-          (msgs.length === 0 || msgs[0].text !== proactive)
+          (msgs.length === 0 || msgs[msgs.length - 1].sender !== 'freddie' || msgs[msgs.length - 1].text !== proactive)
         ) {
-          return [{ sender: 'freddie', text: proactive }, ...msgs];
+          return [...msgs, { sender: 'freddie', text: proactive }];
         }
         return msgs;
       });
