@@ -5,6 +5,8 @@ import TipOfTheDay from './TipOfTheDay';
 import ChallengeOfTheWeek from './ChallengeOfTheWeek';
 import { LEVEL_TITLES_AND_ICONS, getXPProgress } from '../utils/leveling';
 import { supabase } from '../api/supabaseClient';
+import TermsModal from './TermsModal';
+import { useTermsModal } from './useTermsModal';
 
 const LevelBadge = () => {
   const [xp, setXp] = useState<number | null>(null);
@@ -81,28 +83,33 @@ const navItems = [
 
 const NavBar = () => {
   const location = useLocation();
+  const { modalOpen, setModalOpen, termsContent } = useTermsModal();
   return (
-    <nav className="flex items-center justify-center gap-8 px-2 py-3 bg-maineBlue text-weatheredWhite shadow-md">
-      <LevelBadge />
-      <span className="font-retro text-2xl tracking-wider">PorkChop</span>
-      {navItems.map((item) => (
-        <Link
-          key={item.path}
-          to={item.path}
-          className={`px-3 py-1 rounded hover:bg-seafoam hover:text-maineBlue transition-colors ${location.pathname === item.path ? 'bg-seafoam text-maineBlue' : ''}`}
-        >
-          {item.label}
+    <>
+      <nav className="flex items-center justify-center gap-8 px-2 py-3 bg-maineBlue text-weatheredWhite shadow-md">
+        <LevelBadge />
+        <span className="font-retro text-2xl tracking-wider">PorkChop</span>
+        {navItems.map((item) => (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={`px-3 py-1 rounded hover:bg-seafoam hover:text-maineBlue transition-colors ${location.pathname === item.path ? 'bg-seafoam text-maineBlue' : ''}`}
+          >
+            {item.label}
+          </Link>
+        ))}
+
+        <div className="flex flex-col sm:flex-row gap-2 items-center ml-4">
+          <TipOfTheDay />
+          <ChallengeOfTheWeek />
+        </div>
+        <Link to="/profile" className="flex items-center gap-2 hover:text-seafoam">
+          <UserCircleIcon className="h-7 w-7" />
+          <span className="hidden sm:inline">Profile</span>
         </Link>
-      ))}
-      <div className="flex flex-col sm:flex-row gap-2 items-center ml-4">
-        <TipOfTheDay />
-        <ChallengeOfTheWeek />
-      </div>
-      <Link to="/profile" className="flex items-center gap-2 hover:text-seafoam">
-        <UserCircleIcon className="h-7 w-7" />
-        <span className="hidden sm:inline">Profile</span>
-      </Link>
-    </nav>
+      </nav>
+
+    </>
   );
 };
 

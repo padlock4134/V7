@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../api/supabaseClient';
 import EditProfileModal from './EditProfileModal';
-
+import TermsModal from './TermsModal';
+import { useTermsModal } from './useTermsModal';
 import PaymentModal from './PaymentModal';
 
 const Profile = () => {
@@ -34,6 +35,8 @@ const Profile = () => {
   const [cuisineSaved, setCuisineSaved] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const { modalOpen, setModalOpen, termsContent } = useTermsModal();
 
   useEffect(() => {
     const fetchUserAndProfile = async () => {
@@ -194,7 +197,6 @@ const Profile = () => {
           onClick={async () => {
             setSubLoading(true);
             setShowSubModal(true);
-            // Simulate loading for portal link
             setTimeout(() => setSubLoading(false), 1000);
           }}
           disabled={subLoading}
@@ -229,24 +231,27 @@ const Profile = () => {
                       plan="yearly"
                       email={user?.email}
                     />
-                    {/* <button
-                      className="bg-lobsterRed text-white px-4 py-2 rounded font-bold hover:bg-white hover:text-lobsterRed transition-colors"
-                      onClick={() => {}}
-                    >
-                      Cancel
-                    </button> */}
                   </div>
                 </>
               )}
             </div>
           </div>
         )}
+        {/* Account Actions: Sign Out and TOS */}
         <button
-          className="bg-lobsterRed text-weatheredWhite px-4 py-2 rounded font-bold w-full max-w-xs hover:bg-maineBlue hover:text-seafoam transition-colors"
+          className="bg-lobsterRed text-weatheredWhite px-4 py-2 rounded font-bold w-full max-w-xs hover:bg-maineBlue hover:text-seafoam transition-colors mt-4"
           onClick={handleSignOut}
         >
           Sign Out
         </button>
+        <button
+          className="mt-2 underline text-maineBlue hover:text-lobsterRed focus:outline-none"
+          onClick={() => setModalOpen(true)}
+          type="button"
+        >
+          Terms of Service
+        </button>
+        <TermsModal isOpen={modalOpen} onClose={() => setModalOpen(false)} termsContent={termsContent} />
       </div>
     </div>
   );

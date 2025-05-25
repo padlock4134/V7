@@ -2,8 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./LandingPage.css";
 import logo from "../images/logo.png";
+import TermsModal from './TermsModal';
+import { useTermsModal } from './useTermsModal';
 
 const LandingPage: React.FC = () => {
+  const { modalOpen, setModalOpen, termsContent } = useTermsModal();
   return (
     <div className="landing-root bg-sand font-retro min-h-screen flex flex-col">
       <nav className="landing-nav bg-weatheredWhite/90 shadow-md rounded-b-2xl flex items-center justify-between px-8 py-4">
@@ -83,7 +86,16 @@ const LandingPage: React.FC = () => {
       </section>
       </main>
       <footer className="landing-footer bg-weatheredWhite/90 rounded-t-2xl text-center py-4 mt-12 text-navy font-sans text-base shadow-inner">
-        <span>© {new Date().getFullYear()} PorkChop. All rights reserved. | <a href="/terms" className="underline text-maineBlue hover:text-lobsterRed ml-2">Terms of Service</a></span>
+        <span> {new Date().getFullYear()} PorkChop. All rights reserved. |{' '}
+          <button
+            type="button"
+            className="underline text-maineBlue hover:text-lobsterRed ml-2 bg-transparent border-none cursor-pointer focus:outline-none"
+            onClick={() => setModalOpen(true)}
+          >
+            Terms of Service
+          </button>
+        </span>
+        <TermsModal isOpen={modalOpen} onClose={() => setModalOpen(false)} termsContent={termsContent} />
       </footer>
     </div>
   );

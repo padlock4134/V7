@@ -1,4 +1,6 @@
 import React from 'react';
+import TermsModal from './TermsModal';
+import { useTermsModal } from './useTermsModal';
 
 interface PlanSelectionModalProps {
   open: boolean;
@@ -23,6 +25,8 @@ const plans = [
 
 const PlanSelectionModal: React.FC<PlanSelectionModalProps> = ({ open, onSelectPlan, onClose }) => {
   const [selected, setSelected] = React.useState<'monthly' | 'yearly' | null>(null);
+  const { modalOpen, setModalOpen, termsContent } = useTermsModal();
+  const [tosChecked, setTosChecked] = React.useState(false);
 
   if (!open) return null;
 
@@ -51,14 +55,42 @@ const PlanSelectionModal: React.FC<PlanSelectionModalProps> = ({ open, onSelectP
             </button>
           ))}
         </div>
+        {/* TOS Checkbox and Modal Trigger */}
+        <div className="flex flex-col items-center mb-4">
+          <div className="flex items-center">
+            <input
+              id="tos-checkbox"
+              type="checkbox"
+              checked={tosChecked}
+              onChange={e => setTosChecked(e.target.checked)}
+              className="mr-2 accent-seafoam w-4 h-4"
+            />
+            <label htmlFor="tos-checkbox" className="text-xs text-gray-700 select-none">
+              I agree to the{' '}
+              <button
+                type="button"
+                className="underline text-maineBlue hover:text-lobsterRed focus:outline-none"
+                onClick={() => setModalOpen(true)}
+                tabIndex={0}
+              >
+                Terms of Service
+              </button>
+            </label>
+          </div>
+        </div>
         <button
           className="w-full py-3 rounded bg-seafoam text-maineBlue font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-maineBlue hover:text-seafoam transition-colors"
-          disabled={!selected}
-          onClick={() => selected && onSelectPlan(selected)}
+          disabled={!selected || !tosChecked}
+          onClick={() => selected && tosChecked && onSelectPlan(selected)}
         >
           Continue to Payment
         </button>
         <p className="mt-6 text-xs text-gray-500 text-center">You will not be charged until your 7-day free trial ends.</p>
+        <TermsModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          termsContent={termsContent}
+        />
       </div>
     </div>
   );
