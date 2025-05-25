@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import ChefFreddieWidget from './ChefFreddieWidget';
+import NearbyPlaces from '../components/NearbyPlaces';
 import { useEffect } from 'react';
 import { useFreddieContext } from '../components/FreddieContext';
 import { fetchKitchen } from './kitchenSupabase';
 import CookBookImportModal from '../components/CookBookImportModal';
 
-import DepartmentDirectory from '../components/MarketDirectory';
+import { DepartmentsGrid } from '../components/MarketDirectory';
 
 const ChefsCorner = () => {
   const { updateContext } = useFreddieContext();
@@ -16,11 +17,19 @@ const ChefsCorner = () => {
   // Shopping list state
   const [shoppingList, setShoppingList] = useState<string[]>([]);
 
-
   // Modal state for CookBook import
   const [cookbookModalOpen, setCookbookModalOpen] = useState(false);
 
-
+  // Geolocation for Places API
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        () => setCoords(null)
+      );
+    }
+  }, []);
 
   // Open modal for My CookBook import
   const importFromCookBook = () => setCookbookModalOpen(true);
@@ -48,8 +57,6 @@ const ChefsCorner = () => {
     }
   };
 
-
-
   return (
     <div className="max-w-7xl mx-auto mt-8 bg-weatheredWhite p-6 rounded shadow">
       <div className="chefs-corner-root relative flex flex-col md:flex-row gap-8">
@@ -59,11 +66,7 @@ const ChefsCorner = () => {
             <h1 className="text-3xl font-retro text-maineBlue mb-2">Chefs Corner</h1>
             <p className="text-lg text-gray-700 mb-4 text-center">Shop the freshest ingredients, meal kits, and more—all with a Maine Fish Market flair.</p>
           </header>
-
-
-
-
-          {/* Shopping List - now above markets */}
+          {/* Shopping List - now at the top */}
           <section className="mb-8">
             <h2 className="text-xl font-bold text-maineBlue mb-3">Shopping List</h2>
             <div className="bg-sand rounded shadow p-4 flex flex-col items-center">
@@ -97,8 +100,12 @@ const ChefsCorner = () => {
             </div>
           </section>
 
-          {/* Departments Directory */}
-          <DepartmentDirectory />
+
+          {/* Nearby Markets (Google Places) */}
+          {coords && <NearbyPlaces lat={coords.lat} lng={coords.lng} />}
+
+          {/* Departments/Markets Grid */}
+          <DepartmentsGrid />
 
           {/* Car Hop / Meal Kit Delivery Guy */}
           <section className="mb-8">
