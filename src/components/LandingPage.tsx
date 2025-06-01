@@ -30,20 +30,20 @@ const LandingPage: React.FC = () => {
             <Link to="/signin" className="landing-cta-btn bg-seafoam text-maineBlue hover:bg-lobsterRed hover:text-weatheredWhite transition-colors shadow">Log In</Link>
           </div>
         </div>
-        <section className="landing-features flex flex-wrap justify-center gap-8 mt-6">
-          <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-72 border border-seafoam">
+        <section className="landing-features flex flex-col md:flex-row flex-wrap justify-center gap-8 mt-6">
+          <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
             <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Weekly Challenges</h2>
             <p className="text-navy font-sans">Test your skills with unique AI-generated cooking challenges every week. Earn XP and badges as you go!</p>
           </div>
-          <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-72 border border-seafoam">
+          <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
             <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Recipe Discovery</h2>
             <p className="text-navy font-sans">Get personalized recipe ideas based on your kitchen ingredients and preferences.</p>
           </div>
-          <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-72 border border-seafoam">
+          <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
             <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">My Kitchen</h2>
             <p className="text-navy font-sans">Track what you have, reduce waste, and get suggestions for what to cook next.</p>
           </div>
-          <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-72 border border-seafoam">
+          <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
             <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Cookbook & XP</h2>
             <p className="text-navy font-sans">Save your favorite recipes, level up, and unlock achievements as you cook more!</p>
           </div>

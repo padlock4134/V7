@@ -86,29 +86,28 @@ const NavBar = () => {
   const { modalOpen, setModalOpen, termsContent } = useTermsModal();
   return (
     <>
-      <nav className="flex items-center justify-center gap-8 px-2 py-3 bg-maineBlue text-weatheredWhite shadow-md">
-        <LevelBadge />
-        <span className="font-retro text-2xl tracking-wider">PorkChop</span>
-        {navItems.map((item) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            className={`px-3 py-1 rounded hover:bg-seafoam hover:text-maineBlue transition-colors ${location.pathname === item.path ? 'bg-seafoam text-maineBlue' : ''}`}
-          >
-            {item.label}
-          </Link>
-        ))}
-
-        <div className="flex flex-col sm:flex-row gap-2 items-center ml-4">
-          <TipOfTheDay />
-          <ChallengeOfTheWeek />
+      <nav className="navbar bg-maineBlue text-weatheredWhite flex flex-col md:flex-row items-center justify-between px-4 md:px-8 py-3 shadow-md w-full">
+        <div className="flex items-center gap-3 w-full md:w-auto justify-between">
+          <span className="text-2xl font-bold tracking-wider font-retro">PorkChop</span>
         </div>
-        <Link to="/profile" className="flex items-center gap-2 hover:text-seafoam">
-          <UserCircleIcon className="h-7 w-7" />
-          <span className="hidden sm:inline">Profile</span>
-        </Link>
+        <div className="flex flex-col md:flex-row gap-3 md:gap-8 items-center w-full md:w-auto mt-2 md:mt-0">
+          {navItems.map(({ path, label }) => (
+            <Link
+              key={path}
+              to={path}
+              className={`nav-link px-3 py-2 rounded transition-colors duration-200 hover:bg-seafoam hover:text-maineBlue font-retro text-center w-full md:w-auto ${location.pathname === path ? 'bg-weatheredWhite text-maineBlue font-bold' : ''}`}
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
+        <div className="flex items-center gap-2 mt-2 md:mt-0">
+          <LevelBadge />
+          <Link to="/profile" aria-label="Profile">
+            <UserCircleIcon className="h-9 w-9 text-seafoam hover:text-lobsterRed transition-colors" />
+          </Link>
+        </div>
       </nav>
-
     </>
   );
 };
