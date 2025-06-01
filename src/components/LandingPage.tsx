@@ -32,22 +32,30 @@ const LandingPage: React.FC = () => {
           
         </div>
         <section className="landing-features flex flex-col md:flex-row flex-wrap justify-center gap-8 mt-6">
-          <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
-            <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Weekly Challenges</h2>
-            <p className="text-navy font-sans">Test your skills with unique AI-generated cooking challenges every week. Earn XP and badges as you go!</p>
-          </div>
-          <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
-            <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Recipe Discovery</h2>
-            <p className="text-navy font-sans">Get personalized recipe ideas based on your kitchen ingredients and preferences.</p>
-          </div>
-          <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
-            <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">My Kitchen</h2>
-            <p className="text-navy font-sans">Track what you have, reduce waste, and get suggestions for what to cook next.</p>
-          </div>
-          <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
-            <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Cookbook & XP</h2>
-            <p className="text-navy font-sans">Save your favorite recipes, level up, and unlock achievements as you cook more!</p>
-          </div>
+  <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
+    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Weekly Challenges</h2>
+    <p className="text-navy font-sans">Test your skills with unique AI-generated cooking challenges every week. Earn XP and badges as you go!</p>
+  </div>
+  <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
+    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Recipe Discovery</h2>
+    <p className="text-navy font-sans">Get personalized recipe ideas based on your kitchen ingredients and preferences.</p>
+  </div>
+  <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
+    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">My Kitchen</h2>
+    <p className="text-navy font-sans">Track what you have, reduce waste, and get suggestions for what to cook next.</p>
+  </div>
+  <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
+    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Cookbook & XP</h2>
+    <p className="text-navy font-sans">Save your favorite recipes, level up, and unlock achievements as you cook more!</p>
+  </div>
+  <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
+    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Smart Shopping Lists</h2>
+    <p className="text-navy font-sans">Automatically generate and manage grocery lists based on your planned recipes and kitchen inventory.</p>
+  </div>
+  <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
+    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Step-by-Step Cooking Mode</h2>
+    <p className="text-navy font-sans">Follow interactive, distraction-free instructions while you cook, with voice and visual guidance.</p>
+  </div>
         </section>
       {/* Chef Freddie Objections & Answers Section */}
       <section className="max-w-3xl mx-auto mt-12 mb-8 px-6 py-8 bg-weatheredWhite rounded-2xl shadow-lg border-2 border-seafoam">
