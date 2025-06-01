@@ -16,8 +16,9 @@ const LandingPage: React.FC = () => {
           <span className="text-3xl font-bold text-lobsterRed tracking-wide font-retro">PorkChop</span>
         </div>
         <div className="flex gap-3">
-          <Link to="/signup" className="landing-nav-btn primary bg-lobsterRed text-weatheredWhite hover:bg-seafoam hover:text-maineBlue transition-colors">Sign Up</Link>
-        </div>
+  <Link to="/signin" className="landing-nav-btn hover:bg-seafoam hover:text-maineBlue transition-colors">Log In</Link>
+  <Link to="/signup" className="landing-nav-btn primary bg-lobsterRed text-weatheredWhite hover:bg-seafoam hover:text-maineBlue transition-colors">Sign Up</Link>
+</div>
       </nav>
       <main className="landing-main flex-1 flex flex-col items-center justify-center px-4">
         <div className="landing-hero text-center mt-16">
@@ -27,9 +28,6 @@ const LandingPage: React.FC = () => {
           </p>
           <div className="flex flex-col gap-4 items-center mb-8">
   <InstallPWAButton />
-  <div className="text-xs text-gray-500 max-w-xs text-center">
-    iOS users: Tap <span className="font-bold">Share</span> then <span className="font-bold">Add to Home Screen</span> to install.
-  </div>
 </div>
           
         </div>
