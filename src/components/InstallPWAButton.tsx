@@ -24,22 +24,24 @@ const InstallPWAButton: React.FC = () => {
   // On iOS, show instructions instead (no prompt)
   const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
 
-  if (isIOS) {
-    return (
-      <button className="landing-cta-btn bg-seafoam text-maineBlue shadow px-6 py-3 rounded text-lg font-bold" disabled>
-        Add to Home Screen (see instructions below)
-      </button>
-    );
-  }
+  const handleClick = () => {
+    if (isIOS) {
+      window.alert('To install PorkChop on iOS, tap the Share icon in Safari, then choose "Add to Home Screen".');
+    } else if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(() => setDeferredPrompt(null));
+    }
+  };
 
-  return show ? (
+  return (
     <button
       className="landing-cta-btn bg-lobsterRed text-weatheredWhite hover:bg-seafoam hover:text-maineBlue transition-colors shadow-lg px-6 py-3 rounded text-lg font-bold"
-      onClick={handleInstallClick}
+      onClick={handleClick}
+      type="button"
     >
-      Install PorkChop App
+      DOWNLOAD HERE
     </button>
-  ) : null;
+  );
 };
 
 export default InstallPWAButton;
