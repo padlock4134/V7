@@ -26,10 +26,12 @@ const LandingPage: React.FC = () => {
           <p className="landing-tagline text-xl text-navy mb-8 font-sans">
             Discover new recipes, conquer weekly challenges, and track your culinary journey—all powered by AI.
           </p>
-          <div className="landing-cta flex gap-6 justify-center mb-8">
-            <Link to="/signup" className="landing-cta-btn primary bg-lobsterRed text-weatheredWhite hover:bg-seafoam hover:text-maineBlue transition-colors shadow-lg">Get Started Free</Link>
-            <Link to="/signin" className="landing-cta-btn bg-seafoam text-maineBlue hover:bg-lobsterRed hover:text-weatheredWhite transition-colors shadow">Log In</Link>
-          </div>
+          <div className="flex flex-col gap-4 items-center mb-8">
+  <InstallPWAButton />
+  <div className="text-xs text-gray-500 max-w-xs text-center">
+    iOS users: Tap <span className="font-bold">Share</span> then <span className="font-bold">Add to Home Screen</span> to install.
+  </div>
+</div>
           <div className="flex flex-col gap-4 items-center mt-4">
             <InstallPWAButton />
             <div className="text-xs text-gray-500 max-w-xs text-center">
