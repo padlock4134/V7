@@ -16,7 +16,6 @@ const LandingPage: React.FC = () => {
           <span className="text-3xl font-bold text-lobsterRed tracking-wide font-retro">PorkChop</span>
         </div>
         <div className="flex gap-3">
-          <Link to="/signin" className="landing-nav-btn hover:bg-seafoam hover:text-maineBlue transition-colors">Log In</Link>
           <Link to="/signup" className="landing-nav-btn primary bg-lobsterRed text-weatheredWhite hover:bg-seafoam hover:text-maineBlue transition-colors">Sign Up</Link>
         </div>
       </nav>
@@ -32,12 +31,7 @@ const LandingPage: React.FC = () => {
     iOS users: Tap <span className="font-bold">Share</span> then <span className="font-bold">Add to Home Screen</span> to install.
   </div>
 </div>
-          <div className="flex flex-col gap-4 items-center mt-4">
-            <InstallPWAButton />
-            <div className="text-xs text-gray-500 max-w-xs text-center">
-              iOS users: Tap <span className="font-bold">Share</span> then <span className="font-bold">Add to Home Screen</span> to install.
-            </div>
-          </div>
+          
         </div>
         <section className="landing-features flex flex-col md:flex-row flex-wrap justify-center gap-8 mt-6">
           <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
