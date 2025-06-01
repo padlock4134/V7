@@ -14,7 +14,9 @@ const TermsModal: React.FC<TermsModalProps> = ({ isOpen, onClose, termsContent }
       <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full p-6 overflow-y-auto max-h-[80vh] relative">
         <button className="absolute top-2 right-2 text-2xl" onClick={onClose}>&times;</button>
         <h2 className="text-xl font-bold mb-4">Terms of Service & Privacy Policy</h2>
-        <ReactMarkdown>{termsContent}</ReactMarkdown>
+        <div className="terms-content">
+  <ReactMarkdown>{termsContent}</ReactMarkdown>
+</div>
       </div>
     </div>
   );
