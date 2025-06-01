@@ -26,14 +26,17 @@ const InstallPWAButton: React.FC = () => {
 
   if (isIOS) {
     return (
-      <button className="landing-cta-btn bg-seafoam text-maineBlue shadow" disabled>
+      <button className="landing-cta-btn bg-seafoam text-maineBlue shadow px-6 py-3 rounded text-lg font-bold" disabled>
         Add to Home Screen (see instructions below)
       </button>
     );
   }
 
   return show ? (
-    <button className="landing-cta-btn bg-seafoam text-maineBlue shadow" onClick={handleInstallClick}>
+    <button
+      className="landing-cta-btn bg-lobsterRed text-weatheredWhite hover:bg-seafoam hover:text-maineBlue transition-colors shadow-lg px-6 py-3 rounded text-lg font-bold"
+      onClick={handleInstallClick}
+    >
       Install PorkChop App
     </button>
   ) : null;
