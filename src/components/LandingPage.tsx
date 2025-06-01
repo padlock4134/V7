@@ -96,13 +96,7 @@ const LandingPage: React.FC = () => {
       </main>
       <footer className="landing-footer bg-weatheredWhite/90 rounded-t-2xl text-center py-4 mt-12 text-navy font-sans text-base shadow-inner">
         <span> {new Date().getFullYear()} PorkChop. All rights reserved. |{' '}
-          <button
-            type="button"
-            className="underline text-maineBlue hover:text-lobsterRed ml-2 bg-transparent border-none cursor-pointer focus:outline-none"
-            onClick={() => setModalOpen(true)}
-          >
-            Terms of Service
-          </button>
+          <span className="text-xs text-navy underline cursor-pointer hover:text-lobsterRed" onClick={() => setModalOpen(true)}>Terms of Service & Privacy Policy</span>
         </span>
         <TermsModal isOpen={modalOpen} onClose={() => setModalOpen(false)} termsContent={termsContent} />
       </footer>

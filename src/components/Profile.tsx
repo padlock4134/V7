@@ -244,13 +244,7 @@ const Profile = () => {
         >
           Sign Out
         </button>
-        <button
-          className="mt-2 underline text-maineBlue hover:text-lobsterRed focus:outline-none"
-          onClick={() => setModalOpen(true)}
-          type="button"
-        >
-          Terms of Service
-        </button>
+        <span className="text-xs text-navy underline cursor-pointer hover:text-lobsterRed" onClick={() => setModalOpen(true)}>Terms of Service & Privacy Policy</span>
         <TermsModal isOpen={modalOpen} onClose={() => setModalOpen(false)} termsContent={termsContent} />
       </div>
     </div>
