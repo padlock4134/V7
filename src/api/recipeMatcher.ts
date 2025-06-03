@@ -1,9 +1,10 @@
 import { RecipeCard } from '../components/RecipeMatcherModal';
 
-const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
+const ANTHROPIC_API_URL = '/.netlify/functions/anthropic-proxy';
 const UNSPLASH_API_URL = 'https://api.unsplash.com/search/photos';
 
-const anthropicKey = (import.meta as any).env.VITE_ANTHROPIC_RECIPE_KEY;
+// No API key in frontend; handled by Netlify function
+// const anthropicKey = (import.meta as any).env.VITE_ANTHROPIC_RECIPE_KEY;
 const unsplashKey = (import.meta as any).env.VITE_UNSPLASH_ACCESS_KEY;
 
 export async function fetchRecipesWithImages(ingredients: string[], numRecipes = 5): Promise<RecipeCard[]> {
@@ -14,7 +15,6 @@ export async function fetchRecipesWithImages(ingredients: string[], numRecipes =
   const anthropicRes = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
     headers: {
-      'x-api-key': anthropicKey,
       'content-type': 'application/json',
       'anthropic-version': '2023-06-01',
     },
