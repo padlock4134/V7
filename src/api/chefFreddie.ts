@@ -1,12 +1,9 @@
 // Anthropic Claude Haiku API integration for Chef Freddie
 export async function askChefFreddie(prompt: string): Promise<string> {
-  const apiKey = (import.meta as any).env.VITE_ANTHROPIC_CHEF_KEY;
-  if (!apiKey) throw new Error('Anthropic Chef Key missing');
-
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
+  // Use Netlify proxy for Anthropic API (no direct key in frontend)
+  const response = await fetch('/.netlify/functions/anthropic-proxy', {
     method: 'POST',
     headers: {
-      'x-api-key': apiKey,
       'anthropic-version': '2023-06-01',
       'content-type': 'application/json',
     },

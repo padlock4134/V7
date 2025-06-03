@@ -7,15 +7,11 @@ export async function getWeeklyChallengeRecipe(prompt: string): Promise<{
   instructions: string;
   equipment?: string[];
 }> {
-  const apiKey = import.meta.env.VITE_ANTHROPIC_CHALLENGE_KEY;
-  if (!apiKey) throw new Error('Anthropic Challenge API key missing');
-
-  // TODO: Add real payload for Haiku/Anthropic API.
-  const response = await fetch('https://api.anthropic.com/v1/complete', {
+  // Use Netlify proxy for Anthropic API (no direct key in frontend)
+  const response = await fetch('/.netlify/functions/anthropic-proxy', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': apiKey,
     },
     body: JSON.stringify({
       model: 'haiku',
