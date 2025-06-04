@@ -8,6 +8,7 @@ export async function askChefFreddie(prompt: string): Promise<string> {
       'content-type': 'application/json',
     },
     body: JSON.stringify({
+      apiKeyIdentifier: 'chef',
       model: 'claude-3-haiku-20240307',
       max_tokens: 400,
       messages: [{ role: 'user', content: prompt }],

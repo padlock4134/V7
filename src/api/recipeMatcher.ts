@@ -19,6 +19,7 @@ export async function fetchRecipesWithImages(ingredients: string[], numRecipes =
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
+      apiKeyIdentifier: 'recipe',
       model: 'claude-3-haiku-20240307',
       max_tokens: 1024,
       messages: [{ role: 'user', content: prompt }],
