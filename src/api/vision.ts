@@ -1,42 +1,23 @@
-/// <reference types="vite/client" />
 // Google Vision API integration for PorkChop
-// Requires VITE_GOOGLE_VISION_API_KEY in .env
+// Uses secure server-side proxy
 
 export async function scanImage(base64Image: string): Promise<string[]> {
-  const apiKey = import.meta.env.VITE_GOOGLE_VISION_API_KEY;
-  if (!apiKey) throw new Error('Google Vision API key missing');
-
-  const body = {
-    requests: [
-      {
-        image: { content: base64Image },
-        features: [
-      { type: 'TEXT_DETECTION', maxResults: 1 },
-      { type: 'LABEL_DETECTION', maxResults: 10 }
-    ],
-      },
-    ],
-  };
-
-  const res = await fetch(
-    `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`,
-    {
+  try {
+    const response = await fetch('/.netlify/functions/vision-proxy', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    }
-  );
+      body: JSON.stringify({ base64Image })
+    });
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`Vision API error: ${errorText}`);
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error || 'Failed to process image');
+    }
+
+    const { results } = await response.json();
+    return results || [];
+  } catch (error) {
+    console.error('Vision API error:', error);
+    throw error;
   }
-  const data = await res.json();
-  // Text detection
-  const text = data?.responses?.[0]?.fullTextAnnotation?.text || '';
-  const textLines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-  // Label detection
-  const labels = data?.responses?.[0]?.labelAnnotations?.map(l => l.description) || [];
-  // Combine and deduplicate
-  return Array.from(new Set([...textLines, ...labels]));
 }

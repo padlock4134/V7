@@ -1,41 +1,45 @@
 const fetch = require('node-fetch');
 
+// Define API keys mapping
+const API_KEYS = {
+  recipe: process.env.ANTHROPIC_RECIPE_KEY,
+  challenge: process.env.ANTHROPIC_CHALLENGE_KEY,
+  chef: process.env.ANTHROPIC_CHEF_KEY,
+  default: process.env.ANTHROPIC_API_KEY
+};
+
 exports.handler = async function(event) {
+  // Only allow POST requests
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
   }
 
   try {
-    const requestBody = JSON.parse(event.body);
-    const apiKeyIdentifier = requestBody.apiKeyIdentifier;
+    // Parse and validate request body
+    let requestBody;
+    try {
+      requestBody = JSON.parse(event.body);
+    } catch (e) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON body' }) };
+    }
 
+    const apiKeyIdentifier = requestBody.apiKeyIdentifier || 'default';
+    
     // Remove the identifier from the body before forwarding to Anthropic
-    if (requestBody.apiKeyIdentifier) {
-      delete requestBody.apiKeyIdentifier;
-    }
+    delete requestBody.apiKeyIdentifier;
 
-    // Select the appropriate API key based on the identifier
-    let apiKey;
-    switch (apiKeyIdentifier) {
-      case 'recipe':
-        apiKey = process.env.ANTHROPIC_RECIPE_KEY;
-        break;
-      case 'challenge':
-        apiKey = process.env.ANTHROPIC_CHALLENGE_KEY;
-        break;
-      case 'chef':
-        apiKey = process.env.ANTHROPIC_CHEF_KEY;
-        break;
-      default:
-        // Fallback to a general API key if no identifier or unknown
-        apiKey = process.env.ANTHROPIC_API_KEY;
-    }
+    // Get the appropriate API key
+    const apiKey = API_KEYS[apiKeyIdentifier] || API_KEYS.default;
 
     // Check if we have a valid API key
     if (!apiKey) {
       return { 
         statusCode: 500, 
-        body: JSON.stringify({ error: `Anthropic API key not set for identifier: ${apiKeyIdentifier || 'default'}` })
+        body: JSON.stringify({ 
+          error: `Anthropic API key not configured`,
+          details: `No key found for identifier: ${apiKeyIdentifier}`,
+          availableKeys: Object.keys(API_KEYS).filter(k => API_KEYS[k])
+        })
       };
     }
 

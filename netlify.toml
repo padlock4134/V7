@@ -1,0 +1,22 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[dev]
+  framework = "vite"
+  targetPort = 3000
+
+# Environment variables that should be available in the build
+[build.environment]
+  # Add other environment variables your build needs here
+  # But NOT your API keys - those should only be in Netlify's UI
+
+# Redirects for SPA
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
