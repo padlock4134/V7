@@ -12,6 +12,7 @@ export async function askChefFreddie(prompt: string): Promise<string> {
       model: 'claude-3-haiku-20240307',
       max_tokens: 400,
       messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7,
     }),
   });
 
