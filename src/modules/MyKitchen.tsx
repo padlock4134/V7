@@ -276,14 +276,14 @@ const MyKitchen = () => {
             console.log('Saving recipe:', recipe);
             await addRecipeToCookbook(recipe);
             console.log('Recipe saved to Supabase');
-            setCookbook(prev => {
-              const newCookbook = prev.some(r => r.id === recipe.id) ? prev : [...prev, recipe];
-              console.log('Updated local cookbook:', newCookbook);
-              return newCookbook;
-            });
+            // Fetch fresh cookbook data after save
+            const updatedCookbook = await fetchCookbook();
+            console.log('Fetched updated cookbook:', updatedCookbook);
+            setCookbook(updatedCookbook);
+            return true;
           } catch (error) {
             console.error('Error saving recipe:', error);
-            throw error; // Re-throw so the modal can show loading state
+            throw error;
           }
         }}
         recipes={matcherRecipes}
