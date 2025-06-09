@@ -9,7 +9,24 @@ const unsplashKey = (import.meta as any).env.VITE_UNSPLASH_ACCESS_KEY;
 
 export async function fetchRecipesWithImages(ingredients: string[], numRecipes = 5): Promise<RecipeCard[]> {
   // 1. Build the Anthropic prompt
-  const prompt = `You are an expert chef. Given these ingredients: ${ingredients.join(", ")}, create ${numRecipes} creative, realistic, and delicious meal recipes. For each recipe, return a JSON object with fields: title, ingredients (array), and instructions.`;
+  const prompt = `You are an expert chef. Create ${numRecipes} unique recipes using ONLY these ingredients: ${ingredients.join(", ")}. 
+
+Each recipe MUST be realistic and use at least 2-3 of the provided ingredients. Format your response as a JSON array of recipe objects. Each recipe object MUST have these exact fields:
+{
+  "title": "Recipe Name",
+  "ingredients": ["ingredient 1", "ingredient 2", ...],
+  "instructions": ["step 1", "step 2", ...]
+}
+
+Return ONLY the JSON array, no other text. Example format:
+[
+  {
+    "title": "Recipe 1",
+    "ingredients": ["ingredient", "ingredient"],
+    "instructions": ["step", "step"]
+  },
+  ...
+]`;
 
   // 2. Call Anthropic (Claude)
   const anthropicRes = await fetch(ANTHROPIC_API_URL, {
@@ -30,14 +47,20 @@ export async function fetchRecipesWithImages(ingredients: string[], numRecipes =
   // Try to extract JSON from Claude's response
   let recipes: any[] = [];
   try {
-    const match = anthropicData.content[0].text.match(/\[.*\]/s);
-    recipes = match ? JSON.parse(match[0]) : [];
-  } catch {
+    const responseText = anthropicData.content[0].text;
+    // Try to find a JSON array in the response
+    const match = responseText.match(/\[\s*\{[\s\S]*\}\s*\]/);
+    if (match) {
+      recipes = JSON.parse(match[0]);
+    }
+  } catch (error) {
+    console.error('Error parsing recipes:', error);
     recipes = [];
   }
-  if (!Array.isArray(recipes)) recipes = [];
-  // Fallback: if Claude returns a single recipe object
-  if (recipes && !Array.isArray(recipes) && typeof recipes === 'object' && 'title' in recipes) recipes = [recipes];
+
+  // Ensure we have an array of valid recipes
+  recipes = Array.isArray(recipes) ? recipes : [];
+  recipes = recipes.filter(r => r && r.title && Array.isArray(r.ingredients) && Array.isArray(r.instructions));
 
   // 3. For each recipe, call Unsplash in parallel
   const imagePromises = recipes.map(async (r) => {
