@@ -49,6 +49,7 @@ import { useFreddieContext } from '../components/FreddieContext';
 import { getMealVideoQuery, getMainIngredientPrepQuery } from '../utils/videoSourcing';
 import { useRecipeContext } from '../components/RecipeContext';
 import { useNavigate } from 'react-router-dom';
+import { fetchCookbook } from './cookbookSupabase';
 
 // Helper: get main ingredient (first in array)
 function getMainIngredient(ingredients?: string[]): string {
@@ -66,12 +67,11 @@ export function getVideoQueriesForRecipe(recipe: Recipe): [string, string] {
 // Main MyCookBook component starts here
 
 const MyCookBook = () => {
-  // Recipe context for "Cook Me"
   const { setSelectedRecipe, setRecipes } = useRecipeContext();
   const navigate = useNavigate();
-  // Only keep recipe state and handlers
-
   const [recipes, setLocalRecipes] = useState<Recipe[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingIdx, setEditingIdx] = useState<number | null>(null);
   const [form, setForm] = useState<Recipe>(emptyRecipe);
@@ -90,16 +90,33 @@ const MyCookBook = () => {
     }));
   }
 
-  // Sync local recipes to RecipeContext for modal multi-select
-  useEffect(() => {
-    setRecipes(toRecipeCardArray(recipes));
-  }, [recipes, setRecipes]);
-
-  // Freddie context: set page on mount
+  // Load recipes and set page context on mount
   const { updateContext } = useFreddieContext();
   useEffect(() => {
     updateContext({ page: 'MyCookBook' });
-  }, [updateContext]);
+    const loadRecipes = async () => {
+      try {
+        setLoading(true);
+        const savedRecipes = await fetchCookbook();
+        const converted = savedRecipes.map(r => ({
+          name: r.title,
+          description: r.instructions,
+          photo: r.image,
+          ingredients: r.ingredients,
+          instructions: r.instructions,
+          equipment: r.equipment
+        }));
+        setLocalRecipes(converted);
+        setRecipes(savedRecipes); // Update RecipeContext
+      } catch (err) {
+        console.error('Error loading cookbook:', err);
+        setError('Failed to load your cookbook');
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadRecipes();
+  }, [updateContext, setRecipes]);
 
 
 
@@ -148,6 +165,25 @@ const MyCookBook = () => {
       setCurrentRecipeIdx(Math.max(0, recipes.length - 1));
     }
   }, [recipes, currentRecipeIdx]);
+
+  if (loading) {
+    return (
+      <div className="max-w-2xl mx-auto mt-8 bg-weatheredWhite p-6 rounded shadow">
+        <div className="flex flex-col items-center justify-center min-h-[200px]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-maineBlue mb-4"></div>
+          <div className="text-lg font-retro mb-2">Loading your cookbook...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-2xl mx-auto mt-8 bg-weatheredWhite p-6 rounded shadow">
+        <div className="text-lobsterRed text-center font-bold">{error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto mt-8 bg-weatheredWhite p-6 rounded shadow">
