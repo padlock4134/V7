@@ -6,15 +6,13 @@ const API_KEYS = {
   chef: process.env.ANTHROPIC_CHEF_KEY
 };
 
-// Debug: Log which keys are set (safely)
-console.log('API Keys status:', Object.keys(API_KEYS).reduce((acc, key) => {
+// Log which API keys are configured (safely)
+console.log('API Keys configured:', Object.keys(API_KEYS).reduce((acc, key) => {
   acc[key] = !!API_KEYS[key];
   return acc;
 }, {}));
 
 exports.handler = async function(event) {
-  console.log('Received request with headers:', event.headers);
-  
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
@@ -25,13 +23,13 @@ exports.handler = async function(event) {
     let requestBody;
     try {
       requestBody = JSON.parse(event.body);
-      console.log('Parsed request body:', { ...requestBody, model: requestBody.model });
     } catch (e) {
       console.error('JSON parse error:', e);
       return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON body' }) };
     }
 
     const apiKeyIdentifier = requestBody.apiKeyIdentifier;
+    console.log(`Request from ${apiKeyIdentifier} endpoint`);
     
     // Remove the identifier from the body before forwarding to Anthropic
     delete requestBody.apiKeyIdentifier;
@@ -41,15 +39,16 @@ exports.handler = async function(event) {
 
     // Check if we have a valid API key
     if (!apiKey) {
+      console.error(`Missing API key for ${apiKeyIdentifier}`);
       return { 
         statusCode: 500, 
         body: JSON.stringify({ 
-          error: `Anthropic API key not set for identifier: ${apiKeyIdentifier}`
+          error: `API key not configured for: ${apiKeyIdentifier}`
         })
       };
     }
 
-    console.log('Making request to Anthropic API...');
+    console.log(`Making ${apiKeyIdentifier} request to Anthropic...`);
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -60,15 +59,9 @@ exports.handler = async function(event) {
       body: JSON.stringify(requestBody)
     });
 
-    console.log('Anthropic API response status:', response.status);
-    
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Anthropic API error:', {
-        status: response.status,
-        headers: Object.fromEntries(response.headers.entries()),
-        body: errorText
-      });
+      console.error(`Anthropic API error for ${apiKeyIdentifier}:`, errorText);
       return {
         statusCode: response.status,
         body: errorText
