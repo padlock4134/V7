@@ -76,7 +76,7 @@ Return ONLY the JSON array, no other text. Example format:
 
   // 4. Return RecipeCards
   return recipes.slice(0, numRecipes).map((r, i) => ({
-    id: `${r.title}-${i}`,
+    id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}-${i}`,
     title: r.title,
     image: images[i],
     ingredients: Array.isArray(r.ingredients) ? r.ingredients : [],

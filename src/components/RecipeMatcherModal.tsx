@@ -34,14 +34,22 @@ type Props = {
 
 const RecipeMatcherModal: React.FC<Props> = ({ open, onClose, cupboardIngredients, onLike, recipes, loading, error }) => {
   const [currentIdx, setCurrentIdx] = useState(0);
+  const [isSaving, setIsSaving] = useState(false);
   const { setSelectedRecipe } = useRecipeContext();
   const navigate = useNavigate();
 
   if (!open) return null;
 
-  const handleLike = () => {
-    onLike(recipes[currentIdx]);
-    setCurrentIdx(idx => idx + 1);
+  const handleLike = async () => {
+    try {
+      setIsSaving(true);
+      await onLike(recipes[currentIdx]);
+      setCurrentIdx(idx => idx + 1);
+    } catch (error) {
+      console.error('Error liking recipe:', error);
+    } finally {
+      setIsSaving(false);
+    }
   };
   const handleSkip = () => setCurrentIdx(idx => idx + 1);
   function generateTutorials(recipe: RecipeCard) {
@@ -98,8 +106,12 @@ const RecipeMatcherModal: React.FC<Props> = ({ open, onClose, cupboardIngredient
               <button className="bg-lobsterRed text-weatheredWhite px-6 py-2 rounded-full shadow hover:bg-maineBlue hover:text-seafoam text-xl font-bold" onClick={handleSkip}>
                 ✕
               </button>
-              <button className="bg-seafoam text-maineBlue px-6 py-2 rounded-full shadow hover:bg-maineBlue hover:text-seafoam text-xl font-bold" onClick={handleLike}>
-                ♥
+              <button 
+                className="bg-seafoam text-maineBlue px-6 py-2 rounded-full shadow hover:bg-maineBlue hover:text-seafoam text-xl font-bold" 
+                onClick={handleLike}
+                disabled={isSaving}
+              >
+                {isSaving ? '...' : '♥'}
               </button>
               <button className="bg-maineBlue text-seafoam px-6 py-2 rounded-full shadow hover:bg-seafoam hover:text-maineBlue text-xl font-bold" onClick={handleCookMe}>
                 Cook Me

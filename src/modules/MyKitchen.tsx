@@ -273,10 +273,17 @@ const MyKitchen = () => {
         cupboardIngredients={ingredients.map(i => i.name)}
         onLike={async recipe => {
           try {
+            console.log('Saving recipe:', recipe);
             await addRecipeToCookbook(recipe);
-            setCookbook(prev => prev.some(r => r.id === recipe.id) ? prev : [...prev, recipe]);
+            console.log('Recipe saved to Supabase');
+            setCookbook(prev => {
+              const newCookbook = prev.some(r => r.id === recipe.id) ? prev : [...prev, recipe];
+              console.log('Updated local cookbook:', newCookbook);
+              return newCookbook;
+            });
           } catch (error) {
             console.error('Error saving recipe:', error);
+            throw error; // Re-throw so the modal can show loading state
           }
         }}
         recipes={matcherRecipes}
