@@ -1,4 +1,5 @@
-﻿[build]
+@"
+[build]
   command = "npm run build"
   publish = "dist"
   functions = "netlify/functions"
@@ -17,3 +18,4 @@
   from = "/*"
   to = "/index.html"
   status = 200
+"@ | Out-File -FilePath "netlify.toml" -Encoding utf8
