@@ -273,14 +273,9 @@ const MyKitchen = () => {
         cupboardIngredients={ingredients.map(i => i.name)}
         onLike={async recipe => {
           try {
-            console.log('Saving recipe:', recipe);
             await addRecipeToCookbook(recipe);
-            console.log('Recipe saved to Supabase');
-            // Fetch fresh cookbook data after save
             const updatedCookbook = await fetchCookbook();
-            console.log('Fetched updated cookbook:', updatedCookbook);
             setCookbook(updatedCookbook);
-            return true;
           } catch (error) {
             console.error('Error saving recipe:', error);
             throw error;
