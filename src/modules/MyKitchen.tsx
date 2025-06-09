@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { saveKitchen, fetchKitchen } from './kitchenSupabase';
+import { fetchCookbook, addRecipeToCookbook } from './cookbookSupabase';
 import { Ingredient } from '../types';
 
 import { scanImage } from '../api/vision';
@@ -92,10 +93,21 @@ const MyKitchen = () => {
   const { updateContext } = useFreddieContext();
   useEffect(() => {
     updateContext({ page: 'MyKitchen' });
-    // Fetch kitchen from Supabase on mount
-    fetchKitchen()
-      .then(setIngredients)
-      .catch(err => setKitchenError('Failed to load your kitchen.'));
+    // Load both kitchen and cookbook data
+    const loadData = async () => {
+      try {
+        const [kitchenIngredients, cookbookRecipes] = await Promise.all([
+          fetchKitchen(),
+          fetchCookbook()
+        ]);
+        setIngredients(kitchenIngredients);
+        setCookbook(cookbookRecipes);
+      } catch (error) {
+        console.error('Error loading data:', error);
+        setKitchenError('Failed to load your kitchen.');
+      }
+    };
+    loadData();
   }, [updateContext]);
 
   // Filtering logic (only by search text)
@@ -259,8 +271,13 @@ const MyKitchen = () => {
         open={matcherOpen}
         onClose={() => setMatcherOpen(false)}
         cupboardIngredients={ingredients.map(i => i.name)}
-        onLike={recipe => {
-          setCookbook(prev => prev.some(r => r.id === recipe.id) ? prev : [...prev, recipe]);
+        onLike={async recipe => {
+          try {
+            await addRecipeToCookbook(recipe);
+            setCookbook(prev => prev.some(r => r.id === recipe.id) ? prev : [...prev, recipe]);
+          } catch (error) {
+            console.error('Error saving recipe:', error);
+          }
         }}
         recipes={matcherRecipes}
         loading={matcherLoading}
