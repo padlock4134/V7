@@ -1,14 +1,9 @@
 const fetch = require('node-fetch');
 
-// Debug: Log environment variables (safely)
-console.log('Available env vars:', Object.keys(process.env));
-
-// Define API keys mapping with fallbacks
 const API_KEYS = {
-  recipe: process.env.ANTHROPIC_RECIPE_KEY || process.env.ANTHROPIC_API_KEY,
-  challenge: process.env.ANTHROPIC_CHALLENGE_KEY || process.env.ANTHROPIC_API_KEY,
-  chef: process.env.ANTHROPIC_CHEF_KEY || process.env.ANTHROPIC_API_KEY,
-  default: process.env.ANTHROPIC_API_KEY
+  recipe: process.env.ANTHROPIC_RECIPE_KEY,
+  challenge: process.env.ANTHROPIC_CHALLENGE_KEY,
+  chef: process.env.ANTHROPIC_CHEF_KEY
 };
 
 // Debug: Log which keys are set (safely)
@@ -36,27 +31,22 @@ exports.handler = async function(event) {
       return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON body' }) };
     }
 
-    const apiKeyIdentifier = requestBody.apiKeyIdentifier || 'default';
-    console.log('Using API key identifier:', apiKeyIdentifier);
+    const apiKeyIdentifier = requestBody.apiKeyIdentifier;
     
     // Remove the identifier from the body before forwarding to Anthropic
     delete requestBody.apiKeyIdentifier;
 
     // Get the appropriate API key
-    const apiKey = API_KEYS[apiKeyIdentifier] || API_KEYS.default;
+    const apiKey = API_KEYS[apiKeyIdentifier];
 
     // Check if we have a valid API key
     if (!apiKey) {
-      const error = {
-        error: `Anthropic API key not set for identifier: ${apiKeyIdentifier}`,
-        details: {
-          requestedKey: apiKeyIdentifier,
-          availableKeys: Object.keys(API_KEYS).filter(k => API_KEYS[k]),
-          envVars: Object.keys(process.env)
-        }
+      return { 
+        statusCode: 500, 
+        body: JSON.stringify({ 
+          error: `Anthropic API key not set for identifier: ${apiKeyIdentifier}`
+        })
       };
-      console.error('API key error:', error);
-      return { statusCode: 500, body: JSON.stringify(error) };
     }
 
     console.log('Making request to Anthropic API...');
