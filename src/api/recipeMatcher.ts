@@ -47,15 +47,18 @@ Return ONLY the JSON array, no other text. Example format:
   // Try to extract JSON from Claude's response
   let recipes: any[] = [];
   try {
+    if (!anthropicData.content?.[0]?.text) {
+      console.error('Unexpected response format:', anthropicData);
+      return [];
+    }
     const responseText = anthropicData.content[0].text;
-    // Try to find a JSON array in the response
     const match = responseText.match(/\[\s*\{[\s\S]*\}\s*\]/);
     if (match) {
       recipes = JSON.parse(match[0]);
     }
   } catch (error) {
     console.error('Error parsing recipes:', error);
-    recipes = [];
+    return [];
   }
 
   // Ensure we have an array of valid recipes
