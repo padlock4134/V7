@@ -127,8 +127,8 @@ const MyCookBook = () => {
               <button
                 onClick={async () => {
                   try {
-                    const recipeId = `${recipe.name.replace(/\s+/g, '-')}-${idx}`;
-                    await removeRecipeFromCookbook(recipeId);
+                    // Use the recipe name as the ID since that's what we use when saving
+                    await removeRecipeFromCookbook(recipe.name);
                     const updatedRecipes = await fetchCookbook();
                     const converted = updatedRecipes.map(r => ({
                       name: r.title,
