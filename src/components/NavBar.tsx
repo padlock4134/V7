@@ -113,12 +113,12 @@ const NavBar = () => {
           </div>
           
           {/* Center section: Navigation links */}
-          <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 mt-3 lg:mt-0 lg:ml-0 lg:pl-12 w-[660px]">
+          <div className="flex flex-col lg:grid lg:grid-cols-4 mt-3 lg:mt-0 lg:ml-0 lg:pl-12 w-[640px]">
             {navItems.map(({ path, label }) => (
               <Link
                 key={path}
                 to={path}
-                className={`nav-link pl-3 pr-2 py-2 rounded transition-colors duration-200 hover:bg-seafoam hover:text-maineBlue font-retro ${location.pathname === path ? 'bg-weatheredWhite text-maineBlue font-bold' : ''}`}
+                className={`nav-link text-center py-2 rounded transition-colors duration-200 hover:bg-seafoam hover:text-maineBlue font-retro ${location.pathname === path ? 'bg-weatheredWhite text-maineBlue font-bold' : ''}`}
               >
                 {label}
               </Link>
