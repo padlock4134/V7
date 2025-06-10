@@ -127,18 +127,10 @@ const MyCookBook = () => {
               <button
                 onClick={async () => {
                   try {
-                    // Use the recipe name as the ID since that's what we use when saving
-                    await removeRecipeFromCookbook(recipe.name);
-                    const updatedRecipes = await fetchCookbook();
-                    const converted = updatedRecipes.map(r => ({
-                      name: r.title,
-                      description: r.instructions,
-                      photo: r.image,
-                      ingredients: r.ingredients,
-                      instructions: r.instructions,
-                      equipment: r.equipment
-                    }));
-                    setLocalRecipes(converted);
+                    // Use the recipe title as the ID since that's what we use when saving in RecipeMatcherModal
+                    const recipeId = recipe.name;
+                    await removeRecipeFromCookbook(recipeId);
+                    setLocalRecipes(recipes.filter(r => r.name !== recipeId));
                   } catch (err) {
                     console.error('Error deleting recipe:', err);
                     setError('Failed to delete recipe');
