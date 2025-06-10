@@ -79,6 +79,7 @@ const navItems = [
   { path: '/culinary-school', label: 'Culinary School' },
   { path: '/my-cookbook', label: 'My Cookbook' },
   { path: '/chefs-corner', label: 'Chefs Corner' },
+  { path: '/weekly-challenges', label: 'Weekly Challenges' },
 ];
 
 const NavBar = () => {

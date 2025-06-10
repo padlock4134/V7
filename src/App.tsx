@@ -5,6 +5,7 @@ import MyKitchen from './modules/MyKitchen';
 import MyCookBook from './modules/MyCookBook';
 import ChefsCorner from './modules/ChefsCorner';
 import CulinarySchool from './modules/CulinarySchool';
+import WeeklyChallenges from './modules/WeeklyChallenges';
 import Profile from './components/Profile';
 import SignUp from './modules/SignUp';
 import SignIn from './modules/SignIn';
@@ -46,6 +47,7 @@ const App = () => {
               <Route path="/my-cookbook" element={isAuth ? <MyCookBook /> : <Navigate to="/signin" />} />
               <Route path="/chefs-corner" element={isAuth ? <ChefsCorner /> : <Navigate to="/signin" />} />
               <Route path="/culinary-school" element={isAuth ? <CulinarySchool /> : <Navigate to="/signin" />} />
+              <Route path="/weekly-challenges" element={isAuth ? <WeeklyChallenges /> : <Navigate to="/signin" />} />
               <Route path="/profile" element={isAuth ? <Profile /> : <Navigate to="/signin" />} />
               <Route path="/" element={isAuth ? <Navigate to="/dashboard" /> : <LandingPage />} />
             </Routes>
