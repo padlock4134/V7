@@ -17,7 +17,7 @@ interface Place {
   types: string[];
 }
 
-export const DepartmentsGrid: React.FC = () => {
+const MarketDirectory: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedDept, setSelectedDept] = useState<typeof DEPARTMENT_TYPES[0] | null>(null);
   const [coordinates, setCoordinates] = useState<{lat: number; lng: number} | null>(null);
@@ -146,6 +146,4 @@ export const DepartmentsGrid: React.FC = () => {
   );
 };
 
-const DepartmentDirectory: React.FC = () => <DepartmentsGrid />;
-
-export default DepartmentDirectory;
+export default MarketDirectory;
