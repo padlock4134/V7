@@ -88,7 +88,7 @@ const NavBar = () => {
   return (
     <>
       <nav className="navbar bg-maineBlue text-weatheredWhite w-full px-4 lg:px-8 py-3 shadow-md">
-        <div className="max-w-7xl mx-auto flex items-center justify-between w-full lg:pl-12">
+        <div className="w-[640px] mx-auto flex items-center justify-between lg:pl-12">
           {/* Left section: Logo and level */}
           <div className="flex items-center space-x-6">
             {/* Logo */}
@@ -119,28 +119,20 @@ const NavBar = () => {
 
         {/* Mobile menu */}
         {isMenuOpen && (
-          <div className="fixed inset-0 z-50 bg-maineBlue bg-opacity-95">
-            <div className="flex flex-col items-center pt-20 space-y-6">
+          <div className="absolute top-full right-0 mt-2 mr-4 w-48 bg-maineBlue rounded-lg shadow-xl p-4 z-50">
+            <div className="flex flex-col space-y-4">
               {navItems.map(({ path, label }) => (
                 <Link
                   key={path}
                   to={path}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`text-xl font-retro py-2 px-4 rounded transition-colors hover:bg-seafoam hover:text-maineBlue ${
+                  className={`text-lg font-retro py-2 px-3 rounded transition-colors hover:bg-seafoam hover:text-maineBlue ${
                     location.pathname === path ? 'bg-weatheredWhite text-maineBlue font-bold' : ''
                   }`}
                 >
                   {label}
                 </Link>
               ))}
-              <button 
-                type="button"
-                className="mt-8 text-seafoam hover:text-lobsterRed"
-                onClick={() => setIsMenuOpen(false)}
-                aria-label="Close menu"
-              >
-                <XMarkIcon className="h-8 w-8" />
-              </button>
             </div>
           </div>
         )}
