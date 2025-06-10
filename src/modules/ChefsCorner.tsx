@@ -98,25 +98,7 @@ const ChefsCorner = () => {
           {/* Departments/Markets Grid */}
           <DepartmentsGrid />
 
-          {/* Car Hop / Meal Kit Delivery Guy */}
-          <section className="mb-8">
-            <div className="bg-seafoam rounded-lg p-6 flex flex-col items-center shadow">
-              <div className="text-2xl font-bold text-maineBlue mb-2">Car Hop / Meal Kit Delivery Guy</div>
-              <div className="text-gray-700 mb-4 text-center">
-                Get your groceries and meal kits delivered right to your door by our friendly local delivery team!
-              </div>
-            </div>
-          </section>
-
-          {/* Partner/Promo Banner */}
-          <section className="mb-8">
-            <div className="bg-maineBlue rounded-lg p-4 text-center text-seafoam font-bold text-lg shadow">
-              <span>Coming soon: Shop with your favorite grocery partners!</span>
-            </div>
-          </section>
         </div>
-
-
 
         <ChefFreddieWidget />
       </div>
