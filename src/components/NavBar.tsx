@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 import TipOfTheDay from './TipOfTheDay';
-import ChallengeOfTheWeek from './ChallengeOfTheWeek';
 import { LEVEL_TITLES_AND_ICONS, getXPProgress } from '../utils/leveling';
 import { supabase } from '../api/supabaseClient';
+import ChallengeOfTheWeek from './ChallengeOfTheWeek';
 import TermsModal from './TermsModal';
 import { useTermsModal } from './useTermsModal';
 
@@ -79,7 +79,6 @@ const navItems = [
   { path: '/culinary-school', label: 'Culinary School' },
   { path: '/my-cookbook', label: 'My Cookbook' },
   { path: '/chefs-corner', label: 'Chefs Corner' },
-  { path: '/weekly-challenges', label: 'Weekly Challenges' },
 ];
 
 const NavBar = () => {
@@ -90,6 +89,10 @@ const NavBar = () => {
       <nav className="navbar bg-maineBlue text-weatheredWhite flex flex-col md:flex-row items-center justify-between px-4 md:px-8 py-3 shadow-md w-full">
         <div className="flex items-center gap-3 w-full md:w-auto justify-between">
           <span className="text-2xl font-bold tracking-wider font-retro">PorkChop</span>
+          <div className="flex items-center gap-2">
+            <ChallengeOfTheWeek />
+            <LevelBadge />
+          </div>
         </div>
         <div className="flex flex-col md:flex-row gap-3 md:gap-8 items-center w-full md:w-auto mt-2 md:mt-0">
           {navItems.map(({ path, label }) => (
@@ -103,7 +106,6 @@ const NavBar = () => {
           ))}
         </div>
         <div className="flex items-center gap-2 mt-2 md:mt-0">
-          <LevelBadge />
           <Link to="/profile" aria-label="Profile">
             <UserCircleIcon className="h-9 w-9 text-seafoam hover:text-lobsterRed transition-colors" />
           </Link>
