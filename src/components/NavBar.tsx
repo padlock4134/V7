@@ -88,14 +88,13 @@ const NavBar = () => {
     <>
       <nav className="navbar bg-maineBlue text-weatheredWhite w-full px-4 lg:px-8 py-3 shadow-md">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center w-full">
-          {/* Left section: Logo and status */}
+          {/* Left section: Logo and level */}
           <div className="flex items-center space-x-6 w-full lg:w-auto">
             {/* Logo */}
             <span className="text-2xl font-bold tracking-wider font-retro">PorkChop</span>
             
-            {/* Challenge and XP */}
-            <div className="hidden lg:flex items-center space-x-3">
-              <ChallengeOfTheWeek />
+            {/* Level badge */}
+            <div className="hidden lg:flex items-center">
               <LevelBadge />
             </div>
 
@@ -107,14 +106,14 @@ const NavBar = () => {
             </div>
           </div>
 
-          {/* Mobile Challenge and XP */}
+          {/* Mobile status section */}
           <div className="flex lg:hidden items-center space-x-3 mt-3">
-            <ChallengeOfTheWeek />
             <LevelBadge />
+            <ChallengeOfTheWeek />
           </div>
           
           {/* Center section: Navigation links */}
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-8 mt-3 lg:mt-0 lg:mx-auto">
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-16 mt-3 lg:mt-0 lg:mx-auto w-full max-w-2xl">
             {navItems.map(({ path, label }) => (
               <Link
                 key={path}
@@ -126,8 +125,9 @@ const NavBar = () => {
             ))}
           </div>
           
-          {/* Right section: Desktop profile icon */}
-          <div className="hidden lg:flex items-center ml-auto">
+          {/* Right section: Challenge icon and Profile */}
+          <div className="hidden lg:flex items-center space-x-4">
+            <ChallengeOfTheWeek />
             <Link to="/profile" aria-label="Profile">
               <UserCircleIcon className="h-9 w-9 text-seafoam hover:text-lobsterRed transition-colors" />
             </Link>
