@@ -88,24 +88,28 @@ const NavBar = () => {
   return (
     <>
       <nav className="navbar bg-maineBlue text-weatheredWhite w-full px-4 lg:px-8 py-3 shadow-md">
-        <div className="w-[640px] mx-auto flex items-center justify-between lg:pl-12">
-          {/* Left section: Logo and level */}
-          <div className="flex items-center space-x-6">
-            {/* Logo */}
-            <span className="text-2xl font-bold tracking-wider font-retro">PorkChop</span>
-            
-            {/* Level badge */}
-            <div className="hidden lg:flex items-center">
+        <div className="max-w-2xl mx-auto flex items-center justify-between">
+          {/* Nav items in correct order */}
+          <div className="flex items-center justify-between w-full px-8">
+            {/* XP Icon */}
+            <div className="flex items-center">
               <LevelBadge />
             </div>
-          </div>
 
-          {/* Right section: Challenge, Profile, Menu */}
-          <div className="flex items-center space-x-4">
-            <ChallengeOfTheWeek />
+            {/* PorkChop Logo */}
+            <span className="text-2xl font-bold tracking-wider font-retro">PorkChop</span>
+
+            {/* Weekly Challenge */}
+            <div className="flex items-center">
+              <ChallengeOfTheWeek />
+            </div>
+
+            {/* Profile */}
             <Link to="/profile" aria-label="Profile">
               <UserCircleIcon className="h-9 w-9 text-seafoam hover:text-lobsterRed transition-colors" />
             </Link>
+
+            {/* Menu */}
             <div className="relative">
               <button 
                 type="button"
