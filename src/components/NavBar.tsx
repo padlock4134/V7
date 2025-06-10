@@ -92,18 +92,21 @@ const NavBar = () => {
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           {/* Nav items in correct order */}
           <div className="flex items-center justify-between w-full px-8">
+            {/* Porkchop Logo */}
+            <img src="/porkchop-logo.png" alt="PorkChop" className="h-10 w-10" />
+
             {/* XP Icon */}
             <div className="flex items-center">
               <LevelBadge />
             </div>
 
-            {/* PorkChop Logo */}
-            <span className="text-2xl font-bold tracking-wider font-retro">PorkChop</span>
-
             {/* Weekly Challenge */}
             <div className="flex items-center">
               <ChallengeOfTheWeek />
             </div>
+
+            {/* PorkChop Text */}
+            <span className="text-xl font-bold tracking-wider font-retro">PorkChop</span>
 
             {/* Menu */}
             <div className="relative">
