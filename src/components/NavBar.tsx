@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { UserCircleIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import TipOfTheDay from './TipOfTheDay';
+import { UserCircleIcon, Bars3Icon } from '@heroicons/react/24/outline';
 import { LEVEL_TITLES_AND_ICONS, getXPProgress } from '../utils/leveling';
 import { supabase } from '../api/supabaseClient';
 import ChallengeOfTheWeek from './ChallengeOfTheWeek';
-import TermsModal from './TermsModal';
-import { useTermsModal } from './useTermsModal';
+import logo from '../images/logo.png';
 
 interface LevelProgress {
   title: string;
@@ -111,75 +109,57 @@ const navItems = [
 const NavBar = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { modalOpen, setModalOpen, termsContent } = useTermsModal();
+
   return (
-    <>
-      <nav className="navbar bg-maineBlue text-weatheredWhite w-full px-4 lg:px-8 py-3 shadow-md">
-        <div className="max-w-2xl mx-auto relative">
-          {/* Centered PorkChop text */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <span className="text-2xl font-bold tracking-wider font-retro">PorkChop</span>
-          </div>
-
-          {/* Left and right content */}
-          <div className="flex items-center justify-between w-full">
-            {/* Left side items */}
-            <div className="flex items-center space-x-4">
-              <img src="/porkchop-logo.png" alt="PorkChop" className="h-10 w-10" />
-              <div className="flex items-center">
-                <ChallengeOfTheWeek />
-              </div>
-            </div>
-
-            {/* Right side items */}
-            <div className="flex items-center space-x-4">
-              {/* Menu */}
-              <div className="relative">
-                <button 
-                  type="button"
-                  aria-label="Menu"
-                  className="p-2 hover:bg-seafoam hover:text-maineBlue rounded transition-colors"
-                  onClick={() => setIsMenuOpen(prev => !prev)}
-                >
-                  <Bars3Icon className="h-6 w-6" />
-                </button>
-              
-              {/* Menu Dropdown */}
-              {isMenuOpen && (
-                <div className="absolute right-0 top-[100%] w-48 bg-maineBlue rounded-lg shadow-xl p-4 z-50 border border-seafoam">
-                  <div className="flex flex-col space-y-4">
-                    {navItems.map(({ path, label }) => (
-                      <Link
-                        key={path}
-                        to={path}
-                        onClick={() => setIsMenuOpen(false)}
-                        className={`text-lg font-retro py-2 px-3 rounded transition-colors hover:bg-seafoam hover:text-maineBlue flex items-center ${
-                          location.pathname === path ? 'bg-weatheredWhite text-maineBlue font-bold' : ''
-                        }`}
-                      >
-                        {label === 'Profile' && <UserCircleIcon className="h-5 w-5 mr-2" />}
-                        {label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-              </div>
-
-              {/* XP Level */}
-              <div className="flex items-center">
-                <LevelBadge />
-              </div>
-
-              {/* Last Badge */}
-              <div className="flex items-center">
-                <LastBadge />
-              </div>
-            </div>
-          </div>
+    <nav className="navbar bg-maineBlue text-weatheredWhite w-full px-4 lg:px-8 py-3 shadow-md">
+      <div className="max-w-2xl mx-auto flex items-center justify-between">
+        {/* Left group: Logo, Weekly, Level, Badge */}
+        <div className="flex items-center space-x-4">
+          <img src={logo} alt="PorkChop" className="h-10 w-10 rounded-full" />
+          <ChallengeOfTheWeek />
+          <LevelBadge />
+          <LastBadge />
         </div>
-      </nav>
-    </>
+
+        {/* Center: PorkChop text */}
+        <div className="absolute left-1/2 transform -translate-x-1/2">
+          <span className="text-2xl font-bold tracking-wider font-retro">PorkChop</span>
+        </div>
+
+        {/* Right: Hamburger menu */}
+        <div className="relative">
+          <button 
+            type="button"
+            aria-label="Menu"
+            className="p-2 hover:bg-seafoam hover:text-maineBlue rounded transition-colors"
+            onClick={() => setIsMenuOpen(prev => !prev)}
+          >
+            <Bars3Icon className="h-6 w-6" />
+          </button>
+
+          {/* Menu Dropdown */}
+          {isMenuOpen && (
+            <div className="absolute right-0 top-[100%] w-48 bg-maineBlue rounded-lg shadow-xl p-4 z-50 border border-seafoam">
+              <div className="flex flex-col space-y-4">
+                {navItems.map(({ path, label }) => (
+                  <Link
+                    key={path}
+                    to={path}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`text-lg font-retro py-2 px-3 rounded transition-colors hover:bg-seafoam hover:text-maineBlue flex items-center ${
+                      location.pathname === path ? 'bg-weatheredWhite text-maineBlue font-bold' : ''
+                    }`}
+                  >
+                    {label === 'Profile' && <UserCircleIcon className="h-5 w-5 mr-2" />}
+                    {label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </nav>
   );
 };
 
