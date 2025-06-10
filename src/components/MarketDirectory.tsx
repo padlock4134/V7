@@ -30,7 +30,6 @@ export const DepartmentsGrid: React.FC = () => {
 
   return (
     <div className="my-8">
-      <h2 className="text-2xl font-bold text-maineBlue mb-6 text-center">Market Departments</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 max-w-lg mx-auto">
         {DEPARTMENT_TYPES.map(dep => (
           <button
