@@ -1,13 +1,8 @@
 const fetch = require('node-fetch');
 
 exports.handler = async function(event, context) {
-  // Debug logging
-  console.log('Environment variables:', {
-    hasApiKey: !!process.env.VITE_PLACES_API_KEY,
-    keyLength: process.env.VITE_PLACES_API_KEY ? process.env.VITE_PLACES_API_KEY.length : 0
-  });
+  console.log('Received query params:', event.queryStringParameters);
 
-  // Validate required parameters
   if (!event.queryStringParameters?.lat || !event.queryStringParameters?.lng) {
     return {
       statusCode: 400,
@@ -26,9 +21,9 @@ exports.handler = async function(event, context) {
     };
   }
 
-  // Using the new Places API endpoint
   const url = 'https://places.googleapis.com/v1/places:searchNearby';
-  const body = {
+  const searchBody = {
+    includedTypes: type.split(','),
     locationRestriction: {
       circle: {
         center: {
@@ -37,12 +32,12 @@ exports.handler = async function(event, context) {
         },
         radius: parseFloat(radius)
       }
-    },
-    includedTypes: type.split('|')
+    }
   };
 
+  console.log('Request body:', JSON.stringify(searchBody, null, 2));
+
   try {
-    console.log(`Fetching places near ${lat},${lng} within ${radius}m`);
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -50,14 +45,13 @@ exports.handler = async function(event, context) {
         'X-Goog-Api-Key': apiKey,
         'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.types,places.id'
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(searchBody)
     });
 
     const data = await response.json();
-    
-    // Debug logging
     console.log('Google API Response:', {
       status: response.status,
+      statusText: response.statusText,
       hasResults: !!data.places,
       resultCount: data.places ? data.places.length : 0,
       error: data.error
@@ -67,11 +61,14 @@ exports.handler = async function(event, context) {
       console.error('Places API error:', data);
       return {
         statusCode: response.status,
-        body: JSON.stringify({ error: 'Places API error', details: data })
+        body: JSON.stringify({ 
+          error: 'Places API error', 
+          details: data,
+          request: searchBody
+        })
       };
     }
 
-    // Transform the response to match the old format our frontend expects
     const transformedData = {
       status: 'OK',
       results: (data.places || []).map(place => ({
@@ -95,7 +92,11 @@ exports.handler = async function(event, context) {
     console.error('Places fetch error:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to fetch places', details: error.message })
+      body: JSON.stringify({ 
+        error: 'Failed to fetch places', 
+        details: error.message,
+        request: searchBody
+      })
     };
   }
 };
