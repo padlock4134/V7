@@ -39,6 +39,7 @@ function getChefQuoteOfTheDay() {
 }
 
 export interface Recipe {
+  id: string;
   name: string;
   description: string;
   photo?: string;
@@ -63,6 +64,7 @@ const MyCookBook = () => {
         setLoading(true);
         const savedRecipes = await fetchCookbook();
         const converted = savedRecipes.map(r => ({
+          id: r.id,
           name: r.title,
           description: r.instructions,
           photo: r.image,
@@ -155,9 +157,9 @@ const MyCookBook = () => {
                   <button
                     onClick={async () => {
                       try {
-                        const recipeId = recipe.name;
+                        const recipeId = recipe.id;
                         await removeRecipeFromCookbook(recipeId);
-                        setLocalRecipes(recipes.filter(r => r.name !== recipeId));
+                        setLocalRecipes(recipes.filter(r => r.id !== recipeId));
                       } catch (err) {
                         console.error('Error deleting recipe:', err);
                         setError('Failed to delete recipe');
