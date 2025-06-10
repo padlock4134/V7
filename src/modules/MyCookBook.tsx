@@ -126,11 +126,22 @@ const MyCookBook = () => {
                 <h3 className="text-xl font-bold mb-2 line-clamp-1">{recipe.name}</h3>
                 <div className="text-gray-600 overflow-hidden">
                   <h4 className="font-semibold mb-1">Ingredients:</h4>
-                  <ul className="list-disc pl-4 max-h-[200px] overflow-y-auto">
+                  <ul className="list-disc pl-4 max-h-[100px] overflow-y-auto">
                     {recipe.ingredients?.map((ingredient, i) => (
                       <li key={i} className="line-clamp-1">{ingredient}</li>
                     ))}
                   </ul>
+                  
+                  {recipe.equipment && recipe.equipment.length > 0 && (
+                    <>
+                      <h4 className="font-semibold mb-1 mt-2">Equipment Needed:</h4>
+                      <ul className="list-disc pl-4 max-h-[60px] overflow-y-auto">
+                        {recipe.equipment.map((item, i) => (
+                          <li key={i} className="line-clamp-1">{item}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
                 </div>
               </div>
               {/* Back */}

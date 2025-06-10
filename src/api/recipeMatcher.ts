@@ -19,7 +19,7 @@ Each recipe MUST be realistic and use at least 2-3 of the provided ingredients. 
   "equipment": ["required kitchen tool 1", "required kitchen tool 2", ...]
 }
 
-For equipment, include only the essential kitchen tools needed (e.g., knife, cutting board, pan, pot, blender, etc).
+For equipment, list 2-4 essential kitchen tools needed (e.g., chef's knife, cutting board, large skillet, mixing bowl). Be specific about sizes where relevant (e.g., '12-inch skillet' instead of just 'pan').
 
 Return ONLY the JSON array, no other text. Example format:
 [
@@ -66,7 +66,7 @@ Return ONLY the JSON array, no other text. Example format:
 
   // Ensure we have an array of valid recipes
   recipes = Array.isArray(recipes) ? recipes : [];
-  recipes = recipes.filter(r => r && r.title && Array.isArray(r.ingredients) && Array.isArray(r.instructions));
+  recipes = recipes.filter(r => r && r.title && Array.isArray(r.ingredients) && typeof r.instructions === 'string');
 
   // 3. For each recipe, call Unsplash in parallel
   const imagePromises = recipes.map(async (r) => {
@@ -84,5 +84,6 @@ Return ONLY the JSON array, no other text. Example format:
     image: images[i],
     ingredients: Array.isArray(r.ingredients) ? r.ingredients : [],
     instructions: r.instructions || '',
+    equipment: Array.isArray(r.equipment) ? r.equipment : []
   }));
 }
