@@ -87,7 +87,7 @@ const NavBar = () => {
   return (
     <>
       <nav className="navbar bg-maineBlue text-weatheredWhite w-full px-4 lg:px-8 py-3 shadow-md">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center w-full lg:pl-12">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center w-full">
           {/* Left section: Logo and level */}
           <div className="flex items-center space-x-6 w-full lg:w-auto">
             {/* Logo */}
@@ -113,12 +113,12 @@ const NavBar = () => {
           </div>
           
           {/* Center section: Navigation links */}
-          <div className="flex flex-col lg:flex-row items-center justify-center mt-3 lg:mt-0 lg:ml-8 w-full max-w-[800px]">
+          <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 mt-3 lg:mt-0 lg:ml-0 lg:pl-12">
             {navItems.map(({ path, label }) => (
               <Link
                 key={path}
                 to={path}
-                className={`nav-link px-4 py-2 rounded transition-colors duration-200 hover:bg-seafoam hover:text-maineBlue font-retro ${location.pathname === path ? 'bg-weatheredWhite text-maineBlue font-bold' : ''} mx-4`}
+                className={`nav-link px-3 py-2 rounded transition-colors duration-200 hover:bg-seafoam hover:text-maineBlue font-retro ${location.pathname === path ? 'bg-weatheredWhite text-maineBlue font-bold' : ''}`}
               >
                 {label}
               </Link>
@@ -126,7 +126,7 @@ const NavBar = () => {
           </div>
           
           {/* Right section: Challenge icon and Profile */}
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-4 ml-auto">
             <ChallengeOfTheWeek />
             <Link to="/profile" aria-label="Profile">
               <UserCircleIcon className="h-9 w-9 text-seafoam hover:text-lobsterRed transition-colors" />
