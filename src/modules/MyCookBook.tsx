@@ -120,27 +120,27 @@ const MyCookBook = () => {
                   <img 
                     src={recipe.photo} 
                     alt={recipe.name} 
-                    className="w-full h-48 object-cover rounded-t-lg mb-4"
+                    className="w-full h-32 object-cover rounded-t-lg mb-4"
                   />
                 )}
-                <h3 className="text-xl font-bold mb-2">{recipe.name}</h3>
-                <div className="text-gray-600">
+                <h3 className="text-xl font-bold mb-2 line-clamp-1">{recipe.name}</h3>
+                <div className="text-gray-600 overflow-hidden">
                   <h4 className="font-semibold mb-1">Ingredients:</h4>
-                  <ul className="list-disc pl-4">
+                  <ul className="list-disc pl-4 max-h-[200px] overflow-y-auto">
                     {recipe.ingredients?.map((ingredient, i) => (
-                      <li key={i}>{ingredient}</li>
+                      <li key={i} className="line-clamp-1">{ingredient}</li>
                     ))}
                   </ul>
                 </div>
               </div>
               {/* Back */}
               <div className="absolute inset-0 h-full w-full rounded-xl bg-white p-4 shadow-md [transform:rotateY(180deg)] [backface-visibility:hidden]">
-                <h3 className="text-xl font-bold mb-2">{recipe.name}</h3>
-                <div className="text-gray-600 overflow-y-auto h-[280px] mb-4">
+                <h3 className="text-xl font-bold mb-2 line-clamp-1">{recipe.name}</h3>
+                <div className="text-gray-600 overflow-y-auto h-[280px] mb-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
                   <h4 className="font-semibold mb-1">Instructions:</h4>
                   <p className="whitespace-pre-wrap">{recipe.instructions}</p>
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center absolute bottom-4 left-4 right-4">
                   <button
                     onClick={async () => {
                       try {
