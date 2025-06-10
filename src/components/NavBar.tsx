@@ -87,7 +87,7 @@ const NavBar = () => {
   return (
     <>
       <nav className="navbar bg-maineBlue text-weatheredWhite w-full px-4 lg:px-8 py-3 shadow-md">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center w-full">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center w-full lg:pl-12">
           {/* Left section: Logo and level */}
           <div className="flex items-center space-x-6 w-full lg:w-auto">
             {/* Logo */}
@@ -113,7 +113,7 @@ const NavBar = () => {
           </div>
           
           {/* Center section: Navigation links */}
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-12 mt-3 lg:mt-0 lg:mx-auto w-full max-w-3xl lg:pl-8">
+          <div className="flex flex-col lg:flex-row items-center justify-start gap-4 lg:gap-12 mt-3 lg:mt-0 lg:ml-24 w-full max-w-3xl">
             {navItems.map(({ path, label }) => (
               <Link
                 key={path}
