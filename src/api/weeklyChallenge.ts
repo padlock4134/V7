@@ -2,37 +2,69 @@
 // Prevents double-claiming by checking for an existing claim for the current user and week
 import { supabase } from './supabaseClient';
 
-export async function claimWeeklyChallenge({ userId, challengeId, weekNumber, xp, badge }: {
+interface ClaimChallengeParams {
   userId: string;
   challengeId: string;
   weekNumber: number;
   xp: number;
   badge: string;
-}) {
+  proofPhotoPath?: string;
+}
+
+interface ClaimChallengeResult {
+  alreadyClaimed: boolean;
+}
+
+export async function claimWeeklyChallenge({
+  userId,
+  challengeId,
+  weekNumber,
+  xp,
+  badge,
+  proofPhotoPath,
+}: ClaimChallengeParams): Promise<ClaimChallengeResult> {
   // Check if already claimed
-  const { data: existing, error: fetchError } = await supabase
+  const { data: existingClaim } = await supabase
     .from('weekly_challenge_claims')
-    .select('id')
+    .select()
     .eq('user_id', userId)
     .eq('week_number', weekNumber)
-    .maybeSingle();
+    .single();
 
-  if (fetchError) throw new Error('Failed to check claim status');
-  if (existing) {
+  if (existingClaim) {
     return { alreadyClaimed: true };
   }
 
-  // Log claim
-  const { error: insertError } = await supabase
+  // Insert claim with photo proof
+  const { error: claimError } = await supabase
     .from('weekly_challenge_claims')
     .insert({
       user_id: userId,
       challenge_id: challengeId,
       week_number: weekNumber,
-      xp_awarded: xp,
-      badge_awarded: badge,
+      proof_photo: proofPhotoPath,
       claimed_at: new Date().toISOString(),
     });
-  if (insertError) throw new Error('Failed to claim challenge');
+
+  if (claimError) throw claimError;
+
+  // Award XP and badge
+  const { error: xpError } = await supabase.rpc('increment_user_xp', {
+    user_id: userId,
+    xp_amount: xp,
+  });
+
+  if (xpError) throw xpError;
+
+  const { error: badgeError } = await supabase
+    .from('user_badges')
+    .insert({
+      user_id: userId,
+      badge_name: badge,
+      awarded_at: new Date().toISOString(),
+    });
+
+  if (badgeError) throw badgeError;
+
   return { alreadyClaimed: false };
 }
