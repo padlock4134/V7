@@ -100,6 +100,9 @@ const RecipeMatcherModal: React.FC<Props> = ({ open, onClose, cupboardIngredient
               <img src={recipes[currentIdx].image} alt={recipes[currentIdx].title} className="w-full h-48 object-cover rounded mb-2" />
               <h3 className="font-retro text-xl mb-1">{recipes[currentIdx].title}</h3>
               <div className="text-xs text-gray-600 mb-2">Ingredients: {recipes[currentIdx].ingredients.join(', ')}</div>
+              {recipes[currentIdx].equipment && recipes[currentIdx].equipment.length > 0 && (
+                <div className="text-xs text-gray-600 mb-2">Equipment: {recipes[currentIdx].equipment.join(', ')}</div>
+              )}
               <div className="text-sm text-gray-800 mb-2 line-clamp-3">{recipes[currentIdx].instructions}</div>
             </div>
             <div className="flex gap-8 mt-2">

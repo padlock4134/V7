@@ -15,17 +15,20 @@ Each recipe MUST be realistic and use at least 2-3 of the provided ingredients. 
 {
   "title": "Recipe Name",
   "ingredients": ["ingredient 1", "ingredient 2", ...],
-  "instructions": ["step 1", "step 2", ...]
+  "instructions": "Step by step instructions",
+  "equipment": ["required kitchen tool 1", "required kitchen tool 2", ...]
 }
+
+For equipment, include only the essential kitchen tools needed (e.g., knife, cutting board, pan, pot, blender, etc).
 
 Return ONLY the JSON array, no other text. Example format:
 [
   {
     "title": "Recipe 1",
     "ingredients": ["ingredient", "ingredient"],
-    "instructions": ["step", "step"]
-  },
-  ...
+    "instructions": "Step 1...",
+    "equipment": ["chef's knife", "cutting board", "large skillet"]
+  }
 ]`;
 
   // 2. Call Anthropic (Claude)
