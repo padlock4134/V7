@@ -9,26 +9,23 @@ const unsplashKey = (import.meta as any).env.VITE_UNSPLASH_ACCESS_KEY;
 
 export async function fetchRecipesWithImages(ingredients: string[], numRecipes = 5): Promise<RecipeCard[]> {
   // 1. Build the Anthropic prompt
-  const prompt = `Create ${numRecipes} unique recipes using ONLY these ingredients: ${ingredients.join(", ")}. 
+  const prompt = `You are an expert chef. Create ${numRecipes} unique recipes using ONLY these ingredients: ${ingredients.join(", ")}. 
 
 Each recipe MUST be realistic and use at least 2-3 of the provided ingredients. Format your response as a JSON array of recipe objects. Each recipe object MUST have these exact fields:
 {
   "title": "Recipe Name",
   "ingredients": ["ingredient 1", "ingredient 2", ...],
-  "instructions": "Step by step instructions",
-  "equipment": ["required kitchen tool 1", "required kitchen tool 2", ...]
+  "instructions": ["step 1", "step 2", ...]
 }
-
-For equipment, list 2-4 essential kitchen tools needed (e.g., chef's knife, cutting board, large skillet, mixing bowl). Be specific about sizes where relevant (e.g., '12-inch skillet' instead of just 'pan').
 
 Return ONLY the JSON array, no other text. Example format:
 [
   {
     "title": "Recipe 1",
     "ingredients": ["ingredient", "ingredient"],
-    "instructions": "Step 1...",
-    "equipment": ["chef's knife", "cutting board", "large skillet"]
-  }
+    "instructions": ["step", "step"]
+  },
+  ...
 ]`;
 
   // 2. Call Anthropic (Claude)
@@ -42,7 +39,6 @@ Return ONLY the JSON array, no other text. Example format:
       apiKeyIdentifier: 'recipe',
       model: 'claude-3-haiku-20240307',
       max_tokens: 1024,
-      system: "You are an expert chef. Create recipes that are realistic and use the provided ingredients.",
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.7,
     }),
@@ -67,7 +63,7 @@ Return ONLY the JSON array, no other text. Example format:
 
   // Ensure we have an array of valid recipes
   recipes = Array.isArray(recipes) ? recipes : [];
-  recipes = recipes.filter(r => r && r.title && Array.isArray(r.ingredients) && typeof r.instructions === 'string');
+  recipes = recipes.filter(r => r && r.title && Array.isArray(r.ingredients) && Array.isArray(r.instructions));
 
   // 3. For each recipe, call Unsplash in parallel
   const imagePromises = recipes.map(async (r) => {
@@ -84,7 +80,6 @@ Return ONLY the JSON array, no other text. Example format:
     title: r.title,
     image: images[i],
     ingredients: Array.isArray(r.ingredients) ? r.ingredients : [],
-    instructions: r.instructions || '',
-    equipment: Array.isArray(r.equipment) ? r.equipment : []
+    instructions: Array.isArray(r.instructions) ? r.instructions.join('\n') : ''
   }));
 }
