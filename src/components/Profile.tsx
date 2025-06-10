@@ -42,38 +42,53 @@ const Profile = () => {
     const fetchUserAndProfile = async () => {
       setLoading(true);
       setError('');
-      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
-      if (authError || !authUser) {
-        setError('You must be signed in to view your profile.');
+      try {
+        const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
+        if (authError || !authUser) {
+          setError('You must be signed in to view your profile.');
+          return;
+        }
+
+        // Fetch profile and XP in parallel for better performance
+        const [profileResponse, xpResponse] = await Promise.all([
+          supabase.from('profiles').select('*').eq('id', authUser.id),
+          supabase.from('user_xp').select('xp').eq('user_id', authUser.id)
+        ]);
+
+        if (profileResponse.error) {
+          setError('Could not load your profile: ' + profileResponse.error.message);
+          return;
+        }
+
+        const profile = profileResponse.data?.[0];
+        if (!profile) {
+          setError('No profile found. Please try signing out and in again.');
+          return;
+        }
+
+        // Get XP if available, default to 0 if not
+        const xp = xpResponse.data?.[0]?.xp ?? 0;
+
+        setUser({
+          ...profile,
+          email: authUser.email,
+          initials: (authUser.email || 'U').slice(0, 2).toUpperCase(),
+          status: profile.is_premium ? 'Premium' : '7-day trial',
+          joinDate: profile.created_at?.slice(0, 10) ?? '',
+          trialEnds: profile.trial_ends_at?.slice(0, 10) ?? '',
+          xp
+        });
+
+        setDietary(profile.dietary || []);
+        setCuisine(profile.cuisine || []);
+        setDietarySaved(true);
+        setCuisineSaved(true);
+      } catch (err) {
+        console.error('Profile fetch error:', err);
+        setError('An unexpected error occurred while loading your profile.');
+      } finally {
         setLoading(false);
-        return;
       }
-      const { data: profiles, error: profileError } = await supabase.from('profiles').select('*').eq('id', authUser.id);
-      console.log('Supabase profile fetch:', { profiles, profileError });
-      if (profileError) {
-        setError('Could not load your profile: ' + profileError.message);
-        setLoading(false);
-        return;
-      }
-      const profile = profiles && profiles.length > 0 ? profiles[0] : null;
-      if (!profile) {
-        setError('No profile found for this user. Please contact support or try signing out and in again.');
-        setLoading(false);
-        return;
-      }
-      setUser({
-        ...profile,
-        email: authUser.email,
-        initials: (authUser.email || 'U').slice(0, 2).toUpperCase(),
-        status: profile?.is_premium ? 'Premium' : '7-day trial',
-        joinDate: profile?.created_at ? profile.created_at.slice(0, 10) : '',
-        trialEnds: profile?.trial_ends_at ? profile.trial_ends_at.slice(0, 10) : '',
-      });
-      setDietary(profile.dietary || []);
-      setCuisine(profile.cuisine || []);
-      setDietarySaved(true);
-      setCuisineSaved(true);
-      setLoading(false);
     };
     fetchUserAndProfile();
   }, []);

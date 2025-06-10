@@ -54,21 +54,20 @@ export const DepartmentsGrid: React.FC = () => {
             </button>
             <span className="text-5xl mb-4">{selectedDept.icon}</span>
             <h3 className="text-xl font-bold mb-2 text-maineBlue">{selectedDept.label}</h3>
-            <p className="mb-4 text-gray-600 text-center">
-              Browse the {selectedDept.label} market below:
+            <p className="mb-6 text-gray-600 text-center">
+              Ready to explore {selectedDept.label.toLowerCase()} options in your area?
             </p>
-            <div className="w-full h-[500px] border rounded overflow-hidden">
-              <iframe
-                src={selectedDept.url}
-                title={`${selectedDept.label} Market`}
-                width="100%"
-                height="100%"
-                className="w-full h-full"
-                style={{ border: 0 }}
-              />
-            </div>
-            <div className="mt-2 text-xs text-gray-400">
-              (You are viewing an external site inside PorkChop)
+            <a
+              href={selectedDept.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-maineBlue text-seafoam px-6 py-3 rounded-lg font-bold hover:bg-seafoam hover:text-maineBlue transition-colors flex items-center gap-2"
+            >
+              <span>Visit {selectedDept.label}</span>
+              <span className="text-xl">{selectedDept.icon}</span>
+            </a>
+            <div className="mt-4 text-xs text-gray-400">
+              Opens in a new tab for the best shopping experience
             </div>
           </div>
         </div>
