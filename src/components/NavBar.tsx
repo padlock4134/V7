@@ -59,44 +59,28 @@ const useLevelProgress = (): LevelProgress => {
 };
 
 const LevelBadge = () => {
-  const { title, level, icon, current, required, progressPercent } = useLevelProgress();
+  const { title, level, icon, current, required } = useLevelProgress();
   return (
-    <div className="flex flex-col items-center justify-center mr-2">
-      <div
-        className="flex items-center justify-center px-2 py-1 bg-seafoam text-maineBlue rounded-full shadow text-lg font-bold cursor-help"
-        title={`${title} (Level ${level})\n${current} / ${required} XP to next level`}
-        aria-label={`Level ${level}: ${title}`}
-        style={{ minWidth: 40 }}
-      >
-        <span style={{ fontSize: '1.5rem', marginRight: 4 }}>{icon}</span>
-        <span>{level}</span>
-      </div>
-      {/* WoW-style XP bar */}
-      <div className="w-20 h-2 mt-1 bg-blue-900 rounded overflow-hidden border border-blue-300 shadow-inner" style={{ minWidth: 80 }}>
-        <div
-          className="h-full bg-gradient-to-r from-seafoam to-blue-400 transition-all duration-500"
-          style={{ width: `${progressPercent}%` }}
-        />
-      </div>
-      <span className="text-xs text-seafoam mt-0.5" style={{ fontFamily: 'monospace' }}>{current} / {required} XP</span>
+    <div 
+      className="flex items-center justify-center px-2 py-1 bg-seafoam text-maineBlue rounded-full shadow text-lg font-bold cursor-help"
+      title={`${title} (Level ${level})\n${current} / ${required} XP to next level`}
+      aria-label={`Level ${level}: ${title}`}
+    >
+      <span style={{ fontSize: '1.5rem', marginRight: 4 }}>{icon}</span>
+      <span>{level}</span>
     </div>
   );
 };
 
-const LastBadge = () => {
-  return (
-    <div className="flex flex-col items-center justify-center">
-      <div
-        className="flex items-center justify-center px-2 py-1 bg-seafoam text-maineBlue rounded-full shadow text-lg font-bold cursor-help"
-        title="Last Badge Earned"
-        aria-label="Last Badge Earned"
-        style={{ minWidth: 40 }}
-      >
-        <span style={{ fontSize: '1.5rem' }}>🏆</span>
-      </div>
-    </div>
-  );
-};
+const LastBadge = () => (
+  <div 
+    className="flex items-center justify-center px-2 py-1 bg-seafoam text-maineBlue rounded-full shadow text-lg font-bold cursor-help"
+    title="Kitchen Master"
+    aria-label="Kitchen Master Badge"
+  >
+    <span style={{ fontSize: '1.5rem' }}>🏆</span>
+  </div>
+);
 
 const navItems = [
   { path: '/my-kitchen', label: 'My Kitchen' },
@@ -113,17 +97,17 @@ const NavBar = () => {
   return (
     <nav className="navbar bg-maineBlue text-weatheredWhite w-full px-4 lg:px-8 py-3 shadow-md">
       <div className="max-w-2xl mx-auto flex items-center justify-between">
-        {/* Left group: Logo, Weekly, Level, Badge */}
+        {/* Left group: Weekly, Level, Badge */}
         <div className="flex items-center space-x-4">
-          <img src={logo} alt="PorkChop" className="h-10 w-10 rounded-full" />
           <ChallengeOfTheWeek />
           <LevelBadge />
           <LastBadge />
         </div>
 
-        {/* Center: PorkChop text */}
-        <div className="absolute left-1/2 transform -translate-x-1/2">
-          <span className="text-2xl font-bold tracking-wider font-retro">PorkChop</span>
+        {/* Center: PorkChop text and logo */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-3">
+          <span className="text-3xl font-bold tracking-wider font-retro">PorkChop</span>
+          <img src={logo} alt="PorkChop" className="h-10 w-10 rounded-full" />
         </div>
 
         {/* Right: Hamburger menu */}
