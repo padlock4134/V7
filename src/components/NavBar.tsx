@@ -87,27 +87,34 @@ const NavBar = () => {
   return (
     <>
       <nav className="navbar bg-maineBlue text-weatheredWhite w-full px-4 lg:px-8 py-3 shadow-md">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between w-full">
-          {/* Logo section */}
-          <div className="flex items-center justify-between w-full lg:w-auto">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center w-full">
+          {/* Left section: Logo and status */}
+          <div className="flex items-center space-x-6 w-full lg:w-auto">
+            {/* Logo */}
             <span className="text-2xl font-bold tracking-wider font-retro">PorkChop</span>
             
+            {/* Challenge and XP */}
+            <div className="hidden lg:flex items-center space-x-3">
+              <ChallengeOfTheWeek />
+              <LevelBadge />
+            </div>
+
             {/* Mobile profile icon */}
-            <div className="lg:hidden">
+            <div className="lg:hidden ml-auto">
               <Link to="/profile" aria-label="Profile">
                 <UserCircleIcon className="h-9 w-9 text-seafoam hover:text-lobsterRed transition-colors" />
               </Link>
             </div>
           </div>
 
-          {/* Challenge and XP section */}
-          <div className="flex items-center gap-3 mt-3 lg:mt-0 lg:ml-6">
+          {/* Mobile Challenge and XP */}
+          <div className="flex lg:hidden items-center space-x-3 mt-3">
             <ChallengeOfTheWeek />
             <LevelBadge />
           </div>
           
-          {/* Navigation links */}
-          <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 mt-3 lg:mt-0 lg:ml-8">
+          {/* Center section: Navigation links */}
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-8 mt-3 lg:mt-0 lg:mx-auto">
             {navItems.map(({ path, label }) => (
               <Link
                 key={path}
@@ -119,8 +126,8 @@ const NavBar = () => {
             ))}
           </div>
           
-          {/* Desktop profile icon */}
-          <div className="hidden lg:flex items-center ml-4">
+          {/* Right section: Desktop profile icon */}
+          <div className="hidden lg:flex items-center ml-auto">
             <Link to="/profile" aria-label="Profile">
               <UserCircleIcon className="h-9 w-9 text-seafoam hover:text-lobsterRed transition-colors" />
             </Link>
