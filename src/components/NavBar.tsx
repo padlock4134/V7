@@ -88,7 +88,7 @@ const NavBar = () => {
   return (
     <>
       <nav className="navbar bg-maineBlue text-weatheredWhite w-full px-4 lg:px-8 py-3 shadow-md">
-        <div className="max-w-7xl mx-auto flex items-center justify-between w-full">
+        <div className="max-w-7xl mx-auto flex items-center justify-between w-full lg:pl-12">
           {/* Left section: Logo and level */}
           <div className="flex items-center space-x-6">
             {/* Logo */}
@@ -107,9 +107,10 @@ const NavBar = () => {
               <UserCircleIcon className="h-9 w-9 text-seafoam hover:text-lobsterRed transition-colors" />
             </Link>
             <button 
+              type="button"
               aria-label="Menu"
               className="p-2 hover:bg-seafoam hover:text-maineBlue rounded transition-colors"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={() => setIsMenuOpen(prev => !prev)}
             >
               <Bars3Icon className="h-6 w-6" />
             </button>
@@ -118,7 +119,7 @@ const NavBar = () => {
 
         {/* Mobile menu */}
         {isMenuOpen && (
-          <div className="lg:hidden fixed inset-0 z-50 bg-maineBlue bg-opacity-95">
+          <div className="fixed inset-0 z-50 bg-maineBlue bg-opacity-95">
             <div className="flex flex-col items-center pt-20 space-y-6">
               {navItems.map(({ path, label }) => (
                 <Link
@@ -133,6 +134,7 @@ const NavBar = () => {
                 </Link>
               ))}
               <button 
+                type="button"
                 className="mt-8 text-seafoam hover:text-lobsterRed"
                 onClick={() => setIsMenuOpen(false)}
                 aria-label="Close menu"
