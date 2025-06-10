@@ -6,7 +6,7 @@ import { useFreddieContext } from '../components/FreddieContext';
 import { fetchKitchen } from './kitchenSupabase';
 import CookBookImportModal from '../components/CookBookImportModal';
 
-import { DepartmentsGrid } from '../components/MarketDirectory';
+import MarketDirectory from '../components/MarketDirectory';
 
 const ChefsCorner = () => {
   const { updateContext } = useFreddieContext();
@@ -96,7 +96,7 @@ const ChefsCorner = () => {
           <NearbyPlaces />
 
           {/* Departments/Markets Grid */}
-          <DepartmentsGrid />
+          <MarketDirectory />
 
         </div>
 
