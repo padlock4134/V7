@@ -113,7 +113,7 @@ const NavBar = () => {
           </div>
           
           {/* Center section: Navigation links */}
-          <div className="flex flex-col lg:flex-row items-center justify-between mt-3 lg:mt-0 lg:ml-40 w-full max-w-[860px]">
+          <div className="flex flex-col lg:flex-row items-center justify-between mt-3 lg:mt-0 lg:ml-20 w-full max-w-[860px]">
             {navItems.map(({ path, label }) => (
               <Link
                 key={path}
