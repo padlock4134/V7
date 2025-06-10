@@ -86,43 +86,45 @@ const NavBar = () => {
   const { modalOpen, setModalOpen, termsContent } = useTermsModal();
   return (
     <>
-      <nav className="navbar bg-maineBlue text-weatheredWhite flex flex-col md:flex-row items-center px-4 md:px-8 py-3 shadow-md w-full">
-        {/* Top row on mobile, left section on desktop */}
-        <div className="flex items-center justify-between w-full md:w-auto">
-          <span className="text-2xl font-bold tracking-wider font-retro">PorkChop</span>
+      <nav className="navbar bg-maineBlue text-weatheredWhite w-full px-4 lg:px-8 py-3 shadow-md">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between w-full">
+          {/* Logo section */}
+          <div className="flex items-center justify-between w-full lg:w-auto">
+            <span className="text-2xl font-bold tracking-wider font-retro">PorkChop</span>
+            
+            {/* Mobile profile icon */}
+            <div className="lg:hidden">
+              <Link to="/profile" aria-label="Profile">
+                <UserCircleIcon className="h-9 w-9 text-seafoam hover:text-lobsterRed transition-colors" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Challenge and XP section */}
+          <div className="flex items-center gap-3 mt-3 lg:mt-0 lg:ml-6">
+            <ChallengeOfTheWeek />
+            <LevelBadge />
+          </div>
           
-          {/* Show profile on right for mobile only */}
-          <div className="flex md:hidden">
+          {/* Navigation links */}
+          <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 mt-3 lg:mt-0 lg:ml-8">
+            {navItems.map(({ path, label }) => (
+              <Link
+                key={path}
+                to={path}
+                className={`nav-link px-3 py-2 rounded transition-colors duration-200 hover:bg-seafoam hover:text-maineBlue font-retro ${location.pathname === path ? 'bg-weatheredWhite text-maineBlue font-bold' : ''}`}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+          
+          {/* Desktop profile icon */}
+          <div className="hidden lg:flex items-center ml-4">
             <Link to="/profile" aria-label="Profile">
               <UserCircleIcon className="h-9 w-9 text-seafoam hover:text-lobsterRed transition-colors" />
             </Link>
           </div>
-        </div>
-
-        {/* Second row on mobile, center section on desktop */}
-        <div className="flex items-center gap-3 mt-3 md:mt-0 md:ml-6">
-          <ChallengeOfTheWeek />
-          <LevelBadge />
-        </div>
-        
-        {/* Third row on mobile, center-right section on desktop */}
-        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 flex-1 mt-3 md:mt-0 md:ml-8">
-          {navItems.map(({ path, label }) => (
-            <Link
-              key={path}
-              to={path}
-              className={`nav-link px-3 py-2 rounded transition-colors duration-200 hover:bg-seafoam hover:text-maineBlue font-retro ${location.pathname === path ? 'bg-weatheredWhite text-maineBlue font-bold' : ''}`}
-            >
-              {label}
-            </Link>
-          ))}
-        </div>
-        
-        {/* Hide on mobile, show on desktop */}
-        <div className="hidden md:flex items-center ml-4">
-          <Link to="/profile" aria-label="Profile">
-            <UserCircleIcon className="h-9 w-9 text-seafoam hover:text-lobsterRed transition-colors" />
-          </Link>
         </div>
       </nav>
     </>
