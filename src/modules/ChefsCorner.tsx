@@ -20,16 +20,7 @@ const ChefsCorner = () => {
   // Modal state for CookBook import
   const [cookbookModalOpen, setCookbookModalOpen] = useState(false);
 
-  // Geolocation for Places API
-  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        pos => setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-        () => setCoords(null)
-      );
-    }
-  }, []);
+  // Removed coords state since NearbyPlaces now handles its own location
 
   // Open modal for My CookBook import
   const importFromCookBook = () => setCookbookModalOpen(true);
@@ -102,7 +93,7 @@ const ChefsCorner = () => {
 
 
           {/* Nearby Markets (Google Places) */}
-          {coords && <NearbyPlaces lat={coords.lat} lng={coords.lng} />}
+          <NearbyPlaces />
 
           {/* Departments/Markets Grid */}
           <DepartmentsGrid />
