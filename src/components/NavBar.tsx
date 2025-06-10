@@ -17,9 +17,9 @@ interface LevelProgress {
 
 const useLevelProgress = (): LevelProgress => {
   const [progress, setProgress] = useState<LevelProgress>({
-    title: 'Novice',
+    title: 'Beginner',
     level: 1,
-    icon: '⭐',
+    icon: '🧽',
     current: 0,
     required: 100,
     progressPercent: 0,
@@ -39,7 +39,27 @@ const useLevelProgress = (): LevelProgress => {
       if (data?.xp == null) return;
 
       const { level, current, required } = getXPProgress(data.xp);
-      const { title, icon } = LEVEL_TITLES_AND_ICONS[level - 1] || LEVEL_TITLES_AND_ICONS[0];
+      
+      // Map level to title index
+      let titleIndex = 0;
+      if (level >= 60) titleIndex = 15;       // Toji Master 🍶
+      else if (level >= 55) titleIndex = 14;  // Executive Chef 👨‍🍳
+      else if (level >= 50) titleIndex = 13;  // Master Chef 🏅
+      else if (level >= 45) titleIndex = 12;  // Head Chef 👨‍🍳
+      else if (level >= 40) titleIndex = 11;  // Sous Chef 🔪
+      else if (level >= 35) titleIndex = 10;  // Chef De Partie 🍳
+      else if (level >= 30) titleIndex = 9;   // Senior Line Cook 🍳
+      else if (level >= 25) titleIndex = 8;   // Line Cook 🍳
+      else if (level >= 20) titleIndex = 7;   // Junior Cook 🥄
+      else if (level >= 15) titleIndex = 6;   // Prep Cook 🥄
+      else if (level >= 12) titleIndex = 5;   // Kitchen Assistant 🧽
+      else if (level >= 9) titleIndex = 4;    // Kitchen Hand 🧽
+      else if (level >= 6) titleIndex = 3;    // Dishwasher 🧽
+      else if (level >= 3) titleIndex = 2;    // Kitchen Porter 🧽
+      else if (level >= 1) titleIndex = 1;    // Novice 🧽
+      else titleIndex = 0;                    // Beginner 🧽
+
+      const { title, icon } = LEVEL_TITLES_AND_ICONS[titleIndex] || LEVEL_TITLES_AND_ICONS[0];
       const progressPercent = (current / required) * 100;
 
       setProgress({
@@ -98,7 +118,7 @@ const NavBar = () => {
     <nav className="navbar bg-maineBlue text-weatheredWhite w-full px-4 lg:px-8 py-3 shadow-md">
       <div className="max-w-2xl mx-auto flex items-center justify-between">
         {/* Left group: Weekly, Level, Badge */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <ChallengeOfTheWeek />
           <LevelBadge />
           <LastBadge />
@@ -106,12 +126,12 @@ const NavBar = () => {
 
         {/* Center: PorkChop text and logo */}
         <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-3">
-          <span className="text-3xl font-bold tracking-wider font-retro">PorkChop</span>
-          <img src={logo} alt="PorkChop" className="h-10 w-10 rounded-full" />
+          <span className="hidden sm:block text-3xl font-bold tracking-wider font-retro">PorkChop</span>
+          <img src={logo} alt="PorkChop" className="h-8 w-8 sm:h-10 sm:w-10 rounded-full" />
         </div>
 
         {/* Right: Hamburger menu */}
-        <div className="relative">
+        <div className="relative ml-2 sm:ml-0">
           <button 
             type="button"
             aria-label="Menu"
