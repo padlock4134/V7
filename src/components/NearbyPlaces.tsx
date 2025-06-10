@@ -60,16 +60,26 @@ const NearbyPlaces: React.FC = () => {
           `/.netlify/functions/get-places?lat=${coordinates.lat}&lng=${coordinates.lng}&radius=${radius}&type=supermarket|grocery_or_supermarket|bakery|food|store`
         );
         
-        if (!response.ok) {
-          console.error('Places API Error:', response.status, await response.text());
-          throw new Error(`API returned ${response.status}`);
-        }
-        
         const data = await response.json();
+        console.log('Places API response:', data);
+        
+        if (!response.ok) {
+          console.error('Places API Error:', data);
+          throw new Error(data.error || `API returned ${response.status}`);
+        }
         
         if (!data.results) {
           console.error('No results in response:', data);
           throw new Error('No results found');
+        }
+        
+        if (data.status === 'ZERO_RESULTS') {
+          setPlaces([]);
+          return;
+        }
+        
+        if (data.status !== 'OK') {
+          throw new Error(`Google Places API error: ${data.status}`);
         }
         
         setPlaces(data.results);
