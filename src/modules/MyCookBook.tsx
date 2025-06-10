@@ -152,15 +152,30 @@ const MyCookBook = () => {
               
               <button
                 onClick={() => {
-                  setSelectedRecipe({
+                  const fullRecipe = {
                     id: `${recipe.name.replace(/\s+/g, '-')}-${idx}`,
                     title: recipe.name,
                     image: recipe.photo || '',
                     ingredients: recipe.ingredients || [],
                     instructions: recipe.instructions || '',
-                    equipment: recipe.equipment || []
-                  });
-                  navigate('/cook');
+                    equipment: recipe.equipment || [],
+                    tutorials: [
+                      {
+                        title: `Equipment: Using the right tools for ${recipe.name}`,
+                        desc: `Learn how to use the main equipment needed for this dish.`
+                      },
+                      {
+                        title: `Protein Prep: Preparing the main ingredient`,
+                        desc: `How to prep the main protein (e.g., fish, chicken, clams) for this recipe.`
+                      },
+                      {
+                        title: `Recipe: ${recipe.name}`,
+                        desc: recipe.instructions || ''
+                      }
+                    ]
+                  };
+                  setSelectedRecipe(fullRecipe);
+                  navigate('/culinary-school');
                 }}
                 className="bg-seafoam text-maineBlue px-4 py-2 rounded hover:bg-maineBlue hover:text-seafoam transition-colors"
               >
