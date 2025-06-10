@@ -8,49 +8,60 @@ import ChallengeOfTheWeek from './ChallengeOfTheWeek';
 import TermsModal from './TermsModal';
 import { useTermsModal } from './useTermsModal';
 
-const LevelBadge = () => {
-  const [xp, setXp] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
+interface LevelProgress {
+  title: string;
+  level: number;
+  icon: string;
+  current: number;
+  required: number;
+  progressPercent: number;
+}
+
+const useLevelProgress = (): LevelProgress => {
+  const [progress, setProgress] = useState<LevelProgress>({
+    title: 'Novice',
+    level: 1,
+    icon: '⭐',
+    current: 0,
+    required: 100,
+    progressPercent: 0,
+  });
 
   useEffect(() => {
     const fetchXp = async () => {
-      setLoading(true);
-      const {
-        data: { user },
-        error: userErr,
-      } = await supabase.auth.getUser();
-      if (userErr || !user) {
-        setLoading(false);
-        return;
-      }
-      const { data, error } = await supabase
-        .from('profiles')
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data } = await supabase
+        .from('user_xp')
         .select('xp')
-        .eq('id', user.id)
+        .eq('user_id', user.id)
         .single();
-      if (!error && data && typeof data.xp === 'number') {
-        setXp(data.xp);
-      }
-      setLoading(false);
+
+      if (data?.xp == null) return;
+
+      const { level, current, required } = getXPProgress(data.xp);
+      const { title, icon } = LEVEL_TITLES_AND_ICONS[level - 1] || LEVEL_TITLES_AND_ICONS[0];
+      const progressPercent = (current / required) * 100;
+
+      setProgress({
+        title,
+        level,
+        icon,
+        current,
+        required,
+        progressPercent,
+      });
     };
+
     fetchXp();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center mr-2 animate-pulse">
-        <div className="w-12 h-8 bg-seafoam rounded-full mb-1" />
-        <div className="w-20 h-2 bg-blue-900 rounded" />
-        <span className="text-xs text-seafoam mt-0.5" style={{ fontFamily: 'monospace' }}>...</span>
-      </div>
-    );
-  }
-  if (xp == null) {
-    return null;
-  }
-  const { level, current, required } = getXPProgress(xp);
-  const { title, icon } = LEVEL_TITLES_AND_ICONS[level - 1] || LEVEL_TITLES_AND_ICONS[0];
-  const progressPercent = required > 0 ? Math.round((current / required) * 100) : 100;
+  return progress;
+};
+
+const LevelBadge = () => {
+  const { title, level, icon, current, required, progressPercent } = useLevelProgress();
   return (
     <div className="flex flex-col items-center justify-center mr-2">
       <div
@@ -60,7 +71,7 @@ const LevelBadge = () => {
         style={{ minWidth: 40 }}
       >
         <span style={{ fontSize: '1.5rem', marginRight: 4 }}>{icon}</span>
-        <span className="sr-only">Level {level}</span>
+        <span>{level}</span>
       </div>
       {/* WoW-style XP bar */}
       <div className="w-20 h-2 mt-1 bg-blue-900 rounded overflow-hidden border border-blue-300 shadow-inner" style={{ minWidth: 80 }}>
@@ -70,6 +81,21 @@ const LevelBadge = () => {
         />
       </div>
       <span className="text-xs text-seafoam mt-0.5" style={{ fontFamily: 'monospace' }}>{current} / {required} XP</span>
+    </div>
+  );
+};
+
+const LastBadge = () => {
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <div
+        className="flex items-center justify-center px-2 py-1 bg-seafoam text-maineBlue rounded-full shadow text-lg font-bold cursor-help"
+        title="Last Badge Earned"
+        aria-label="Last Badge Earned"
+        style={{ minWidth: 40 }}
+      >
+        <span style={{ fontSize: '1.5rem' }}>🏆</span>
+      </div>
     </div>
   );
 };
@@ -89,35 +115,34 @@ const NavBar = () => {
   return (
     <>
       <nav className="navbar bg-maineBlue text-weatheredWhite w-full px-4 lg:px-8 py-3 shadow-md">
-        <div className="max-w-2xl mx-auto flex items-center justify-between">
-          {/* Nav items in correct order */}
-          <div className="flex items-center justify-between w-full px-8">
-            {/* Porkchop Logo */}
-            <img src="/porkchop-logo.png" alt="PorkChop" className="h-10 w-10" />
+        <div className="max-w-2xl mx-auto relative">
+          {/* Centered PorkChop text */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <span className="text-2xl font-bold tracking-wider font-retro">PorkChop</span>
+          </div>
 
-            {/* XP Icon */}
-            <div className="flex items-center">
-              <LevelBadge />
+          {/* Left and right content */}
+          <div className="flex items-center justify-between w-full">
+            {/* Left side items */}
+            <div className="flex items-center space-x-4">
+              <img src="/porkchop-logo.png" alt="PorkChop" className="h-10 w-10" />
+              <div className="flex items-center">
+                <ChallengeOfTheWeek />
+              </div>
             </div>
 
-            {/* Weekly Challenge */}
-            <div className="flex items-center">
-              <ChallengeOfTheWeek />
-            </div>
-
-            {/* PorkChop Text */}
-            <span className="text-xl font-bold tracking-wider font-retro">PorkChop</span>
-
-            {/* Menu */}
-            <div className="relative">
-              <button 
-                type="button"
-                aria-label="Menu"
-                className="p-2 hover:bg-seafoam hover:text-maineBlue rounded transition-colors"
-                onClick={() => setIsMenuOpen(prev => !prev)}
-              >
-                <Bars3Icon className="h-6 w-6" />
-              </button>
+            {/* Right side items */}
+            <div className="flex items-center space-x-4">
+              {/* Menu */}
+              <div className="relative">
+                <button 
+                  type="button"
+                  aria-label="Menu"
+                  className="p-2 hover:bg-seafoam hover:text-maineBlue rounded transition-colors"
+                  onClick={() => setIsMenuOpen(prev => !prev)}
+                >
+                  <Bars3Icon className="h-6 w-6" />
+                </button>
               
               {/* Menu Dropdown */}
               {isMenuOpen && (
@@ -139,6 +164,17 @@ const NavBar = () => {
                   </div>
                 </div>
               )}
+              </div>
+
+              {/* XP Level */}
+              <div className="flex items-center">
+                <LevelBadge />
+              </div>
+
+              {/* Last Badge */}
+              <div className="flex items-center">
+                <LastBadge />
+              </div>
             </div>
           </div>
         </div>
