@@ -56,7 +56,7 @@ const NearbyPlaces: React.FC = () => {
       try {
         const radius = 24140; // 15 miles in meters
         console.log('Fetching places with coordinates:', coordinates);
-        const url = `/.netlify/functions/get-places?lat=${coordinates.lat}&lng=${coordinates.lng}&radius=${radius}&type=supermarket,grocery_store,bakery,butcher_shop,fish_store,food_store`;
+        const url = `/.netlify/functions/get-places?lat=${coordinates.lat}&lng=${coordinates.lng}&radius=${radius}&type=supermarket,grocery,bakery,butcher_shop,meal_takeaway,restaurant`;
         console.log('Fetching from URL:', url);
         
         const response = await fetch(url);

@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 
 // Types for market info
 export const DEPARTMENT_TYPES = [
-  { key: 'grocery', label: 'Grocery', icon: '🛒', placeTypes: ['supermarket', 'grocery_store'] },
-  { key: 'produce', label: 'Produce', icon: '🥦', placeTypes: ['grocery_store', 'food_store'] },
+  { key: 'grocery', label: 'Grocery', icon: '🛒', placeTypes: ['supermarket', 'grocery'] },
+  { key: 'produce', label: 'Produce', icon: '🥦', placeTypes: ['grocery', 'supermarket'] },
   { key: 'bakery', label: 'Bakery', icon: '🍞', placeTypes: ['bakery'] },
   { key: 'butcher', label: 'Butcher', icon: '🥩', placeTypes: ['butcher_shop'] },
-  { key: 'seafood', label: 'Seafood', icon: '🐟', placeTypes: ['fish_store'] },
-  { key: 'dairy', label: 'Dairy', icon: '🥛', placeTypes: ['food_store'] },
+  { key: 'seafood', label: 'Seafood', icon: '🐟', placeTypes: ['restaurant', 'meal_takeaway'] },
+  { key: 'dairy', label: 'Dairy', icon: '🥛', placeTypes: ['grocery', 'supermarket'] },
 ];
 
 interface Place {
@@ -55,7 +55,7 @@ const MarketDirectory: React.FC = () => {
       try {
         const radius = 24140; // 15 miles in meters
         const response = await fetch(
-          `/.netlify/functions/get-places?lat=${coordinates.lat}&lng=${coordinates.lng}&radius=${radius}&type=supermarket,grocery_store,bakery,butcher_shop,fish_store,food_store`
+          `/.netlify/functions/get-places?lat=${coordinates.lat}&lng=${coordinates.lng}&radius=${radius}&type=supermarket,grocery,bakery,butcher_shop,meal_takeaway,restaurant`
         );
         
         const data = await response.json();

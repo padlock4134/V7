@@ -15,7 +15,7 @@ exports.handler = async function(event, context) {
     };
   }
 
-  const { lat, lng, radius = 24140, type = 'supermarket,grocery_store,bakery,butcher_shop,fish_store,food_store' } = event.queryStringParameters;
+  const { lat, lng, radius = 24140, type = 'supermarket,grocery,bakery,butcher_shop,meal_takeaway,restaurant' } = event.queryStringParameters;
   const apiKey = process.env.VITE_PLACES_API_KEY;
 
   if (!apiKey) {
