@@ -106,36 +106,38 @@ const NavBar = () => {
             <Link to="/profile" aria-label="Profile">
               <UserCircleIcon className="h-9 w-9 text-seafoam hover:text-lobsterRed transition-colors" />
             </Link>
-            <button 
-              type="button"
-              aria-label="Menu"
-              className="p-2 hover:bg-seafoam hover:text-maineBlue rounded transition-colors"
-              onClick={() => setIsMenuOpen(prev => !prev)}
-            >
-              <Bars3Icon className="h-6 w-6" />
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile menu */}
-        {isMenuOpen && (
-          <div className="absolute top-full right-0 mt-2 mr-4 w-48 bg-maineBlue rounded-lg shadow-xl p-4 z-50">
-            <div className="flex flex-col space-y-4">
-              {navItems.map(({ path, label }) => (
-                <Link
-                  key={path}
-                  to={path}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`text-lg font-retro py-2 px-3 rounded transition-colors hover:bg-seafoam hover:text-maineBlue ${
-                    location.pathname === path ? 'bg-weatheredWhite text-maineBlue font-bold' : ''
-                  }`}
-                >
-                  {label}
-                </Link>
-              ))}
+            <div className="relative">
+              <button 
+                type="button"
+                aria-label="Menu"
+                className="p-2 hover:bg-seafoam hover:text-maineBlue rounded transition-colors"
+                onClick={() => setIsMenuOpen(prev => !prev)}
+              >
+                <Bars3Icon className="h-6 w-6" />
+              </button>
+              
+              {/* Menu Dropdown */}
+              {isMenuOpen && (
+                <div className="absolute right-0 top-[100%] w-48 bg-maineBlue rounded-lg shadow-xl p-4 z-50 border border-seafoam">
+                  <div className="flex flex-col space-y-4">
+                    {navItems.map(({ path, label }) => (
+                      <Link
+                        key={path}
+                        to={path}
+                        onClick={() => setIsMenuOpen(false)}
+                        className={`text-lg font-retro py-2 px-3 rounded transition-colors hover:bg-seafoam hover:text-maineBlue ${
+                          location.pathname === path ? 'bg-weatheredWhite text-maineBlue font-bold' : ''
+                        }`}
+                      >
+                        {label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        )}
+        </div>
       </nav>
     </>
   );
