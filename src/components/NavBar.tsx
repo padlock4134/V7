@@ -79,6 +79,7 @@ const navItems = [
   { path: '/culinary-school', label: 'Culinary School' },
   { path: '/my-cookbook', label: 'My Cookbook' },
   { path: '/chefs-corner', label: 'Chefs Corner' },
+  { path: '/profile', label: 'Profile' },
 ];
 
 const NavBar = () => {
@@ -104,11 +105,6 @@ const NavBar = () => {
               <ChallengeOfTheWeek />
             </div>
 
-            {/* Profile */}
-            <Link to="/profile" aria-label="Profile">
-              <UserCircleIcon className="h-9 w-9 text-seafoam hover:text-lobsterRed transition-colors" />
-            </Link>
-
             {/* Menu */}
             <div className="relative">
               <button 
@@ -129,10 +125,11 @@ const NavBar = () => {
                         key={path}
                         to={path}
                         onClick={() => setIsMenuOpen(false)}
-                        className={`text-lg font-retro py-2 px-3 rounded transition-colors hover:bg-seafoam hover:text-maineBlue ${
+                        className={`text-lg font-retro py-2 px-3 rounded transition-colors hover:bg-seafoam hover:text-maineBlue flex items-center ${
                           location.pathname === path ? 'bg-weatheredWhite text-maineBlue font-bold' : ''
                         }`}
                       >
+                        {label === 'Profile' && <UserCircleIcon className="h-5 w-5 mr-2" />}
                         {label}
                       </Link>
                     ))}
