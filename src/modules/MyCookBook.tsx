@@ -112,67 +112,85 @@ const MyCookBook = () => {
         {recipes.length === 0 ? (
           <div className="text-gray-400 italic">No recipes yet. Add your first recipe!</div>
         ) : recipes.map((recipe, idx) => (
-          <div key={idx} className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-            {recipe.photo && (
-              <img 
-                src={recipe.photo} 
-                alt={recipe.name} 
-                className="w-full h-48 object-cover rounded-t-lg mb-4"
-              />
-            )}
-            <h3 className="text-xl font-bold mb-2">{recipe.name}</h3>
-            <p className="text-gray-600 mb-4">{recipe.description}</p>
-            
-            <div className="flex justify-between items-center">
-              <button
-                onClick={async () => {
-                  try {
-                    // Use the recipe title as the ID since that's what we use when saving in RecipeMatcherModal
-                    const recipeId = recipe.name;
-                    await removeRecipeFromCookbook(recipeId);
-                    setLocalRecipes(recipes.filter(r => r.name !== recipeId));
-                  } catch (err) {
-                    console.error('Error deleting recipe:', err);
-                    setError('Failed to delete recipe');
-                  }
-                }}
-                className="text-lobsterRed hover:text-maineBlue transition-colors"
-                title="Delete Recipe"
-              >
-                🗑️ Remove
-              </button>
-              
-              <button
-                onClick={() => {
-                  const fullRecipe = {
-                    id: `${recipe.name.replace(/\s+/g, '-')}-${idx}`,
-                    title: recipe.name,
-                    image: recipe.photo || '',
-                    ingredients: recipe.ingredients || [],
-                    instructions: recipe.instructions || '',
-                    equipment: recipe.equipment || [],
-                    tutorials: [
-                      {
-                        title: `Equipment: Using the right tools for ${recipe.name}`,
-                        desc: `Learn how to use the main equipment needed for this dish.`
-                      },
-                      {
-                        title: `Protein Prep: Preparing the main ingredient`,
-                        desc: `How to prep the main protein (e.g., fish, chicken, clams) for this recipe.`
-                      },
-                      {
-                        title: `Recipe: ${recipe.name}`,
-                        desc: recipe.instructions || ''
+          <div key={idx} className="group h-[400px] [perspective:1000px]">
+            <div className="relative h-full w-full rounded-xl transition-all duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
+              {/* Front */}
+              <div className="absolute inset-0 bg-white p-4 rounded-lg shadow-md">
+                {recipe.photo && (
+                  <img 
+                    src={recipe.photo} 
+                    alt={recipe.name} 
+                    className="w-full h-48 object-cover rounded-t-lg mb-4"
+                  />
+                )}
+                <h3 className="text-xl font-bold mb-2">{recipe.name}</h3>
+                <div className="text-gray-600">
+                  <h4 className="font-semibold mb-1">Ingredients:</h4>
+                  <ul className="list-disc pl-4">
+                    {recipe.ingredients?.map((ingredient, i) => (
+                      <li key={i}>{ingredient}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              {/* Back */}
+              <div className="absolute inset-0 h-full w-full rounded-xl bg-white p-4 shadow-md [transform:rotateY(180deg)] [backface-visibility:hidden]">
+                <h3 className="text-xl font-bold mb-2">{recipe.name}</h3>
+                <div className="text-gray-600 overflow-y-auto h-[280px] mb-4">
+                  <h4 className="font-semibold mb-1">Instructions:</h4>
+                  <p className="whitespace-pre-wrap">{recipe.instructions}</p>
+                </div>
+                <div className="flex justify-between items-center">
+                  <button
+                    onClick={async () => {
+                      try {
+                        const recipeId = recipe.name;
+                        await removeRecipeFromCookbook(recipeId);
+                        setLocalRecipes(recipes.filter(r => r.name !== recipeId));
+                      } catch (err) {
+                        console.error('Error deleting recipe:', err);
+                        setError('Failed to delete recipe');
                       }
-                    ]
-                  };
-                  setSelectedRecipe(fullRecipe);
-                  navigate('/culinary-school');
-                }}
-                className="bg-seafoam text-maineBlue px-4 py-2 rounded hover:bg-maineBlue hover:text-seafoam transition-colors"
-              >
-                Cook This
-              </button>
+                    }}
+                    className="text-lobsterRed hover:text-maineBlue transition-colors"
+                    title="Delete Recipe"
+                  >
+                    🗑️ Remove
+                  </button>
+                  
+                  <button
+                    onClick={() => {
+                      const fullRecipe = {
+                        id: `${recipe.name.replace(/\s+/g, '-')}-${idx}`,
+                        title: recipe.name,
+                        image: recipe.photo || '',
+                        ingredients: recipe.ingredients || [],
+                        instructions: recipe.instructions || '',
+                        equipment: recipe.equipment || [],
+                        tutorials: [
+                          {
+                            title: `Equipment: Using the right tools for ${recipe.name}`,
+                            desc: `Learn how to use the main equipment needed for this dish.`
+                          },
+                          {
+                            title: `Protein Prep: Preparing the main ingredient`,
+                            desc: `How to prep the main protein (e.g., fish, chicken, clams) for this recipe.`
+                          },
+                          {
+                            title: `Recipe: ${recipe.name}`,
+                            desc: recipe.instructions || ''
+                          }
+                        ]
+                      };
+                      setSelectedRecipe(fullRecipe);
+                      navigate('/culinary-school');
+                    }}
+                    className="bg-seafoam text-maineBlue px-4 py-2 rounded hover:bg-maineBlue hover:text-seafoam transition-colors"
+                  >
+                    Cook This
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         ))}
