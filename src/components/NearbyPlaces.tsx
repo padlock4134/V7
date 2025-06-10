@@ -56,15 +56,19 @@ const NearbyPlaces: React.FC = () => {
       try {
         const radius = 24140; // 15 miles in meters
         console.log('Fetching places with coordinates:', coordinates);
-        const response = await fetch(
-          `/.netlify/functions/get-places?lat=${coordinates.lat}&lng=${coordinates.lng}&radius=${radius}&type=supermarket|grocery_or_supermarket|bakery|food|store`
-        );
+        const url = `/.netlify/functions/get-places?lat=${coordinates.lat}&lng=${coordinates.lng}&radius=${radius}&type=supermarket|grocery_or_supermarket|bakery|food|store`;
+        console.log('Fetching from URL:', url);
         
+        const response = await fetch(url);
         const data = await response.json();
-        console.log('Places API response:', data);
+        console.log('Raw Places API response:', data);
         
         if (!response.ok) {
-          console.error('Places API Error:', data);
+          console.error('Places API Error:', {
+            status: response.status,
+            statusText: response.statusText,
+            data
+          });
           throw new Error(data.error || `API returned ${response.status}`);
         }
         
@@ -79,13 +83,14 @@ const NearbyPlaces: React.FC = () => {
         }
         
         if (data.status !== 'OK') {
-          throw new Error(`Google Places API error: ${data.status}`);
+          console.error('Google Places API error details:', data);
+          throw new Error(`Google Places API error: ${data.status} - ${data.error_message || 'No error message provided'}`);
         }
         
         setPlaces(data.results);
       } catch (err) {
         console.error('Places fetch error:', err);
-        setError('Failed to fetch nearby places. Please try again.');
+        setError(`Failed to fetch nearby places: ${err.message}`);
       } finally {
         setLoading(false);
       }

@@ -1,6 +1,11 @@
 const fetch = require('node-fetch');
 
 exports.handler = async function(event, context) {
+  // Debug logging
+  console.log('Environment variables:', {
+    hasApiKey: !!process.env.VITE_PLACES_API_KEY,
+    keyLength: process.env.VITE_PLACES_API_KEY ? process.env.VITE_PLACES_API_KEY.length : 0
+  });
   // Validate required parameters
   if (!event.queryStringParameters?.lat || !event.queryStringParameters?.lng) {
     return {
@@ -21,12 +26,23 @@ exports.handler = async function(event, context) {
   }
 
   const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&type=${type}&key=${apiKey}`;
+  
+  // Debug logging
+  console.log('Request URL (without key):', url.replace(apiKey, 'REDACTED'));
 
   try {
     console.log(`Fetching places near ${lat},${lng} within ${radius}m`);
     const response = await fetch(url);
     const data = await response.json();
     
+    // Debug logging
+    console.log('Google API Response:', {
+      status: data.status,
+      hasResults: !!data.results,
+      resultCount: data.results ? data.results.length : 0,
+      error_message: data.error_message
+    });
+
     if (!response.ok) {
       console.error('Places API error:', data);
       return {
