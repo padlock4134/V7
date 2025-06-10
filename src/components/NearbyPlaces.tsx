@@ -55,17 +55,26 @@ const NearbyPlaces: React.FC = () => {
       setError(null);
       try {
         const radius = 24140; // 15 miles in meters
+        console.log('Fetching places with coordinates:', coordinates);
         const response = await fetch(
           `/.netlify/functions/get-places?lat=${coordinates.lat}&lng=${coordinates.lng}&radius=${radius}&type=supermarket|grocery_or_supermarket|bakery|food|store`
         );
+        
+        if (!response.ok) {
+          console.error('Places API Error:', response.status, await response.text());
+          throw new Error(`API returned ${response.status}`);
+        }
+        
         const data = await response.json();
         
         if (!data.results) {
+          console.error('No results in response:', data);
           throw new Error('No results found');
         }
         
         setPlaces(data.results);
       } catch (err) {
+        console.error('Places fetch error:', err);
         setError('Failed to fetch nearby places. Please try again.');
       } finally {
         setLoading(false);
