@@ -50,3 +50,27 @@ export async function addRecipeToCookbook(recipe: RecipeCard) {
     if (error) throw error;
   }
 }
+
+export async function removeRecipeFromCookbook(recipeId: string) {
+  const user = (await supabase.auth.getUser()).data.user;
+  if (!user) throw new Error('Not signed in');
+  
+  const { data, error: fetchError } = await supabase
+    .from('user_cookbook')
+    .select('recipes')
+    .eq('user_id', user.id)
+    .single();
+    
+  if (fetchError && fetchError.code !== 'PGRST116') throw fetchError;
+  
+  const existingRecipes = (data?.recipes || []) as RecipeCard[];
+  const updatedRecipes = existingRecipes.filter(r => r.id !== recipeId);
+  
+  const { error } = await supabase
+    .from('user_cookbook')
+    .upsert([{ 
+      user_id: user.id, 
+      recipes: updatedRecipes
+    }], { onConflict: 'user_id' });
+  if (error) throw error;
+}
