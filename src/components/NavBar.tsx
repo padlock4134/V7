@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { UserCircleIcon } from '@heroicons/react/24/outline';
+import { UserCircleIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import TipOfTheDay from './TipOfTheDay';
 import { LEVEL_TITLES_AND_ICONS, getXPProgress } from '../utils/leveling';
 import { supabase } from '../api/supabaseClient';
@@ -83,13 +83,14 @@ const navItems = [
 
 const NavBar = () => {
   const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { modalOpen, setModalOpen, termsContent } = useTermsModal();
   return (
     <>
       <nav className="navbar bg-maineBlue text-weatheredWhite w-full px-4 lg:px-8 py-3 shadow-md">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center w-full">
+        <div className="max-w-7xl mx-auto flex items-center justify-between w-full">
           {/* Left section: Logo and level */}
-          <div className="flex items-center space-x-6 w-full lg:w-auto">
+          <div className="flex items-center space-x-6">
             {/* Logo */}
             <span className="text-2xl font-bold tracking-wider font-retro">PorkChop</span>
             
@@ -97,42 +98,50 @@ const NavBar = () => {
             <div className="hidden lg:flex items-center">
               <LevelBadge />
             </div>
-
-            {/* Mobile profile icon */}
-            <div className="lg:hidden ml-auto">
-              <Link to="/profile" aria-label="Profile">
-                <UserCircleIcon className="h-9 w-9 text-seafoam hover:text-lobsterRed transition-colors" />
-              </Link>
-            </div>
           </div>
 
-          {/* Mobile status section */}
-          <div className="flex lg:hidden items-center space-x-3 mt-3">
-            <LevelBadge />
-            <ChallengeOfTheWeek />
-          </div>
-          
-          {/* Center section: Navigation links */}
-          <div className="flex flex-col lg:grid lg:grid-cols-4 mt-3 lg:mt-0 w-[640px] lg:pl-12">
-            {navItems.map(({ path, label }) => (
-              <Link
-                key={path}
-                to={path}
-                className={`nav-link text-center py-2 rounded transition-colors duration-200 hover:bg-seafoam hover:text-maineBlue font-retro ${location.pathname === path ? 'bg-weatheredWhite text-maineBlue font-bold' : ''}`}
-              >
-                {label}
-              </Link>
-            ))}
-          </div>
-          
-          {/* Right section: Challenge icon and Profile */}
-          <div className="hidden lg:flex items-center space-x-4 ml-auto">
+          {/* Right section: Challenge, Profile, Menu */}
+          <div className="flex items-center space-x-4">
             <ChallengeOfTheWeek />
             <Link to="/profile" aria-label="Profile">
               <UserCircleIcon className="h-9 w-9 text-seafoam hover:text-lobsterRed transition-colors" />
             </Link>
+            <button 
+              aria-label="Menu"
+              className="p-2 hover:bg-seafoam hover:text-maineBlue rounded transition-colors"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <Bars3Icon className="h-6 w-6" />
+            </button>
           </div>
         </div>
+
+        {/* Mobile menu */}
+        {isMenuOpen && (
+          <div className="lg:hidden fixed inset-0 z-50 bg-maineBlue bg-opacity-95">
+            <div className="flex flex-col items-center pt-20 space-y-6">
+              {navItems.map(({ path, label }) => (
+                <Link
+                  key={path}
+                  to={path}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`text-xl font-retro py-2 px-4 rounded transition-colors hover:bg-seafoam hover:text-maineBlue ${
+                    location.pathname === path ? 'bg-weatheredWhite text-maineBlue font-bold' : ''
+                  }`}
+                >
+                  {label}
+                </Link>
+              ))}
+              <button 
+                className="mt-8 text-seafoam hover:text-lobsterRed"
+                onClick={() => setIsMenuOpen(false)}
+                aria-label="Close menu"
+              >
+                <XMarkIcon className="h-8 w-8" />
+              </button>
+            </div>
+          </div>
+        )}
       </nav>
     </>
   );
