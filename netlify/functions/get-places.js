@@ -1,7 +1,12 @@
 const fetch = require('node-fetch');
 
 exports.handler = async function(event, context) {
-  console.log('Received query params:', event.queryStringParameters);
+  console.log('Function triggered with event:', {
+    httpMethod: event.httpMethod,
+    path: event.path,
+    queryParams: event.queryStringParameters,
+    headers: event.headers
+  });
 
   if (!event.queryStringParameters?.lat || !event.queryStringParameters?.lng) {
     return {
@@ -21,6 +26,8 @@ exports.handler = async function(event, context) {
     };
   }
 
+  console.log('Using API key:', apiKey.substring(0, 5) + '...');
+
   const url = 'https://places.googleapis.com/v1/places:searchNearby';
   const searchBody = {
     includedTypes: type.split(','),
@@ -35,7 +42,11 @@ exports.handler = async function(event, context) {
     }
   };
 
-  console.log('Request body:', JSON.stringify(searchBody, null, 2));
+  console.log('Request to Google Places:', {
+    url,
+    method: 'POST',
+    body: searchBody
+  });
 
   try {
     const response = await fetch(url, {
@@ -48,8 +59,24 @@ exports.handler = async function(event, context) {
       body: JSON.stringify(searchBody)
     });
 
-    const data = await response.json();
-    console.log('Google API Response:', {
+    const rawResponse = await response.text();
+    console.log('Raw Google API response:', rawResponse);
+
+    let data;
+    try {
+      data = JSON.parse(rawResponse);
+    } catch (e) {
+      console.error('Failed to parse Google API response:', e);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ 
+          error: 'Invalid response from Google Places API',
+          rawResponse
+        })
+      };
+    }
+
+    console.log('Parsed Google API response:', {
       status: response.status,
       statusText: response.statusText,
       hasResults: !!data.places,

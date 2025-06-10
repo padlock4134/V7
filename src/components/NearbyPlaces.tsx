@@ -60,8 +60,18 @@ const NearbyPlaces: React.FC = () => {
         console.log('Fetching from URL:', url);
         
         const response = await fetch(url);
-        const data = await response.json();
-        console.log('Raw Places API response:', data);
+        const rawResponse = await response.text(); // Get raw text first
+        console.log('Raw response text:', rawResponse);
+        
+        let data;
+        try {
+          data = JSON.parse(rawResponse);
+        } catch (e) {
+          console.error('Failed to parse JSON:', e);
+          throw new Error('Invalid response format');
+        }
+        
+        console.log('Parsed Places API response:', data);
         
         if (!response.ok) {
           console.error('Places API Error:', {
