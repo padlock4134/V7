@@ -113,7 +113,7 @@ const NavBar = () => {
           </div>
           
           {/* Center section: Navigation links */}
-          <div className="flex flex-col lg:grid lg:grid-cols-4 mt-3 lg:mt-0 lg:ml-0 lg:pl-12 w-[640px]">
+          <div className="flex flex-col lg:grid lg:grid-cols-4 mt-3 lg:mt-0 w-[640px] lg:pl-12">
             {navItems.map(({ path, label }) => (
               <Link
                 key={path}
