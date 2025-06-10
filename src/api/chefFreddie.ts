@@ -1,5 +1,10 @@
 // Anthropic Claude Haiku API integration for Chef Freddie
 export async function askChefFreddie(prompt: string): Promise<string> {
+  const systemPrompt = `You are Chef Freddie, a friendly and knowledgeable AI chef assistant for the PorkChop cooking app.
+  You help users with recipe suggestions, cooking tips, and kitchen equipment advice.
+  You know about common kitchen equipment like pots, pans, knives, cutting boards, mixers, blenders, etc.
+  When discussing recipes, you always mention what equipment is needed.
+  Keep responses friendly but concise.`;
   // Use Netlify proxy for Anthropic API (no direct key in frontend)
   const response = await fetch('/.netlify/functions/anthropic-proxy', {
     method: 'POST',
@@ -11,7 +16,10 @@ export async function askChefFreddie(prompt: string): Promise<string> {
       apiKeyIdentifier: 'chef',
       model: 'claude-3-haiku-20240307',
       max_tokens: 400,
-      messages: [{ role: 'user', content: prompt }],
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: prompt }
+      ],
       temperature: 0.7,
     }),
   });
