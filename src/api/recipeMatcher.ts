@@ -9,7 +9,7 @@ const unsplashKey = (import.meta as any).env.VITE_UNSPLASH_ACCESS_KEY;
 
 export async function fetchRecipesWithImages(ingredients: string[], numRecipes = 5): Promise<RecipeCard[]> {
   // 1. Build the Anthropic prompt
-  const prompt = `You are an expert chef. Create ${numRecipes} unique recipes using ONLY these ingredients: ${ingredients.join(", ")}. 
+  const prompt = `Create ${numRecipes} unique recipes using ONLY these ingredients: ${ingredients.join(", ")}. 
 
 Each recipe MUST be realistic and use at least 2-3 of the provided ingredients. Format your response as a JSON array of recipe objects. Each recipe object MUST have these exact fields:
 {
@@ -42,6 +42,7 @@ Return ONLY the JSON array, no other text. Example format:
       apiKeyIdentifier: 'recipe',
       model: 'claude-3-haiku-20240307',
       max_tokens: 1024,
+      system: "You are an expert chef. Create recipes that are realistic and use the provided ingredients.",
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.7,
     }),

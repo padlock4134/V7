@@ -16,10 +16,8 @@ export async function askChefFreddie(prompt: string): Promise<string> {
       apiKeyIdentifier: 'chef',
       model: 'claude-3-haiku-20240307',
       max_tokens: 400,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: prompt }
-      ],
+      system: "You are Chef Freddie, a friendly and knowledgeable AI chef assistant. You help with recipe suggestions, cooking tips, and kitchen equipment advice.",
+      messages: [{ role: 'user', content: prompt }],
       temperature: 0.7,
     }),
   });
