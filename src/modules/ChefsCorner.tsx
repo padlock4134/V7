@@ -58,7 +58,7 @@ const ChefsCorner = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto mt-8 bg-weatheredWhite p-6 rounded shadow">
+    <div className="max-w-2xl mx-auto mt-8 bg-weatheredWhite p-6 rounded shadow">
       <div className="chefs-corner-root relative flex flex-col md:flex-row gap-8">
         {/* Main Content */}
         <div className="flex-1 min-w-0">
