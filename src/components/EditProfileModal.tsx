@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { ExperienceLevel } from '../types/userPreferences';
+import { getUserPreferences, updateExperienceLevel } from '../api/userPreferences';
 import { supabase } from '../api/supabaseClient';
 
 interface EditProfileModalProps {
@@ -10,6 +12,15 @@ interface EditProfileModalProps {
 
 const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onClose, user, onProfileUpdated }) => {
   const [bio, setBio] = useState(user?.bio || '');
+  const [experienceLevel, setExperienceLevel] = useState<ExperienceLevel>('new_to_cooking');
+
+  useEffect(() => {
+    if (open) {
+      getUserPreferences().then(prefs => {
+        setExperienceLevel(prefs.experienceLevel);
+      });
+    }
+  }, [open]);
   const [avatarUrl, setAvatarUrl] = useState(user?.avatar || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -18,16 +29,23 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onClose, user
     e.preventDefault();
     setLoading(true);
     setError('');
-    const { error } = await supabase
+    try {
+      // Update profile
+      const { error: profileError } = await supabase
       .from('profiles')
       .update({ bio, avatar_url: avatarUrl })
       .eq('id', user.id);
-    setLoading(false);
-    if (error) {
-      setError(error.message);
-    } else {
+      if (profileError) throw profileError;
+
+      // Update experience level
+      await updateExperienceLevel(experienceLevel);
+
       onProfileUpdated({ ...user, bio, avatar: avatarUrl });
       onClose();
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -38,6 +56,17 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ open, onClose, user
         <button type="button" onClick={onClose} className="absolute top-2 right-2 text-2xl text-gray-400 hover:text-maineBlue">×</button>
         <h2 className="text-xl font-bold mb-4 text-maineBlue">Edit Profile</h2>
         {error && <div className="mb-2 text-red-600">{error}</div>}
+
+        <label className="block mb-2 font-semibold">Cooking Experience</label>
+        <select
+          className="w-full mb-4 p-2 border rounded bg-white"
+          value={experienceLevel}
+          onChange={e => setExperienceLevel(e.target.value as ExperienceLevel)}
+        >
+          <option value="new_to_cooking">New to Cooking</option>
+          <option value="home_cook">Home Cook</option>
+          <option value="kitchen_confident">Kitchen Confident</option>
+        </select>
         <label className="block mb-2 font-semibold">Bio</label>
         <textarea
           className="w-full mb-4 p-2 border rounded"

@@ -1,21 +1,77 @@
 import { RecipeCard } from '../components/RecipeMatcherModal';
+import { ExperienceLevel, DEFAULT_EXPERIENCE_LEVEL } from '../types/userPreferences';
+import { getUserPreferences } from './userPreferences';
+import { supabase } from './supabaseClient';
+import { getCurrentUserId } from './userSession';
 
 const ANTHROPIC_API_URL = '/.netlify/functions/anthropic-proxy';
 const UNSPLASH_API_URL = 'https://api.unsplash.com/search/photos';
-
-// No API key in frontend; handled by Netlify function
-// const anthropicKey = (import.meta as any).env.VITE_ANTHROPIC_RECIPE_KEY;
 const unsplashKey = (import.meta as any).env.VITE_UNSPLASH_ACCESS_KEY;
 
-export async function fetchRecipesWithImages(ingredients: string[], numRecipes = 5): Promise<RecipeCard[]> {
-  // 1. Build the Anthropic prompt
-  const prompt = `You are an expert chef. Create ${numRecipes} unique recipes using ingredients from this list: ${ingredients.join(", ")}. 
+const RECIPE_PROMPTS = {
+  new_to_cooking: (numRecipes: number, ingredients: string[]) => 
+    `You are a patient cooking teacher. Create ${numRecipes} super simple recipes for a beginner cook using ingredients from: ${ingredients.join(", ")}. 
+    RULES:
+    1. Use only 2-3 ingredients per recipe
+    2. Only basic cooking methods (pan fry, boil, mix)
+    3. Very detailed step-by-step instructions
+    4. Keep cook time under 20 minutes`,
 
-IMPORTANT RULES:
-1. Each recipe MUST use at least 3-4 ingredients from the provided list
-2. Recipes must be practical and delicious
-3. Instructions should be clear and detailed
-4. You may assume basic pantry items like salt, pepper, and water are available
+  home_cook: (numRecipes: number, ingredients: string[]) => 
+    `You are a helpful home cooking expert. Create ${numRecipes} recipes for someone comfortable with basic cooking using ingredients from: ${ingredients.join(", ")}.
+    RULES:
+    1. Use 3-4 ingredients per recipe
+    2. Standard cooking methods
+    3. Clear instructions
+    4. Keep cook time under 30 minutes`,
+
+  kitchen_confident: (numRecipes: number, ingredients: string[]) => 
+    `You are a professional chef. Create ${numRecipes} interesting recipes for an experienced home cook using ingredients from: ${ingredients.join(", ")}.
+    RULES:
+    1. Use 4+ ingredients per recipe
+    2. Can include advanced techniques
+    3. Professional-style instructions
+    4. Focus on flavor and technique`
+};
+
+async function getUserProfile() {
+  const userId = await getCurrentUserId();
+  if (!userId) return null;
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('dietary, cuisine')
+    .eq('id', userId)
+    .single();
+
+  if (error || !data) {
+    console.warn('Failed to fetch user profile:', error);
+    return null;
+  }
+
+  return data;
+}
+
+export async function fetchRecipesWithImages(ingredients: string[], numRecipes = 5): Promise<RecipeCard[]> {
+  // 1. Get user preferences
+  const [{ experienceLevel }, profile] = await Promise.all([
+    getUserPreferences(),
+    getUserProfile()
+  ]);
+
+  const promptTemplate = RECIPE_PROMPTS[experienceLevel] || RECIPE_PROMPTS[DEFAULT_EXPERIENCE_LEVEL];
+  
+  // 2. Build the Anthropic prompt
+  const basePrompt = promptTemplate(numRecipes, ingredients);
+  
+  // Add dietary and cuisine preferences if available
+  const dietaryPrefs = profile?.dietary || [];
+  const cuisinePrefs = profile?.cuisine || [];
+  
+  const prompt = `${basePrompt}
+
+${dietaryPrefs.length ? `IMPORTANT: All recipes MUST follow these dietary restrictions: ${dietaryPrefs.join(', ')}` : ''}
+${cuisinePrefs.length ? `PREFERRED CUISINES: Try to incorporate these cuisine styles when possible: ${cuisinePrefs.join(', ')}` : ''}
 
 Format your response as a JSON array of recipe objects. Each recipe object MUST have these exact fields:
 {
@@ -26,7 +82,78 @@ Format your response as a JSON array of recipe objects. Each recipe object MUST 
 
 Return ONLY the JSON array, no other text.`;
 
-  // 2. Call Anthropic (Claude)
+  // 3. Call Anthropic API
+  const anthropicRes = await fetch(ANTHROPIC_API_URL, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      apiKeyIdentifier: 'recipe',
+      model: 'claude-3-haiku-20240307',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7,
+    }),
+  });
+
+  const anthropicData = await anthropicRes.json();
+  if (!anthropicRes.ok) {
+    console.error('Anthropic API error:', anthropicData);
+    return generateFallbackRecipes(ingredients, numRecipes);
+  }
+
+  let recipes;
+  try {
+    const content = anthropicData.content[0].text;
+    recipes = JSON.parse(content);
+    if (!Array.isArray(recipes)) throw new Error('Response not an array');
+  } catch (err) {
+    console.error('Failed to parse recipes:', err);
+    return generateFallbackRecipes(ingredients, numRecipes);
+  }
+
+  // 4. Fetch images for each recipe
+  const imagePromises = recipes.slice(0, numRecipes).map(async (recipe: any) => {
+    try {
+      const res = await fetch(`${UNSPLASH_API_URL}?query=${encodeURIComponent(recipe.title)}&client_id=${unsplashKey}`);
+      const data = await res.json();
+      return data.results?.[0]?.urls?.small || '';
+    } catch (err) {
+      console.error('Failed to fetch image:', err);
+      return '';
+    }
+  });
+
+  const images = await Promise.all(imagePromises);
+
+  // 5. Return recipe cards
+  return recipes.slice(0, numRecipes).map((r, i) => ({
+    id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}-${i}`,
+    title: r.title,
+    image: images[i],
+    ingredients: Array.isArray(r.ingredients) ? r.ingredients : [],
+    instructions: Array.isArray(r.instructions) ? r.instructions.join('\n') : ''
+  }));
+}
+
+export async function generateFallbackRecipes(ingredients: string[], count: number): Promise<any[]> {
+  const { experienceLevel } = await getUserPreferences();
+  const promptTemplate = RECIPE_PROMPTS[experienceLevel] || RECIPE_PROMPTS[DEFAULT_EXPERIENCE_LEVEL];
+  
+  const prompt = `${promptTemplate(count, ingredients)}
+
+Format your response as a JSON array of recipe objects. Each recipe object MUST have these exact fields:
+{
+  "title": "Recipe Name",
+  "ingredients": ["ingredient 1", "ingredient 2", ...],
+  "instructions": ["step 1", "step 2", ...]
+}
+
+Return ONLY the JSON array, no other text.`;
+
+  // 2. Call Anthropic API
   const anthropicRes = await fetch(ANTHROPIC_API_URL, {
     method: 'POST',
     headers: {
@@ -100,7 +227,7 @@ Return ONLY the JSON array, no other text.`;
   const images = await Promise.all(imagePromises);
 
   // 4. Return RecipeCards
-  return validRecipes.slice(0, numRecipes).map((r, i) => ({
+  return validRecipes.slice(0, count).map((r, i) => ({
     id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}-${i}`,
     title: r.title,
     image: images[i],
