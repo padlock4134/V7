@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import ChefFreddieWidget from './ChefFreddieWidget';
-import NearbyPlaces from '../components/NearbyPlaces';
 import { useEffect } from 'react';
 import { useFreddieContext } from '../components/FreddieContext';
 import { fetchKitchen } from './kitchenSupabase';
 import CookBookImportModal from '../components/CookBookImportModal';
-
 import MarketDirectory from '../components/MarketDirectory';
 
 const ChefsCorner = () => {
@@ -92,10 +90,7 @@ const ChefsCorner = () => {
           </section>
 
 
-          {/* Nearby Markets (Google Places) */}
-          <NearbyPlaces />
-
-          {/* Departments/Markets Grid */}
+          {/* Markets Directory */}
           <MarketDirectory />
 
         </div>
