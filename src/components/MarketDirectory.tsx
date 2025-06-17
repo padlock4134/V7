@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 
 // Types for market info
 export const DEPARTMENT_TYPES = [
-  { key: 'grocery', label: 'Grocery', icon: '🛒', placeTypes: ['supermarket', 'convenience_store'], keywords: ['grocery', 'market', 'food', 'store'] },
-  { key: 'produce', label: 'Produce', icon: '🥦', placeTypes: ['supermarket', 'convenience_store'], keywords: ['produce', 'fruit', 'vegetable', 'farm', 'organic'] },
-  { key: 'bakery', label: 'Bakery', icon: '🍞', placeTypes: ['bakery'], keywords: ['bakery', 'bread', 'pastry', 'cake', 'donut'] },
-  { key: 'butcher', label: 'Meat', icon: '🥩', placeTypes: ['supermarket'], keywords: ['meat', 'butcher', 'steak', 'beef', 'poultry'] },
-  { key: 'seafood', label: 'Seafood', icon: '🐟', placeTypes: ['supermarket'], keywords: ['seafood', 'fish', 'shellfish', 'lobster', 'crab'] },
-  { key: 'dairy', label: 'Dairy', icon: '🥛', placeTypes: ['supermarket', 'convenience_store'], keywords: ['dairy', 'milk', 'cheese', 'yogurt'] },
+  { key: 'grocery', label: 'Grocery', icon: '🛒', placeTypes: ['supermarket', 'convenience_store'], keywords: ['grocery', 'market', 'food', 'store', 'co-op', 'coop', 'natural', 'organic'] },
+  { key: 'produce', label: 'Produce', icon: '🥦', placeTypes: ['supermarket', 'convenience_store'], keywords: ['produce', 'fruit', 'vegetable', 'farm', 'organic', 'farmers', 'garden', 'orchard', 'berry', 'apple'] },
+  { key: 'bakery', label: 'Bakery', icon: '🍞', placeTypes: ['bakery'], keywords: ['bakery', 'bread', 'pastry', 'cake', 'donut', 'bake', 'bagel', 'cookie', 'pie'] },
+  { key: 'butcher', label: 'Meat', icon: '🥩', placeTypes: ['supermarket'], keywords: ['meat', 'butcher', 'steak', 'beef', 'poultry', 'pat', 'pats', 'sausage', 'deli'] },
+  { key: 'seafood', label: 'Seafood', icon: '🐟', placeTypes: ['supermarket'], keywords: ['seafood', 'fish', 'shellfish', 'lobster', 'crab', 'harbor', 'ocean', 'sea', 'marine', 'catch'] },
+  { key: 'dairy', label: 'Dairy', icon: '🥛', placeTypes: ['supermarket', 'convenience_store'], keywords: ['dairy', 'milk', 'cheese', 'yogurt', 'creamery', 'cream', 'ice cream', 'farm'] },
 ];
 
 // Maximum number of places to show per category
@@ -112,12 +112,57 @@ const MarketDirectory: React.FC = () => {
     result.forEach(place => {
       const nameLower = place.name.toLowerCase();
       
-      // Check if the place name contains any category-specific keywords
-      for (const dept of DEPARTMENT_TYPES) {
-        if (dept.keywords.some(keyword => nameLower.includes(keyword))) {
-          place.assignedCategory = dept.key;
-          place.isSpecialized = true; // Mark as specialized if name contains keywords
-          break;
+      // Special case handling for known specialized markets and common patterns
+      if ((nameLower.includes('pat') && nameLower.includes('meat')) || 
+          (nameLower.includes('butcher'))) {
+        place.assignedCategory = 'butcher';
+        place.isSpecialized = true;
+      } 
+      else if ((nameLower.includes('harbor') && nameLower.includes('fish')) || 
+               (nameLower.includes('seafood')) || 
+               (nameLower.includes('lobster'))) {
+        place.assignedCategory = 'seafood';
+        place.isSpecialized = true;
+      }
+      else if (nameLower.includes('farm') && 
+              (nameLower.includes('dairy') || nameLower.includes('milk') || nameLower.includes('cheese'))) {
+        place.assignedCategory = 'dairy';
+        place.isSpecialized = true;
+      }
+      else if ((nameLower.includes('farm') && 
+               (nameLower.includes('produce') || nameLower.includes('fruit') || nameLower.includes('vegetable'))) || 
+               nameLower.includes('farmers market')) {
+        place.assignedCategory = 'produce';
+        place.isSpecialized = true;
+      }
+      else if (nameLower.includes('bakery') || nameLower.includes('bread') || nameLower.includes('pastry')) {
+        place.assignedCategory = 'bakery';
+        place.isSpecialized = true;
+      }
+      // If not a special case, check category keywords
+      else {
+        // Check if it's a farm - farms are always specialized
+        if (nameLower.includes('farm')) {
+          // Try to determine the farm type
+          if (nameLower.includes('dairy') || nameLower.includes('milk') || nameLower.includes('cheese')) {
+            place.assignedCategory = 'dairy';
+            place.isSpecialized = true;
+          } else {
+            // Default farm to produce if not specified
+            place.assignedCategory = 'produce';
+            place.isSpecialized = true;
+          }
+        } else {
+          // Check for other category keywords
+          for (const dept of DEPARTMENT_TYPES) {
+            if (dept.keywords.some(keyword => nameLower.includes(keyword))) {
+              place.assignedCategory = dept.key;
+              // If the place name contains specific keywords that strongly indicate specialization
+              const specializationIndicators = ['market', 'specialty', 'artisan', 'gourmet', 'local', 'farm', 'fresh', 'organic'];
+              place.isSpecialized = specializationIndicators.some(indicator => nameLower.includes(indicator));
+              break;
+            }
+          }
         }
       }
     });
