@@ -5,8 +5,8 @@ export const DEPARTMENT_TYPES = [
   { key: 'grocery', label: 'Grocery', icon: '🛒', placeTypes: ['supermarket', 'convenience_store'] },
   { key: 'produce', label: 'Produce', icon: '🥦', placeTypes: ['supermarket', 'convenience_store'] },
   { key: 'bakery', label: 'Bakery', icon: '🍞', placeTypes: ['bakery'] },
-  { key: 'butcher', label: 'Meat', icon: '🥩', placeTypes: ['restaurant', 'meal_takeaway'] },
-  { key: 'seafood', label: 'Seafood', icon: '🐟', placeTypes: ['restaurant', 'meal_takeaway'] },
+  { key: 'butcher', label: 'Meat', icon: '🥩', placeTypes: ['supermarket'] },
+  { key: 'seafood', label: 'Seafood', icon: '🐟', placeTypes: ['supermarket'] },
   { key: 'dairy', label: 'Dairy', icon: '🥛', placeTypes: ['supermarket', 'convenience_store'] },
 ];
 
@@ -15,6 +15,7 @@ interface Place {
   vicinity: string;
   place_id: string;
   types: string[];
+  website: string | null;
 }
 
 const MarketDirectory: React.FC = () => {
@@ -55,7 +56,7 @@ const MarketDirectory: React.FC = () => {
       try {
         const radius = 24140; // 15 miles in meters
         const response = await fetch(
-          `/.netlify/functions/get-places?lat=${coordinates.lat}&lng=${coordinates.lng}&radius=${radius}&type=supermarket,convenience_store,bakery,restaurant,meal_takeaway`
+          `/.netlify/functions/get-places?lat=${coordinates.lat}&lng=${coordinates.lng}&radius=${radius}&type=supermarket,convenience_store,bakery`
         );
         
         const data = await response.json();
@@ -66,7 +67,13 @@ const MarketDirectory: React.FC = () => {
         }
         
         if (data.status === 'OK' && data.results) {
-          setPlaces(data.results);
+          // Filter out any places that might still have restaurant types
+          const filteredPlaces = data.results.filter(
+            (place: Place) => !place.types.some(
+              (type: string) => type === 'restaurant' || type === 'meal_takeaway'
+            )
+          );
+          setPlaces(filteredPlaces);
         }
       } catch (err) {
         console.error('Places fetch error:', err);
@@ -129,6 +136,16 @@ const MarketDirectory: React.FC = () => {
                     <div key={place.place_id} className="bg-sand rounded-lg p-4">
                       <h4 className="font-bold text-maineBlue">{place.name}</h4>
                       <p className="text-gray-600 text-sm">{place.vicinity}</p>
+                      {place.website && (
+                        <a 
+                          href={place.website} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="text-sm text-maineBlue hover:underline mt-1 inline-block"
+                        >
+                          Visit Website <span className="text-xs">↗</span>
+                        </a>
+                      )}
                     </div>
                   ))}
                   {getPlacesForDepartment(selectedDept).length === 0 && (

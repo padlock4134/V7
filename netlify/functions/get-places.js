@@ -15,7 +15,7 @@ exports.handler = async function(event, context) {
     };
   }
 
-  const { lat, lng, radius = 24140, type = 'supermarket,convenience_store,bakery,restaurant,meal_takeaway' } = event.queryStringParameters;
+  const { lat, lng, radius = 24140, type = 'supermarket,convenience_store,bakery' } = event.queryStringParameters;
   const apiKey = process.env.VITE_PLACES_API_KEY;
 
   if (!apiKey) {
@@ -54,7 +54,7 @@ exports.handler = async function(event, context) {
       headers: {
         'Content-Type': 'application/json',
         'X-Goog-Api-Key': apiKey,
-        'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.types,places.id'
+        'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.types,places.id,places.websiteUri'
       },
       body: JSON.stringify(searchBody)
     });
@@ -102,7 +102,8 @@ exports.handler = async function(event, context) {
         place_id: place.id,
         name: place.displayName?.text || '',
         vicinity: place.formattedAddress || '',
-        types: place.types || []
+        types: place.types || [],
+        website: place.websiteUri || null
       }))
     };
 
