@@ -13,6 +13,9 @@ export const DEPARTMENT_TYPES = [
 // Maximum number of places to show per category
 const MAX_PLACES_PER_CATEGORY = 5;
 
+// List of big box retailers to exclude
+const BIG_BOX_RETAILERS = ['walmart', 'costco', 'bj', 'bjs', 'sams club', 'sam\'s club', 'best buy', 'target', 'home depot', 'lowe\'s', 'lowes'];
+
 interface Place {
   name: string;
   vicinity: string;
@@ -72,11 +75,11 @@ const MarketDirectory: React.FC = () => {
         }
         
         if (data.status === 'OK' && data.results) {
-          // Filter out any places that might still have restaurant types
+          // Filter out restaurants and big box retailers
           const filteredPlaces = data.results.filter(
-            (place: Place) => !place.types.some(
-              (type: string) => type === 'restaurant' || type === 'meal_takeaway'
-            )
+            (place: Place) => 
+              !place.types.some(type => type === 'restaurant' || type === 'meal_takeaway') &&
+              !BIG_BOX_RETAILERS.some(storeName => place.name.toLowerCase().includes(storeName))
           );
           
           // Assign each place to its most appropriate category
