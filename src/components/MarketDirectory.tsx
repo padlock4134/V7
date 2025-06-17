@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 
 // Types for market info
 export const DEPARTMENT_TYPES = [
-  { key: 'grocery', label: 'Grocery', icon: '🛒', placeTypes: ['supermarket', 'convenience_store'] },
-  { key: 'produce', label: 'Produce', icon: '🥦', placeTypes: ['supermarket', 'convenience_store'] },
-  { key: 'bakery', label: 'Bakery', icon: '🍞', placeTypes: ['bakery'] },
-  { key: 'butcher', label: 'Meat', icon: '🥩', placeTypes: ['supermarket'] },
-  { key: 'seafood', label: 'Seafood', icon: '🐟', placeTypes: ['supermarket'] },
-  { key: 'dairy', label: 'Dairy', icon: '🥛', placeTypes: ['supermarket', 'convenience_store'] },
+  { key: 'grocery', label: 'Grocery', icon: '🛒', placeTypes: ['supermarket', 'convenience_store'], keywords: ['grocery', 'market', 'food', 'store'] },
+  { key: 'produce', label: 'Produce', icon: '🥦', placeTypes: ['supermarket', 'convenience_store'], keywords: ['produce', 'fruit', 'vegetable', 'farm', 'organic'] },
+  { key: 'bakery', label: 'Bakery', icon: '🍞', placeTypes: ['bakery'], keywords: ['bakery', 'bread', 'pastry', 'cake', 'donut'] },
+  { key: 'butcher', label: 'Meat', icon: '🥩', placeTypes: ['supermarket'], keywords: ['meat', 'butcher', 'steak', 'beef', 'poultry'] },
+  { key: 'seafood', label: 'Seafood', icon: '🐟', placeTypes: ['supermarket'], keywords: ['seafood', 'fish', 'shellfish', 'lobster', 'crab'] },
+  { key: 'dairy', label: 'Dairy', icon: '🥛', placeTypes: ['supermarket', 'convenience_store'], keywords: ['dairy', 'milk', 'cheese', 'yogurt'] },
 ];
 
 interface Place {
@@ -16,6 +16,7 @@ interface Place {
   place_id: string;
   types: string[];
   website: string | null;
+  assignedCategory?: string; // Track which category this place is assigned to
 }
 
 const MarketDirectory: React.FC = () => {
@@ -73,7 +74,10 @@ const MarketDirectory: React.FC = () => {
               (type: string) => type === 'restaurant' || type === 'meal_takeaway'
             )
           );
-          setPlaces(filteredPlaces);
+          
+          // Assign each place to its most appropriate category
+          const categorizedPlaces = assignPlacesToCategories(filteredPlaces);
+          setPlaces(categorizedPlaces);
         }
       } catch (err) {
         console.error('Places fetch error:', err);
@@ -93,7 +97,51 @@ const MarketDirectory: React.FC = () => {
 
   const closeModal = () => setModalOpen(false);
 
+  // Assign places to their most appropriate category based on name and types
+  const assignPlacesToCategories = (places: Place[]): Place[] => {
+    const result = [...places];
+    
+    // First pass: Check for exact matches in name
+    result.forEach(place => {
+      const nameLower = place.name.toLowerCase();
+      
+      // Check if the place name contains any category-specific keywords
+      for (const dept of DEPARTMENT_TYPES) {
+        if (dept.keywords.some(keyword => nameLower.includes(keyword))) {
+          place.assignedCategory = dept.key;
+          break;
+        }
+      }
+    });
+    
+    // Second pass: For places without an assigned category, use their types
+    result.forEach(place => {
+      if (!place.assignedCategory) {
+        // For general supermarkets with no specific category, assign to grocery
+        if (place.types.includes('supermarket')) {
+          place.assignedCategory = 'grocery';
+        } else if (place.types.includes('bakery')) {
+          place.assignedCategory = 'bakery';
+        } else if (place.types.includes('convenience_store')) {
+          place.assignedCategory = 'grocery';
+        }
+      }
+    });
+    
+    return result;
+  };
+
   const getPlacesForDepartment = (dept: typeof DEPARTMENT_TYPES[0]) => {
+    // First, get places specifically assigned to this category
+    const assignedPlaces = places.filter(place => place.assignedCategory === dept.key);
+    
+    // If we have assigned places, return those
+    if (assignedPlaces.length > 0) {
+      return assignedPlaces;
+    }
+    
+    // Fallback: If no places were specifically assigned to this category,
+    // use the original type-based filtering
     return places.filter(place => 
       place.types.some(type => dept.placeTypes.includes(type))
     );
