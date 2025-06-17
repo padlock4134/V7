@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../api/supabaseClient';
 import PaymentModal from '../components/PaymentModal';
 import PlanSelectionModal from '../components/PlanSelectionModal';
+import { useAuth } from '../components/AuthProvider';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -19,25 +20,37 @@ const SignUp = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    const storeToSave = groceryStore === 'Other' ? customStore : groceryStore;
-    // Add storeToSave to user metadata or a separate table as needed
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          grocery_store: storeToSave,
+    
+    try {
+      const storeToSave = groceryStore === 'Other' ? customStore : groceryStore;
+      // Add storeToSave to user metadata or a separate table as needed
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            grocery_store: storeToSave,
+          },
         },
-      },
-    });
-    if (error) {
-      setError(error.message);
-      return;
-    }
-    // Wait for user to be available
-    const user = data?.user;
-    if (user) {
-      setShowPlanModal(true); // Only show the plan modal, do not navigate away
+      });
+      
+      if (error) {
+        setError(error.message);
+        return;
+      }
+      
+      // Wait for user to be available
+      const user = data?.user;
+      if (user) {
+        // Store session in localStorage for immediate access
+        if (data.session) {
+          localStorage.setItem('porkchop-session', JSON.stringify(data.session));
+        }
+        setShowPlanModal(true); // Only show the plan modal, do not navigate away
+      }
+    } catch (err) {
+      console.error('Sign up error:', err);
+      setError('An unexpected error occurred. Please try again.');
     }
   };
 
@@ -96,7 +109,12 @@ const SignUp = () => {
                 required
               />
             )}
-            <button type="submit" className="w-full bg-maineBlue text-seafoam py-2 rounded font-semibold hover:bg-seafoam hover:text-maineBlue transition-colors">Sign Up</button>
+            <button 
+              type="submit" 
+              className="w-full bg-maineBlue text-seafoam py-2 rounded font-semibold hover:bg-seafoam hover:text-maineBlue transition-colors"
+            >
+              Sign Up
+            </button>
             <div className="mt-4 text-center text-sm">
               Already have an account? <Link to="/signin" className="text-maineBlue underline">Sign In</Link>
             </div>

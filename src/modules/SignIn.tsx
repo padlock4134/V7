@@ -2,21 +2,33 @@ import React, { useState } from 'react';
 import logo from '../images/logo.png';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../api/supabaseClient';
+import { useAuth } from '../components/AuthProvider';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      setError(error.message);
-    } else {
-      navigate('/my-kitchen');
+    setIsLoading(true);
+    
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        setError(error.message);
+      } else {
+        // Auth state will be handled by AuthProvider
+        navigate('/my-kitchen');
+      }
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
+      console.error('Sign in error:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -45,7 +57,13 @@ const SignIn = () => {
           className="w-full mb-4 p-2 border rounded"
           required
         />
-        <button type="submit" className="w-full bg-maineBlue text-seafoam py-2 rounded font-semibold hover:bg-seafoam hover:text-maineBlue transition-colors">Sign In</button>
+        <button 
+          type="submit" 
+          className="w-full bg-maineBlue text-seafoam py-2 rounded font-semibold hover:bg-seafoam hover:text-maineBlue transition-colors"
+          disabled={isLoading}
+        >
+          {isLoading ? 'Signing In...' : 'Sign In'}
+        </button>
         <div className="mt-4 text-center text-sm">
           Don't have an account? <Link to="/signup" className="text-maineBlue underline">Sign Up</Link>
         </div>

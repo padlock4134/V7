@@ -8,52 +8,59 @@ import CulinarySchool from './modules/CulinarySchool';
 import Profile from './components/Profile';
 import SignUp from './modules/SignUp';
 import SignIn from './modules/SignIn';
-import { supabase } from './api/supabaseClient';
 import Dashboard from './components/Dashboard';
 import ChefFreddieWidget from './components/ChefFreddieWidget';
 import { FreddieProvider } from './components/FreddieContext';
 import { RecipeProvider } from './components/RecipeContext';
 import LandingPage from './components/LandingPage';
 import './components/LandingPage.css';
+import AuthProvider, { useAuth } from './components/AuthProvider';
 
-import { useEffect, useState } from 'react';
-
-const App = () => {
+const AppRoutes = () => {
   const location = useLocation();
   const hideOnPublic = ['/', '/signup', '/signin'].includes(location.pathname);
-  const [isAuth, setIsAuth] = useState<boolean>(false);
-  useEffect(() => {
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuth(!!session);
-    });
-    // Check initial state
-    supabase.auth.getSession().then(({ data }) => setIsAuth(!!data.session));
-    return () => { listener?.subscription.unsubscribe(); };
-  }, []);
+  const { user, isLoading } = useAuth();
+
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-sand">
+        <div className="text-maineBlue text-xl">Loading...</div>
+      </div>
+    );
+  }
 
   return (
-    <RecipeProvider>
-      <FreddieProvider>
-        <div className="min-h-screen bg-sand">
-          {!hideOnPublic && <NavBar />}
-          <main className="max-w-5xl mx-auto px-4 pt-8 pb-8">
-            <Routes>
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
-              {/* Protected routes */}
-              <Route path="/dashboard" element={isAuth ? <Dashboard /> : <Navigate to="/signin" />} />
-              <Route path="/my-kitchen" element={isAuth ? <MyKitchen /> : <Navigate to="/signin" />} />
-              <Route path="/my-cookbook" element={isAuth ? <MyCookBook /> : <Navigate to="/signin" />} />
-              <Route path="/chefs-corner" element={isAuth ? <ChefsCorner /> : <Navigate to="/signin" />} />
-              <Route path="/culinary-school" element={isAuth ? <CulinarySchool /> : <Navigate to="/signin" />} />
-              <Route path="/profile" element={isAuth ? <Profile /> : <Navigate to="/signin" />} />
-              <Route path="/" element={isAuth ? <Navigate to="/dashboard" /> : <LandingPage />} />
-            </Routes>
-          </main>
-          {!hideOnPublic && <ChefFreddieWidget />}
-        </div>
-      </FreddieProvider>
-    </RecipeProvider>
+    <div className="min-h-screen bg-sand">
+      {!hideOnPublic && <NavBar />}
+      <main className="max-w-5xl mx-auto px-4 pt-8 pb-8">
+        <Routes>
+          <Route path="/signin" element={!user ? <SignIn /> : <Navigate to="/dashboard" />} />
+          <Route path="/signup" element={!user ? <SignUp /> : <Navigate to="/dashboard" />} />
+          {/* Protected routes */}
+          <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/signin" />} />
+          <Route path="/my-kitchen" element={user ? <MyKitchen /> : <Navigate to="/signin" />} />
+          <Route path="/my-cookbook" element={user ? <MyCookBook /> : <Navigate to="/signin" />} />
+          <Route path="/chefs-corner" element={user ? <ChefsCorner /> : <Navigate to="/signin" />} />
+          <Route path="/culinary-school" element={user ? <CulinarySchool /> : <Navigate to="/signin" />} />
+          <Route path="/profile" element={user ? <Profile /> : <Navigate to="/signin" />} />
+          <Route path="/" element={user ? <Navigate to="/dashboard" /> : <LandingPage />} />
+        </Routes>
+      </main>
+      {!hideOnPublic && <ChefFreddieWidget />}
+    </div>
+  );
+};
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <RecipeProvider>
+        <FreddieProvider>
+          <AppRoutes />
+        </FreddieProvider>
+      </RecipeProvider>
+    </AuthProvider>
   );
 };
 
