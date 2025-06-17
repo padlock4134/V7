@@ -10,6 +10,9 @@ export const DEPARTMENT_TYPES = [
   { key: 'dairy', label: 'Dairy', icon: '🥛', placeTypes: ['supermarket', 'convenience_store'], keywords: ['dairy', 'milk', 'cheese', 'yogurt'] },
 ];
 
+// Maximum number of places to show per category
+const MAX_PLACES_PER_CATEGORY = 5;
+
 interface Place {
   name: string;
   vicinity: string;
@@ -17,6 +20,7 @@ interface Place {
   types: string[];
   website: string | null;
   assignedCategory?: string; // Track which category this place is assigned to
+  isSpecialized?: boolean; // Whether this is a specialized market vs. general grocery
 }
 
 const MarketDirectory: React.FC = () => {
@@ -109,6 +113,7 @@ const MarketDirectory: React.FC = () => {
       for (const dept of DEPARTMENT_TYPES) {
         if (dept.keywords.some(keyword => nameLower.includes(keyword))) {
           place.assignedCategory = dept.key;
+          place.isSpecialized = true; // Mark as specialized if name contains keywords
           break;
         }
       }
@@ -120,10 +125,13 @@ const MarketDirectory: React.FC = () => {
         // For general supermarkets with no specific category, assign to grocery
         if (place.types.includes('supermarket')) {
           place.assignedCategory = 'grocery';
+          place.isSpecialized = false;
         } else if (place.types.includes('bakery')) {
           place.assignedCategory = 'bakery';
+          place.isSpecialized = true; // Bakeries are specialized
         } else if (place.types.includes('convenience_store')) {
           place.assignedCategory = 'grocery';
+          place.isSpecialized = false;
         }
       }
     });
@@ -133,18 +141,30 @@ const MarketDirectory: React.FC = () => {
 
   const getPlacesForDepartment = (dept: typeof DEPARTMENT_TYPES[0]) => {
     // First, get places specifically assigned to this category
-    const assignedPlaces = places.filter(place => place.assignedCategory === dept.key);
+    let assignedPlaces = places.filter(place => place.assignedCategory === dept.key);
     
-    // If we have assigned places, return those
+    // Sort places: specialized markets first, then general grocery stores
+    assignedPlaces.sort((a, b) => {
+      // First sort by specialized flag (specialized first)
+      if (a.isSpecialized && !b.isSpecialized) return -1;
+      if (!a.isSpecialized && b.isSpecialized) return 1;
+      
+      // If both are the same type, sort alphabetically
+      return a.name.localeCompare(b.name);
+    });
+    
+    // If we have assigned places, return up to MAX_PLACES_PER_CATEGORY
     if (assignedPlaces.length > 0) {
-      return assignedPlaces;
+      return assignedPlaces.slice(0, MAX_PLACES_PER_CATEGORY);
     }
     
     // Fallback: If no places were specifically assigned to this category,
-    // use the original type-based filtering
-    return places.filter(place => 
+    // use the original type-based filtering, limited to MAX_PLACES_PER_CATEGORY
+    const fallbackPlaces = places.filter(place => 
       place.types.some(type => dept.placeTypes.includes(type))
     );
+    
+    return fallbackPlaces.slice(0, MAX_PLACES_PER_CATEGORY);
   };
 
   return (
@@ -181,7 +201,10 @@ const MarketDirectory: React.FC = () => {
               <>
                 <div className="w-full mt-4 space-y-3">
                   {getPlacesForDepartment(selectedDept).map(place => (
-                    <div key={place.place_id} className="bg-sand rounded-lg p-4">
+                    <div 
+                      key={place.place_id} 
+                      className={`rounded-lg p-4 ${place.isSpecialized ? 'bg-sand' : 'bg-gray-50'}`}
+                    >
                       <h4 className="font-bold text-maineBlue">{place.name}</h4>
                       <p className="text-gray-600 text-sm">{place.vicinity}</p>
                       {place.website && (
