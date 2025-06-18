@@ -7,7 +7,7 @@ export const DEPARTMENT_TYPES = [
   { key: 'bakery', label: 'Bakery', icon: '🍞', placeTypes: ['bakery'], keywords: ['bakery', 'bread', 'pastry', 'cake', 'donut', 'bake', 'bagel', 'cookie', 'pie', 'patisserie', 'boulangerie', 'confection'] },
   { key: 'butcher', label: 'Meat', icon: '🥩', placeTypes: ['supermarket'], keywords: ['meat', 'butcher', 'steak', 'beef', 'poultry', 'pat', 'pats', 'sausage', 'deli', 'chop', 'prime', 'angus', 'pork', 'chicken', 'lamb'] },
   { key: 'seafood', label: 'Seafood', icon: '🐟', placeTypes: ['supermarket'], keywords: ['seafood', 'fish', 'shellfish', 'lobster', 'crab', 'harbor', 'ocean', 'sea', 'marine', 'catch', 'oyster', 'clam', 'shrimp', 'mussel', 'fishmonger', 'fishery'] },
-  { key: 'dairy', label: 'Dairy', icon: '🥛', placeTypes: ['supermarket', 'convenience_store'], keywords: ['dairy', 'milk', 'cheese', 'yogurt', 'creamery', 'cream', 'ice cream', 'farm', 'butter', 'fromagerie'] },
+  { key: 'farms', label: 'Farms', icon: '🚜', placeTypes: ['supermarket', 'convenience_store'], keywords: ['farm', 'farmers market', 'farmstand', 'csa', 'agriculture', 'ranch', 'homestead', 'acres', 'dairy', 'milk', 'cheese', 'creamery', 'yogurt'] },
 ];
 
 // Maximum number of places to show per category
@@ -23,6 +23,25 @@ const GENERIC_GROCERY_CHAINS = ['trader joe', 'whole foods', 'hannaford', 'shaw'
 const SPECIALTY_INDICATORS = [
   'specialty', 'artisan', 'gourmet', 'local', 'fresh', 'organic', 'market', 'shop', 'farm', 'stand'
 ];
+
+// Known specialized markets to prioritize
+const SPECIALIZED_MARKETS = {
+  'harbor fish': 'seafood',
+  'harbor fish market': 'seafood',
+  'merrill seafood': 'seafood',
+  'pats meat': 'butcher',
+  'pat meat': 'butcher',
+  'pat\'s meat': 'butcher',
+  'pat\'s meat market': 'butcher'
+};
+
+// Search queries for specialty categories
+const SPECIALTY_SEARCH_QUERIES = {
+  'butcher': ['meat market', 'butcher shop'],
+  'seafood': ['seafood market', 'fish market'],
+  'produce': ['produce market', 'fruit stand', 'vegetable market'],
+  'farms': ['farm', 'farmers market', 'farm stand']
+};
 
 interface Place {
   name: string;
@@ -69,31 +88,74 @@ const MarketDirectory: React.FC = () => {
 
     const fetchPlaces = async () => {
       setLoading(true);
+      setError(null);
       try {
         const radius = 24140; // 15 miles in meters
-        const response = await fetch(
+        let allPlaces: Place[] = [];
+        
+        // Initial fetch for supermarkets, convenience stores, and bakeries
+        const initialResponse = await fetch(
           `/.netlify/functions/get-places?lat=${coordinates.lat}&lng=${coordinates.lng}&radius=${radius}&type=supermarket,convenience_store,bakery`
         );
         
-        const data = await response.json();
-        console.log('Places API response:', data);
+        const initialData = await initialResponse.json();
+        console.log('Initial Places API response:', initialData);
         
-        if (!response.ok) {
-          throw new Error(data.error || `API returned ${response.status}`);
+        if (!initialResponse.ok) {
+          throw new Error(initialData.error || `API returned ${initialResponse.status}`);
         }
         
-        if (data.status === 'OK' && data.results) {
+        if (initialData.status === 'OK' && initialData.results) {
           // Filter out restaurants and big box retailers
-          const filteredPlaces = data.results.filter(
+          const filteredPlaces = initialData.results.filter(
             (place: Place) => 
               !place.types.some(type => type === 'restaurant' || type === 'meal_takeaway') &&
               !BIG_BOX_RETAILERS.some(storeName => place.name.toLowerCase().includes(storeName))
           );
           
-          // Assign each place to its most appropriate category
-          const categorizedPlaces = assignPlacesToCategories(filteredPlaces);
-          setPlaces(categorizedPlaces);
+          allPlaces = [...filteredPlaces];
         }
+        
+        // Additional searches for specialty categories
+        const specialtyCategories = ['butcher', 'seafood', 'produce', 'farms'];
+        for (const category of specialtyCategories) {
+          const queries = SPECIALTY_SEARCH_QUERIES[category as keyof typeof SPECIALTY_SEARCH_QUERIES];
+          
+          for (const query of queries) {
+            try {
+              console.log(`Searching for ${category} with query: ${query}`);
+              const specialtyResponse = await fetch(
+                `/.netlify/functions/text-search-places?lat=${coordinates.lat}&lng=${coordinates.lng}&radius=${radius}&query=${encodeURIComponent(query)}`
+              );
+              
+              const specialtyData = await specialtyResponse.json();
+              console.log(`${category} search response for "${query}":`, specialtyData);
+              
+              if (specialtyData.status === 'OK' && specialtyData.results) {
+                // Filter out restaurants and big box retailers
+                const filteredSpecialtyPlaces = specialtyData.results.filter(
+                  (place: Place) => 
+                    !place.types.some(type => type === 'restaurant' || type === 'meal_takeaway') &&
+                    !BIG_BOX_RETAILERS.some(storeName => place.name.toLowerCase().includes(storeName))
+                );
+                
+                // Add to our collection, avoiding duplicates
+                for (const place of filteredSpecialtyPlaces) {
+                  if (!allPlaces.some(p => p.place_id === place.place_id)) {
+                    allPlaces.push(place);
+                  }
+                }
+              }
+            } catch (err) {
+              console.error(`Error fetching ${category} places with query "${query}":`, err);
+              // Continue with other queries even if one fails
+            }
+          }
+        }
+        
+        // Assign each place to its most appropriate category
+        const categorizedPlaces = assignPlacesToCategories(allPlaces);
+        setPlaces(categorizedPlaces);
       } catch (err) {
         console.error('Places fetch error:', err);
         setError('Failed to fetch nearby places.');
@@ -119,6 +181,17 @@ const MarketDirectory: React.FC = () => {
     result.forEach(place => {
       const nameLower = place.name.toLowerCase();
       
+      // Debug: Log if we find Harbor Fish or other specialty markets
+      if (nameLower.includes('harbor') && nameLower.includes('fish')) {
+        console.log('Found Harbor Fish during categorization:', place);
+      }
+      if (nameLower.includes('merrill') && nameLower.includes('seafood')) {
+        console.log('Found Merrill Seafood during categorization:', place);
+      }
+      if ((nameLower.includes('pat') || nameLower.includes('pat\'s')) && nameLower.includes('meat')) {
+        console.log('Found Pat\'s Meat Market during categorization:', place);
+      }
+      
       // Check if it's a big box retailer (already filtered, but double-check)
       const isBigBox = BIG_BOX_RETAILERS.some(retailer => nameLower.includes(retailer));
       if (isBigBox) {
@@ -135,22 +208,32 @@ const MarketDirectory: React.FC = () => {
         return;
       }
       
-      // First check for specialized keywords in the name
-      let foundSpecialty = false;
+      // First check for known specialized markets we want to explicitly categorize
+      for (const [marketName, category] of Object.entries(SPECIALIZED_MARKETS)) {
+        if (nameLower.includes(marketName)) {
+          place.assignedCategory = category;
+          place.isSpecialized = true;
+          return; // Skip further processing for this place
+        }
+      }
       
       // Special handling for farms - farms are typically specialized
       if (nameLower.includes('farm')) {
-        if (nameLower.includes('dairy') || nameLower.includes('milk') || nameLower.includes('cheese')) {
-          place.assignedCategory = 'dairy';
-          place.isSpecialized = true;
-          return;
-        } else if (nameLower.includes('meat') || nameLower.includes('beef') || nameLower.includes('poultry')) {
+        if (nameLower.includes('meat') || nameLower.includes('beef') || nameLower.includes('poultry')) {
           place.assignedCategory = 'butcher';
           place.isSpecialized = true;
           return;
+        } else if (nameLower.includes('seafood') || nameLower.includes('fish')) {
+          place.assignedCategory = 'seafood';
+          place.isSpecialized = true;
+          return;
+        } else if (nameLower.includes('dairy') || nameLower.includes('milk') || nameLower.includes('cheese')) {
+          place.assignedCategory = 'farms';
+          place.isSpecialized = true;
+          return;
         } else {
-          // Default farm to produce if not specified
-          place.assignedCategory = 'produce';
+          // Default farm to farms category if not specified
+          place.assignedCategory = 'farms';
           place.isSpecialized = true;
           return;
         }
@@ -169,21 +252,19 @@ const MarketDirectory: React.FC = () => {
                                // These types are always specialized
                                dept.key === 'bakery' || 
                                dept.key === 'butcher' || 
-                               dept.key === 'seafood';
-          foundSpecialty = true;
-          break;
+                               dept.key === 'seafood' ||
+                               dept.key === 'farms';
+          return; // Found a match, no need to check further
         }
       }
       
       // If no specialty was found, check Google's place types
-      if (!foundSpecialty) {
-        for (const dept of DEPARTMENT_TYPES) {
-          if (place.types.some(type => dept.placeTypes.includes(type))) {
-            place.assignedCategory = dept.key;
-            // Bakeries from Google place types are specialized
-            place.isSpecialized = dept.key === 'bakery';
-            break;
-          }
+      for (const dept of DEPARTMENT_TYPES) {
+        if (place.types.some(type => dept.placeTypes.includes(type))) {
+          place.assignedCategory = dept.key;
+          // Bakeries from Google place types are specialized
+          place.isSpecialized = dept.key === 'bakery';
+          return; // Found a match, no need to check further
         }
       }
       
