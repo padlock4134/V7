@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 // Types for market info
 export const DEPARTMENT_TYPES = [
   { key: 'grocery', label: 'Grocery', icon: '🛒', placeTypes: ['supermarket', 'convenience_store'], keywords: ['grocery', 'market', 'food', 'store', 'co-op', 'coop', 'natural', 'organic'] },
-  { key: 'produce', label: 'Produce', icon: '🥦', placeTypes: ['supermarket', 'convenience_store'], keywords: ['produce', 'fruit', 'vegetable', 'farm', 'organic', 'farmers', 'garden', 'orchard', 'berry', 'apple'] },
-  { key: 'bakery', label: 'Bakery', icon: '🍞', placeTypes: ['bakery'], keywords: ['bakery', 'bread', 'pastry', 'cake', 'donut', 'bake', 'bagel', 'cookie', 'pie'] },
-  { key: 'butcher', label: 'Meat', icon: '🥩', placeTypes: ['supermarket'], keywords: ['meat', 'butcher', 'steak', 'beef', 'poultry', 'pat', 'pats', 'sausage', 'deli'] },
-  { key: 'seafood', label: 'Seafood', icon: '🐟', placeTypes: ['supermarket'], keywords: ['seafood', 'fish', 'shellfish', 'lobster', 'crab', 'harbor', 'ocean', 'sea', 'marine', 'catch'] },
-  { key: 'dairy', label: 'Dairy', icon: '🥛', placeTypes: ['supermarket', 'convenience_store'], keywords: ['dairy', 'milk', 'cheese', 'yogurt', 'creamery', 'cream', 'ice cream', 'farm'] },
+  { key: 'produce', label: 'Produce', icon: '🥦', placeTypes: ['supermarket', 'convenience_store'], keywords: ['produce', 'fruit', 'vegetable', 'farm', 'organic', 'farmers', 'garden', 'orchard', 'berry', 'apple', 'greengrocer', 'csa', 'stand'] },
+  { key: 'bakery', label: 'Bakery', icon: '🍞', placeTypes: ['bakery'], keywords: ['bakery', 'bread', 'pastry', 'cake', 'donut', 'bake', 'bagel', 'cookie', 'pie', 'patisserie', 'boulangerie', 'confection'] },
+  { key: 'butcher', label: 'Meat', icon: '🥩', placeTypes: ['supermarket'], keywords: ['meat', 'butcher', 'steak', 'beef', 'poultry', 'pat', 'pats', 'sausage', 'deli', 'chop', 'prime', 'angus', 'pork', 'chicken', 'lamb'] },
+  { key: 'seafood', label: 'Seafood', icon: '🐟', placeTypes: ['supermarket'], keywords: ['seafood', 'fish', 'shellfish', 'lobster', 'crab', 'harbor', 'ocean', 'sea', 'marine', 'catch', 'oyster', 'clam', 'shrimp', 'mussel', 'fishmonger', 'fishery'] },
+  { key: 'dairy', label: 'Dairy', icon: '🥛', placeTypes: ['supermarket', 'convenience_store'], keywords: ['dairy', 'milk', 'cheese', 'yogurt', 'creamery', 'cream', 'ice cream', 'farm', 'butter', 'fromagerie'] },
 ];
 
 // Maximum number of places to show per category
@@ -22,9 +22,34 @@ const GENERIC_GROCERY_CHAINS = ['trader joe', 'whole foods', 'hannaford', 'shaw'
 // Known specialized markets to prioritize
 const SPECIALIZED_MARKETS = {
   'harbor fish': 'seafood',
-  'pat': 'butcher',
   'pats meat': 'butcher',
-  'farmers market': 'produce'
+  'pat meat': 'butcher',
+  'meat market': 'butcher',
+  'butcher shop': 'butcher',
+  'fish market': 'seafood',
+  'seafood market': 'seafood',
+  'farmers market': 'produce',
+  'farm stand': 'produce',
+  'bakery': 'bakery',
+  'dairy farm': 'dairy',
+  'creamery': 'dairy',
+  'cheese shop': 'dairy'
+};
+
+// Business type indicators that strongly suggest specialization
+const BUSINESS_TYPE_INDICATORS = {
+  'butcher': 'butcher',
+  'meat': 'butcher',
+  'fishmonger': 'seafood',
+  'fish': 'seafood',
+  'seafood': 'seafood',
+  'bakery': 'bakery',
+  'patisserie': 'bakery',
+  'farm': 'produce',
+  'creamery': 'dairy',
+  'dairy': 'dairy',
+  'produce': 'produce',
+  'greengrocer': 'produce'
 };
 
 interface Place {
@@ -125,6 +150,30 @@ const MarketDirectory: React.FC = () => {
       
       // Check if it's a generic grocery chain - never mark these as specialized
       const isGenericChain = GENERIC_GROCERY_CHAINS.some(chain => nameLower.includes(chain));
+      if (isGenericChain) {
+        place.assignedCategory = 'grocery';
+        place.isSpecialized = false;
+        return; // Skip further processing for generic chains
+      }
+      
+      // Check for business type indicators in the name
+      for (const [indicator, category] of Object.entries(BUSINESS_TYPE_INDICATORS)) {
+        // Look for patterns like "X Market", "X Shop", etc.
+        const businessPatterns = [
+          `${indicator} market`, 
+          `${indicator} shop`, 
+          `${indicator} store`,
+          `${indicator} specialty`,
+          `${indicator}'s`,
+          `${indicator}s`
+        ];
+        
+        if (businessPatterns.some(pattern => nameLower.includes(pattern))) {
+          place.assignedCategory = category;
+          place.isSpecialized = true;
+          return; // Skip further processing
+        }
+      }
       
       // Special case handling for known specialized markets
       for (const [marketName, category] of Object.entries(SPECIALIZED_MARKETS)) {
@@ -181,7 +230,7 @@ const MarketDirectory: React.FC = () => {
             if (dept.keywords.some(keyword => nameLower.includes(keyword))) {
               place.assignedCategory = dept.key;
               // If the place name contains specific keywords that strongly indicate specialization
-              const specializationIndicators = ['specialty', 'artisan', 'gourmet', 'local', 'farm', 'fresh', 'organic'];
+              const specializationIndicators = ['specialty', 'artisan', 'gourmet', 'local', 'farm', 'fresh', 'organic', 'market', 'shop'];
               place.isSpecialized = specializationIndicators.some(indicator => nameLower.includes(indicator));
               break;
             }
