@@ -73,7 +73,7 @@ const ChefsCorner = () => {
           </header>
           {/* Shopping List - now at the top */}
           <section className="mb-8">
-            <h2 className="text-xl font-bold text-maineBlue mb-3">Shopping List</h2>
+            <h2 className="text-xl font-bold text-maineBlue mb-3 text-center">Shopping List</h2>
             <div className="bg-sand rounded shadow p-4 flex flex-col items-center">
               <p className="mb-2 text-gray-700 text-center">Import your saved recipes from My CookBook and shop everything you need in one click!</p>
               <button onClick={importFromCookBook} className="bg-maineBlue text-seafoam px-4 py-2 rounded font-bold hover:bg-seafoam hover:text-maineBlue transition-colors w-full">Import from My CookBook</button>
@@ -99,9 +99,7 @@ const ChefsCorner = () => {
                   ))
                 )}
               </ul>
-              {shoppingList.length > 0 && (
-                <button className="mt-4 bg-lobsterRed text-weatheredWhite px-4 py-2 rounded font-bold hover:bg-seafoam hover:text-maineBlue transition-colors w-full">Checkout</button>
-              )}
+
             </div>
           </section>
 
