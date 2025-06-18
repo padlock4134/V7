@@ -19,38 +19,10 @@ const BIG_BOX_RETAILERS = ['walmart', 'costco', 'bj', 'bjs', 'sams club', 'sam\'
 // List of generic grocery chains that should not be considered specialized
 const GENERIC_GROCERY_CHAINS = ['trader joe', 'whole foods', 'hannaford', 'shaw', 'market basket', 'stop & shop', 'kroger', 'publix', 'albertsons', 'safeway', 'giant', 'food lion'];
 
-// Known specialized markets to prioritize
-const SPECIALIZED_MARKETS = {
-  'harbor fish': 'seafood',
-  'pats meat': 'butcher',
-  'pat meat': 'butcher',
-  'meat market': 'butcher',
-  'butcher shop': 'butcher',
-  'fish market': 'seafood',
-  'seafood market': 'seafood',
-  'farmers market': 'produce',
-  'farm stand': 'produce',
-  'bakery': 'bakery',
-  'dairy farm': 'dairy',
-  'creamery': 'dairy',
-  'cheese shop': 'dairy'
-};
-
-// Business type indicators that strongly suggest specialization
-const BUSINESS_TYPE_INDICATORS = {
-  'butcher': 'butcher',
-  'meat': 'butcher',
-  'fishmonger': 'seafood',
-  'fish': 'seafood',
-  'seafood': 'seafood',
-  'bakery': 'bakery',
-  'patisserie': 'bakery',
-  'farm': 'produce',
-  'creamery': 'dairy',
-  'dairy': 'dairy',
-  'produce': 'produce',
-  'greengrocer': 'produce'
-};
+// Specialty keywords that strongly indicate a specialized market
+const SPECIALTY_INDICATORS = [
+  'specialty', 'artisan', 'gourmet', 'local', 'fresh', 'organic', 'market', 'shop', 'farm', 'stand'
+];
 
 interface Place {
   name: string;
@@ -144,121 +116,81 @@ const MarketDirectory: React.FC = () => {
   const assignPlacesToCategories = (places: Place[]): Place[] => {
     const result = [...places];
     
-    // First pass: Check for exact matches in name
     result.forEach(place => {
       const nameLower = place.name.toLowerCase();
       
-      // Check if it's a generic grocery chain - never mark these as specialized
+      // Check if it's a big box retailer (already filtered, but double-check)
+      const isBigBox = BIG_BOX_RETAILERS.some(retailer => nameLower.includes(retailer));
+      if (isBigBox) {
+        // Skip big box retailers entirely
+        return;
+      }
+      
+      // Check if it's a generic grocery chain
       const isGenericChain = GENERIC_GROCERY_CHAINS.some(chain => nameLower.includes(chain));
       if (isGenericChain) {
+        // Generic chains always go to grocery and are not specialized
         place.assignedCategory = 'grocery';
         place.isSpecialized = false;
-        return; // Skip further processing for generic chains
+        return;
       }
       
-      // Check for business type indicators in the name
-      for (const [indicator, category] of Object.entries(BUSINESS_TYPE_INDICATORS)) {
-        // Look for patterns like "X Market", "X Shop", etc.
-        const businessPatterns = [
-          `${indicator} market`, 
-          `${indicator} shop`, 
-          `${indicator} store`,
-          `${indicator} specialty`,
-          `${indicator}'s`,
-          `${indicator}s`
-        ];
-        
-        if (businessPatterns.some(pattern => nameLower.includes(pattern))) {
-          place.assignedCategory = category;
+      // First check for specialized keywords in the name
+      let foundSpecialty = false;
+      
+      // Special handling for farms - farms are typically specialized
+      if (nameLower.includes('farm')) {
+        if (nameLower.includes('dairy') || nameLower.includes('milk') || nameLower.includes('cheese')) {
+          place.assignedCategory = 'dairy';
           place.isSpecialized = true;
-          return; // Skip further processing
-        }
-      }
-      
-      // Special case handling for known specialized markets
-      for (const [marketName, category] of Object.entries(SPECIALIZED_MARKETS)) {
-        if (nameLower.includes(marketName)) {
-          place.assignedCategory = category;
+          return;
+        } else if (nameLower.includes('meat') || nameLower.includes('beef') || nameLower.includes('poultry')) {
+          place.assignedCategory = 'butcher';
           place.isSpecialized = true;
-          return; // Skip further processing for this place
-        }
-      }
-      
-      // Special case handling for common patterns
-      if (nameLower.includes('butcher') && !isGenericChain) {
-        place.assignedCategory = 'butcher';
-        place.isSpecialized = true;
-      } 
-      else if ((nameLower.includes('seafood') || nameLower.includes('fish') || nameLower.includes('lobster')) && 
-               !isGenericChain) {
-        place.assignedCategory = 'seafood';
-        place.isSpecialized = true;
-      }
-      else if (nameLower.includes('farm') && 
-              (nameLower.includes('dairy') || nameLower.includes('milk') || nameLower.includes('cheese')) &&
-              !isGenericChain) {
-        place.assignedCategory = 'dairy';
-        place.isSpecialized = true;
-      }
-      else if ((nameLower.includes('farm') && 
-               (nameLower.includes('produce') || nameLower.includes('fruit') || nameLower.includes('vegetable'))) &&
-               !isGenericChain) {
-        place.assignedCategory = 'produce';
-        place.isSpecialized = true;
-      }
-      else if ((nameLower.includes('bakery') || nameLower.includes('bread') || nameLower.includes('pastry')) &&
-               !isGenericChain) {
-        place.assignedCategory = 'bakery';
-        place.isSpecialized = true;
-      }
-      // If not a special case, check category keywords
-      else if (!isGenericChain) {
-        // Check if it's a farm - farms are always specialized
-        if (nameLower.includes('farm')) {
-          // Try to determine the farm type
-          if (nameLower.includes('dairy') || nameLower.includes('milk') || nameLower.includes('cheese')) {
-            place.assignedCategory = 'dairy';
-            place.isSpecialized = true;
-          } else {
-            // Default farm to produce if not specified
-            place.assignedCategory = 'produce';
-            place.isSpecialized = true;
-          }
+          return;
         } else {
-          // Check for other category keywords
-          for (const dept of DEPARTMENT_TYPES) {
-            if (dept.keywords.some(keyword => nameLower.includes(keyword))) {
-              place.assignedCategory = dept.key;
-              // If the place name contains specific keywords that strongly indicate specialization
-              const specializationIndicators = ['specialty', 'artisan', 'gourmet', 'local', 'farm', 'fresh', 'organic', 'market', 'shop'];
-              place.isSpecialized = specializationIndicators.some(indicator => nameLower.includes(indicator));
-              break;
-            }
-          }
-        }
-      } else {
-        // Generic chains are always assigned to grocery unless they have a specific department
-        if (!place.assignedCategory) {
-          place.assignedCategory = 'grocery';
-          place.isSpecialized = false;
+          // Default farm to produce if not specified
+          place.assignedCategory = 'produce';
+          place.isSpecialized = true;
+          return;
         }
       }
-    });
-    
-    // Second pass: For places without an assigned category, use their types
-    result.forEach(place => {
-      if (!place.assignedCategory) {
-        // For general supermarkets with no specific category, assign to grocery
-        if (place.types.includes('supermarket')) {
-          place.assignedCategory = 'grocery';
-          place.isSpecialized = false;
-        } else if (place.types.includes('bakery')) {
-          place.assignedCategory = 'bakery';
-          place.isSpecialized = true; // Bakeries are specialized
-        } else if (place.types.includes('convenience_store')) {
-          place.assignedCategory = 'grocery';
-          place.isSpecialized = false;
+      
+      // Check for specialty keywords in each department
+      for (const dept of DEPARTMENT_TYPES) {
+        // Skip grocery category for specialty keyword matching
+        if (dept.key === 'grocery') continue;
+        
+        // Check if any specialty keywords are in the name
+        if (dept.keywords.some(keyword => nameLower.includes(keyword))) {
+          place.assignedCategory = dept.key;
+          // Check if it contains any specialty indicators
+          place.isSpecialized = SPECIALTY_INDICATORS.some(indicator => nameLower.includes(indicator)) || 
+                               // These types are always specialized
+                               dept.key === 'bakery' || 
+                               dept.key === 'butcher' || 
+                               dept.key === 'seafood';
+          foundSpecialty = true;
+          break;
         }
+      }
+      
+      // If no specialty was found, check Google's place types
+      if (!foundSpecialty) {
+        for (const dept of DEPARTMENT_TYPES) {
+          if (place.types.some(type => dept.placeTypes.includes(type))) {
+            place.assignedCategory = dept.key;
+            // Bakeries from Google place types are specialized
+            place.isSpecialized = dept.key === 'bakery';
+            break;
+          }
+        }
+      }
+      
+      // Default to grocery if no category was assigned
+      if (!place.assignedCategory) {
+        place.assignedCategory = 'grocery';
+        place.isSpecialized = false;
       }
     });
     
@@ -266,16 +198,13 @@ const MarketDirectory: React.FC = () => {
   };
 
   const getPlacesForDepartment = (dept: typeof DEPARTMENT_TYPES[0]) => {
-    // First, get places specifically assigned to this category
+    // Get places specifically assigned to this category
     let assignedPlaces = places.filter(place => place.assignedCategory === dept.key);
     
-    // Sort places: specialized markets first, then general grocery stores
+    // Sort by specialized first, then alphabetically
     assignedPlaces.sort((a, b) => {
-      // First sort by specialized flag (specialized first)
       if (a.isSpecialized && !b.isSpecialized) return -1;
       if (!a.isSpecialized && b.isSpecialized) return 1;
-      
-      // If both are the same type, sort alphabetically
       return a.name.localeCompare(b.name);
     });
     
@@ -285,7 +214,7 @@ const MarketDirectory: React.FC = () => {
     }
     
     // Fallback: If no places were specifically assigned to this category,
-    // use the original type-based filtering, limited to MAX_PLACES_PER_CATEGORY
+    // use the place type-based filtering, excluding generic grocery chains
     const fallbackPlaces = places.filter(place => 
       place.types.some(type => dept.placeTypes.includes(type)) &&
       !GENERIC_GROCERY_CHAINS.some(chain => place.name.toLowerCase().includes(chain))
