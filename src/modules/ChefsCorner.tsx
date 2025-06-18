@@ -5,12 +5,28 @@ import { useFreddieContext } from '../components/FreddieContext';
 import { fetchKitchen } from './kitchenSupabase';
 import CookBookImportModal from '../components/CookBookImportModal';
 import MarketDirectory from '../components/MarketDirectory';
+import { useRecipeContext } from '../components/RecipeContext';
+import { fetchCookbook } from './cookbookSupabase';
 
 const ChefsCorner = () => {
   const { updateContext } = useFreddieContext();
+  const { setRecipes } = useRecipeContext();
+  
   useEffect(() => {
     updateContext({ page: 'ChefsCorner' });
-  }, [updateContext]);
+    
+    // Load recipes from cookbook when Chef's Corner loads
+    const loadRecipes = async () => {
+      try {
+        const savedRecipes = await fetchCookbook();
+        setRecipes(savedRecipes);
+      } catch (err) {
+        console.error('Error loading cookbook recipes:', err);
+      }
+    };
+    
+    loadRecipes();
+  }, [updateContext, setRecipes]);
 
   // Shopping list state
   const [shoppingList, setShoppingList] = useState<string[]>([]);
