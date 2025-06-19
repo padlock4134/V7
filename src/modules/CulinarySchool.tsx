@@ -22,7 +22,7 @@ const defaultTutorials = [
     comingSoon: true
   },
   {
-    title: 'Main Ingredient Prep',
+    title: 'Let\'s Cook This Meal!',
     desc: 'How to prepare the main ingredient for this dish.'
   }
 ];
@@ -36,7 +36,7 @@ function getTwoTutorials(recipe) {
       comingSoon: true
     },
     {
-      title: `Main Ingredient Prep: Preparing the main ingredient`,
+      title: `Let\'s Cook This Meal!`,
       desc: `How to prep the main ingredient (e.g., fish, chicken, clams) for this recipe.`
     }
   ];
@@ -274,7 +274,10 @@ const CulinarySchool = () => {
             </ol>
             <div className="mt-8 text-center">
               <div className="text-gray-700 mb-4">Want to get started? Head to My Kitchen and click <b>'Cook Me'</b> on any recipe!</div>
-              <Link to="/my-kitchen" className="inline-block bg-maineBlue text-seafoam px-6 py-2 rounded-full shadow hover:bg-seafoam hover:text-maineBlue font-bold transition-colors">Go to My Kitchen</Link>
+              <div className="flex justify-center space-x-4">
+                <Link to="/my-kitchen" className="inline-block bg-maineBlue text-seafoam px-6 py-2 rounded-full shadow hover:bg-seafoam hover:text-maineBlue font-bold transition-colors">Go to My Kitchen</Link>
+                <Link to="/my-cookbook" className="inline-block bg-maineBlue text-seafoam px-6 py-2 rounded-full shadow hover:bg-seafoam hover:text-maineBlue font-bold transition-colors">Go to My Cookbook</Link>
+              </div>
             </div>
           </>
         )}
