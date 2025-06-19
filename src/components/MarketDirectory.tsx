@@ -62,6 +62,7 @@ interface Place {
   };
   assignedCategory?: string; // Track which category this place is assigned to
   isSpecialized?: boolean; // Whether this is a specialized market vs. general grocery
+  distance?: number; // Distance from user's location in miles
 }
 
 const MarketDirectory: React.FC = () => {
@@ -359,10 +360,38 @@ const MarketDirectory: React.FC = () => {
       });
     }
     
-    // Sort by specialized first, then alphabetically
+    // Calculate distance for each place for sorting purposes
+    if (coordinates) {
+      assignedPlaces.forEach(place => {
+        if (place.geometry && place.geometry.location) {
+          try {
+            place.distance = calculateDistance(
+              coordinates.lat,
+              coordinates.lng,
+              place.geometry.location.lat,
+              place.geometry.location.lng
+            );
+          } catch (err) {
+            place.distance = 999; // Default high distance value for places with calculation errors
+          }
+        } else {
+          place.distance = 999; // Default high distance value for places without geometry
+        }
+      });
+    }
+    
+    // Sort by specialized first, then by distance (closest first)
     assignedPlaces.sort((a, b) => {
+      // First priority: specialized markets always come first
       if (a.isSpecialized && !b.isSpecialized) return -1;
       if (!a.isSpecialized && b.isSpecialized) return 1;
+      
+      // Second priority: within each group (specialized or non-specialized), sort by distance
+      if (a.distance !== undefined && b.distance !== undefined) {
+        return a.distance - b.distance;
+      }
+      
+      // Fallback to alphabetical if distances aren't available
       return a.name.localeCompare(b.name);
     });
     
