@@ -15,7 +15,7 @@ export const DEPARTMENT_TYPES = [
 const MAX_PLACES_PER_CATEGORY = 5;
 
 // List of big box retailers to exclude
-const BIG_BOX_RETAILERS = ['walmart', 'costco', 'bj', 'bjs', 'sams club', 'sam\'s club', 'best buy', 'target', 'home depot', 'lowe\'s', 'lowes'];
+const BIG_BOX_RETAILERS = ['walmart', 'costco', 'bj', 'bjs', 'sams club', 'sam\'s club', 'best buy', 'target', 'home depot', 'lowe\'s', 'lowes', 'duluth trading', 'duluth trading company'];
 
 // List of generic grocery chains that should not be considered specialized
 const GENERIC_GROCERY_CHAINS = ['trader joe', 'whole foods', 'hannaford', 'shaw', 'market basket', 'stop & shop', 'kroger', 'publix', 'albertsons', 'safeway', 'giant', 'food lion'];
