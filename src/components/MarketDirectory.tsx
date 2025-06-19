@@ -54,6 +54,12 @@ interface Place {
   place_id: string;
   types: string[];
   website: string | null;
+  geometry: {
+    location: {
+      lat: number;
+      lng: number;
+    }
+  };
   assignedCategory?: string; // Track which category this place is assigned to
   isSpecialized?: boolean; // Whether this is a specialized market vs. general grocery
 }
@@ -128,7 +134,14 @@ const MarketDirectory: React.FC = () => {
           const filteredPlaces = initialData.results.filter(
             (place: Place) => 
               !place.types.some(type => type === 'restaurant' || type === 'meal_takeaway') &&
-              !BIG_BOX_RETAILERS.some(storeName => place.name.toLowerCase().includes(storeName))
+              !BIG_BOX_RETAILERS.some(storeName => place.name.toLowerCase().includes(storeName)) &&
+              // Only include places within 15 miles
+              calculateDistance(
+                coordinates.lat,
+                coordinates.lng,
+                place.geometry.location.lat,
+                place.geometry.location.lng
+              ) <= 15
           );
           
           allPlaces = [...filteredPlaces];
@@ -243,6 +256,14 @@ const MarketDirectory: React.FC = () => {
       
       if (nameLower.includes('meat') || nameLower.includes('butcher')) {
         place.assignedCategory = 'butcher';
+        place.isSpecialized = true;
+        return;
+      }
+      
+      // Special handling for bakeries - make sure they're properly categorized
+      if (nameLower.includes('bakery') || nameLower.includes('bakeries') || nameLower.includes('bread') || 
+          nameLower.includes('pastry') || nameLower.includes('cake') || place.types.includes('bakery')) {
+        place.assignedCategory = 'bakery';
         place.isSpecialized = true;
         return;
       }
