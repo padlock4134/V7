@@ -104,7 +104,7 @@ const WeeklyChallengeRecipeModal: React.FC<WeeklyChallengeRecipeModalProps> = ({
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-      <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative" onClick={e => e.stopPropagation()}>
+      <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-800" onClick={onClose} aria-label="Close">✕</button>
         <div className="flex flex-col items-center min-h-[200px] justify-center">
           {loading && (
@@ -120,7 +120,7 @@ const WeeklyChallengeRecipeModal: React.FC<WeeklyChallengeRecipeModalProps> = ({
           )}
           {!loading && !error && recipe && (
             <>
-              {recipe.image && <img src={recipe.image} alt={recipe.title} className="w-full max-h-64 object-cover rounded mb-4" />}
+              {recipe.image && <img src={recipe.image} alt={recipe.title} className="w-full max-h-48 sm:max-h-64 object-cover rounded mb-4" />}
               <h2 className="text-2xl font-bold mb-2 text-center">{recipe.title}</h2>
               <h3 className="font-semibold text-lg mt-2 mb-1">Ingredients</h3>
               <ul className="mb-3 list-disc list-inside">
