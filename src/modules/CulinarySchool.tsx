@@ -17,8 +17,9 @@ const generalLessons = [
 
 const defaultTutorials = [
   {
-    title: 'How to Make the Meal',
-    desc: 'Watch a video on how to make the entire recipe.'
+    title: 'Tutorials and Cooking Hacks',
+    desc: 'Learn specialized techniques and shortcuts for better cooking.',
+    comingSoon: true
   },
   {
     title: 'Main Ingredient Prep',
@@ -30,8 +31,9 @@ function getTwoTutorials(recipe) {
   if (!recipe) return [];
   return [
     {
-      title: `How to Make ${recipe.title}`,
-      desc: `Watch a video on how to make the entire recipe.`
+      title: `Tutorials and Cooking Hacks`,
+      desc: `Learn specialized techniques and shortcuts for better cooking.`,
+      comingSoon: true
     },
     {
       title: `Main Ingredient Prep: Preparing the main ingredient`,
@@ -188,11 +190,16 @@ const CulinarySchool = () => {
               {tutorials.map((tut, idx) => (
                 <li
                   key={idx}
-                  className="bg-sand p-4 rounded shadow-inner cursor-pointer hover:bg-sky-300 hover:text-maineBlue transition-colors"
-                  onClick={() => setModalIdx(idx)}
+                  className={`bg-sand p-4 rounded shadow-inner relative ${tut.comingSoon ? 'cursor-default' : 'cursor-pointer hover:bg-sky-300 hover:text-maineBlue transition-colors'}`}
+                  onClick={() => !tut.comingSoon && setModalIdx(idx)}
                 >
                   <div className="font-bold mb-1">Step {idx + 1}: {tut.title}</div>
                   <div className="text-sm text-gray-700">{tut.desc}</div>
+                  {tut.comingSoon && (
+                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded">
+                      <span className="text-white font-bold text-lg transform rotate-12">Coming Soon</span>
+                    </div>
+                  )}
                 </li>
               ))}
             </ol>
@@ -252,11 +259,16 @@ const CulinarySchool = () => {
               {defaultTutorials.map((tut, idx) => (
                 <li
                   key={idx}
-                  className="bg-sand p-4 rounded shadow-inner cursor-pointer hover:bg-sky-300 hover:text-maineBlue transition-colors"
-                  onClick={() => setModalIdx(idx)}
+                  className={`bg-sand p-4 rounded shadow-inner relative ${tut.comingSoon ? 'cursor-default' : 'cursor-pointer hover:bg-sky-300 hover:text-maineBlue transition-colors'}`}
+                  onClick={() => !tut.comingSoon && setModalIdx(idx)}
                 >
                   <div className="font-bold mb-1">Step {idx + 1}: {tut.title}</div>
                   <div className="text-sm text-gray-700">{tut.desc}</div>
+                  {tut.comingSoon && (
+                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded">
+                      <span className="text-white font-bold text-lg transform rotate-12">Coming Soon</span>
+                    </div>
+                  )}
                 </li>
               ))}
             </ol>
