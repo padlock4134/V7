@@ -137,22 +137,7 @@ const MarketDirectory: React.FC = () => {
               !BIG_BOX_RETAILERS.some(storeName => place.name.toLowerCase().includes(storeName))
           );
           
-          // Apply distance filter safely - only include places within 15 miles
-          const placesWithinRadius = filteredPlaces.filter(place => {
-            // Skip places without valid geometry
-            if (!place.geometry || !place.geometry.location) return false;
-            
-            // Calculate distance and only include places within 15 miles
-            const distance = calculateDistance(
-              coordinates.lat,
-              coordinates.lng,
-              place.geometry.location.lat,
-              place.geometry.location.lng
-            );
-            return distance <= 15;
-          });
-          
-          allPlaces = [...placesWithinRadius];
+          allPlaces = [...filteredPlaces];
         }
         
         // Additional searches for specialty categories
@@ -178,23 +163,10 @@ const MarketDirectory: React.FC = () => {
                     !BIG_BOX_RETAILERS.some(storeName => place.name.toLowerCase().includes(storeName))
                 );
                 
-                // Add to our collection, avoiding duplicates and ensuring they're within 15 miles
+                // Add to our collection, avoiding duplicates
                 for (const place of filteredSpecialtyPlaces) {
                   if (!allPlaces.some(p => p.place_id === place.place_id)) {
-                    // Only add places with valid geometry and within 15 miles
-                    if (place.geometry && place.geometry.location) {
-                      const distance = calculateDistance(
-                        coordinates.lat,
-                        coordinates.lng,
-                        place.geometry.location.lat,
-                        place.geometry.location.lng
-                      );
-                      
-                      // Only add places within 15 miles
-                      if (distance <= 15) {
-                        allPlaces.push(place);
-                      }
-                    }
+                    allPlaces.push(place);
                   }
                 }
               }
@@ -365,6 +337,27 @@ const MarketDirectory: React.FC = () => {
   const getPlacesForDepartment = (dept: typeof DEPARTMENT_TYPES[0]) => {
     // Get places specifically assigned to this category
     let assignedPlaces = places.filter(place => place.assignedCategory === dept.key);
+    
+    // Apply 15-mile distance filter if geometry data is available
+    if (coordinates) {
+      assignedPlaces = assignedPlaces.filter(place => {
+        // If no geometry data, keep the place to avoid empty results
+        if (!place.geometry || !place.geometry.location) return true;
+        
+        try {
+          const distance = calculateDistance(
+            coordinates.lat,
+            coordinates.lng,
+            place.geometry.location.lat,
+            place.geometry.location.lng
+          );
+          return distance <= 15;
+        } catch (err) {
+          console.log('Distance calculation error for', place.name, err);
+          return true; // Keep the place on error to avoid empty results
+        }
+      });
+    }
     
     // Sort by specialized first, then alphabetically
     assignedPlaces.sort((a, b) => {
