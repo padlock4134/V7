@@ -12,14 +12,14 @@ const plans = [
   {
     id: 'monthly',
     name: 'Monthly',
-    price: '$14.99/mo',
-    description: '7-day free trial, then $14.99 per month. Cancel anytime.'
+    price: '$10.99/mo',
+    description: '$10.99 per month. Cancel anytime.'
   },
   {
     id: 'yearly',
     name: 'Yearly',
-    price: '$150/yr',
-    description: '7-day free trial, then $150 per year. Save 17% vs monthly.'
+    price: '$99/yr',
+    description: '$99 per year. Save over 24% vs monthly.'
   }
 ];
 
@@ -85,7 +85,7 @@ const PlanSelectionModal: React.FC<PlanSelectionModalProps> = ({ open, onSelectP
         >
           Continue to Payment
         </button>
-        <p className="mt-6 text-xs text-gray-500 text-center">You will not be charged until your 7-day free trial ends.</p>
+        <p className="mt-6 text-xs text-gray-500 text-center">Payments are securely processed. You'll be redirected to your dashboard after payment.</p>
         <TermsModal
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
