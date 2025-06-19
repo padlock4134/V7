@@ -292,9 +292,21 @@ const MarketDirectory: React.FC = () => {
       return a.name.localeCompare(b.name);
     });
     
+    // Remove duplicates by name (case insensitive)
+    const uniquePlaces: Place[] = [];
+    const seenNames = new Set<string>();
+    
+    for (const place of assignedPlaces) {
+      const nameLower = place.name.toLowerCase();
+      if (!seenNames.has(nameLower)) {
+        uniquePlaces.push(place);
+        seenNames.add(nameLower);
+      }
+    }
+    
     // If we have assigned places, return up to MAX_PLACES_PER_CATEGORY
-    if (assignedPlaces.length > 0) {
-      return assignedPlaces.slice(0, MAX_PLACES_PER_CATEGORY);
+    if (uniquePlaces.length > 0) {
+      return uniquePlaces.slice(0, MAX_PLACES_PER_CATEGORY);
     }
     
     // Fallback: If no places were specifically assigned to this category,
@@ -304,7 +316,19 @@ const MarketDirectory: React.FC = () => {
       !GENERIC_GROCERY_CHAINS.some(chain => place.name.toLowerCase().includes(chain))
     );
     
-    return fallbackPlaces.slice(0, MAX_PLACES_PER_CATEGORY);
+    // Also deduplicate fallback places
+    const uniqueFallbackPlaces: Place[] = [];
+    const seenFallbackNames = new Set<string>();
+    
+    for (const place of fallbackPlaces) {
+      const nameLower = place.name.toLowerCase();
+      if (!seenFallbackNames.has(nameLower)) {
+        uniqueFallbackPlaces.push(place);
+        seenFallbackNames.add(nameLower);
+      }
+    }
+    
+    return uniqueFallbackPlaces.slice(0, MAX_PLACES_PER_CATEGORY);
   };
 
   return (
