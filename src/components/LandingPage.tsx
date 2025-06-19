@@ -29,14 +29,7 @@ const LandingPage: React.FC = () => {
           <p className="text-xl md:text-2xl text-navy font-sans mb-8">
             PorkChop is your AI cooking sidekick—helping you plan, shop, and cook smarter every day. Discover recipes, conquer weekly challenges, and track your progress, all in one place.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Link to="/signup" className="px-8 py-3 rounded-full bg-lobsterRed text-weatheredWhite font-bold text-lg shadow hover:bg-seafoam hover:text-maineBlue transition-colors">
-              Get Started Free
-            </Link>
-            <Link to="/signin" className="px-8 py-3 rounded-full bg-seafoam text-maineBlue font-bold text-lg shadow hover:bg-lobsterRed hover:text-weatheredWhite transition-colors">
-              Log In
-            </Link>
-          </div>
+          
           <div className="flex flex-col items-center gap-2">
             <span className="text-sm text-navy">No clutter. No ads. Cancel anytime.</span>
             <InstallPWAButton />
