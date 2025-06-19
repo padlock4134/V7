@@ -134,17 +134,22 @@ const MarketDirectory: React.FC = () => {
           const filteredPlaces = initialData.results.filter(
             (place: Place) => 
               !place.types.some(type => type === 'restaurant' || type === 'meal_takeaway') &&
-              !BIG_BOX_RETAILERS.some(storeName => place.name.toLowerCase().includes(storeName)) &&
-              // Only include places within 15 miles
-              calculateDistance(
-                coordinates.lat,
-                coordinates.lng,
-                place.geometry.location.lat,
-                place.geometry.location.lng
-              ) <= 15
+              !BIG_BOX_RETAILERS.some(storeName => place.name.toLowerCase().includes(storeName))
           );
           
-          allPlaces = [...filteredPlaces];
+          // Apply distance filter only to places with valid geometry
+          const placesWithinRadius = filteredPlaces.filter(place => {
+            if (!place.geometry || !place.geometry.location) return false;
+            
+            return calculateDistance(
+              coordinates.lat,
+              coordinates.lng,
+              place.geometry.location.lat,
+              place.geometry.location.lng
+            ) <= 15;
+          });
+          
+          allPlaces = [...placesWithinRadius];
         }
         
         // Additional searches for specialty categories
@@ -173,17 +178,19 @@ const MarketDirectory: React.FC = () => {
                 // Add to our collection, avoiding duplicates and ensuring they're within 15 miles
                 for (const place of filteredSpecialtyPlaces) {
                   if (!allPlaces.some(p => p.place_id === place.place_id)) {
-                    // Calculate distance from user's location
-                    const distance = calculateDistance(
-                      coordinates.lat,
-                      coordinates.lng,
-                      place.geometry.location.lat,
-                      place.geometry.location.lng
-                    );
-                    
-                    // Only add places within 15 miles
-                    if (distance <= 15) {
-                      allPlaces.push(place);
+                    // Only add places with valid geometry and within 15 miles
+                    if (place.geometry && place.geometry.location) {
+                      const distance = calculateDistance(
+                        coordinates.lat,
+                        coordinates.lng,
+                        place.geometry.location.lat,
+                        place.geometry.location.lng
+                      );
+                      
+                      // Only add places within 15 miles
+                      if (distance <= 15) {
+                        allPlaces.push(place);
+                      }
                     }
                   }
                 }
@@ -248,7 +255,7 @@ const MarketDirectory: React.FC = () => {
       }
       
       // Priority categorization for seafood and meat in name - these take precedence over other rules
-      if (nameLower.includes('seafood') || nameLower.includes('fish')) {
+      if (nameLower.includes('seafood') || nameLower.includes('fish') || nameLower.includes('shellfish') || nameLower.includes('lobster')) {
         place.assignedCategory = 'seafood';
         place.isSpecialized = true;
         return;
@@ -264,6 +271,13 @@ const MarketDirectory: React.FC = () => {
       if (nameLower.includes('bakery') || nameLower.includes('bakeries') || nameLower.includes('bread') || 
           nameLower.includes('pastry') || nameLower.includes('cake') || place.types.includes('bakery')) {
         place.assignedCategory = 'bakery';
+        place.isSpecialized = true;
+        return;
+      }
+      
+      // Special handling for farms
+      if (nameLower.includes('farm') || nameLower.includes('farmers market')) {
+        place.assignedCategory = 'farms';
         place.isSpecialized = true;
         return;
       }
