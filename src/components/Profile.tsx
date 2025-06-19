@@ -7,6 +7,9 @@ import { useTermsModal } from './useTermsModal';
 import PaymentModal from './PaymentModal';
 
 const Profile = () => {
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelConfirmed, setCancelConfirmed] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -220,10 +223,48 @@ const Profile = () => {
         </button>
         <button
           className="bg-lobsterRed text-weatheredWhite px-4 py-2 rounded font-bold w-full max-w-xs hover:bg-seafoam hover:text-maineBlue transition-colors"
-          onClick={() => alert('Cancel subscription functionality coming soon!')}
+          onClick={() => setShowCancelModal(true)}
         >
           Cancel Subscription
         </button>
+
+        {/* Cancel Subscription Modal */}
+        {showCancelModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+            <div className="bg-weatheredWhite rounded-lg shadow-lg p-8 max-w-sm w-full relative flex flex-col items-center">
+              <button className="absolute top-2 right-2 text-lobsterRed font-bold text-xl" onClick={() => setShowCancelModal(false)}>✕</button>
+              <h3 className="font-retro text-lg mb-4 text-lobsterRed">Cancel Subscription</h3>
+              {cancelConfirmed ? (
+                <div className="text-center text-maineBlue text-lg font-retro">Your cancellation request has been received.<br/>Your account will be canceled within 24 hours.</div>
+              ) : (
+                <>
+                  <div className="mb-4 text-center text-maineBlue">Your account will be canceled within 24 hours.<br/>You will receive an email confirmation.</div>
+                  <button
+                    className="bg-lobsterRed text-weatheredWhite px-4 py-2 rounded font-bold w-full mt-2 hover:bg-seafoam hover:text-maineBlue transition-colors"
+                    onClick={async () => {
+                      setCancelLoading(true);
+                      try {
+                        await fetch('/.netlify/functions/cancel-subscription', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ email: user?.email }),
+                        });
+                        setCancelConfirmed(true);
+                      } catch (e) {
+                        alert('Failed to send cancellation request. Please try again.');
+                      } finally {
+                        setCancelLoading(false);
+                      }
+                    }}
+                    disabled={cancelLoading}
+                  >
+                    {cancelLoading ? 'Processing...' : 'Confirm Cancel'}
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Manage Subscription Modal */}
         {showSubModal && (
