@@ -14,8 +14,11 @@ export const DEPARTMENT_TYPES = [
 // Maximum number of places to show per category
 const MAX_PLACES_PER_CATEGORY = 5;
 
-// List of big box retailers to exclude
-const BIG_BOX_RETAILERS = ['walmart', 'costco', 'bj', 'bjs', 'sams club', 'sam\'s club', 'best buy', 'target', 'home depot', 'lowe\'s', 'lowes', 'duluth trading', 'duluth trading company', 'cvs', 'cvs pharmacy'];
+// List of big box retailers and non-food places to exclude
+const BIG_BOX_RETAILERS = ['walmart', 'costco', 'bj', 'bjs', 'sams club', 'sam\'s club', 'best buy', 'target', 'home depot', 'lowe\'s', 'lowes', 'duluth trading', 'duluth trading company', 'cvs', 'cvs pharmacy', 'maine audubon'];
+
+// List of specific places to exclude (exact matches)
+const EXCLUDED_PLACES = ['Brunswick Farmers Market', 'Brunswick Winter Farmers\' Market'];
 
 // List of generic grocery chains that should not be considered specialized
 const GENERIC_GROCERY_CHAINS = ['trader joe', 'whole foods', 'hannaford', 'shaw', 'market basket', 'stop & shop', 'kroger', 'publix', 'albertsons', 'safeway', 'giant', 'food lion'];
@@ -198,6 +201,12 @@ const MarketDirectory: React.FC = () => {
       const isBigBox = BIG_BOX_RETAILERS.some(retailer => nameLower.includes(retailer));
       if (isBigBox) {
         // Skip big box retailers entirely
+        return;
+      }
+      
+      // Check if it's in our specific exclusion list (exact match)
+      if (EXCLUDED_PLACES.includes(place.name)) {
+        // Skip specifically excluded places
         return;
       }
       
