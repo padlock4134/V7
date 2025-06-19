@@ -358,8 +358,8 @@ const MyKitchen = () => {
                       {/* Jar look */}
                       <div className="w-16 h-20 bg-weatheredWhite border-2 border-yellow-700 rounded-b-lg rounded-t-md shadow relative flex flex-col items-center justify-end">
                         <div className="w-12 h-3 bg-yellow-900 rounded-t-md absolute -top-3 left-1/2 -translate-x-1/2"></div>
-                        <span className="text-xs font-semibold mt-8 text-maineBlue break-words text-center px-1">{ing.name}</span>
-                        <span className="absolute bottom-1 left-1/2 -translate-x-1/2 text-[10px] text-yellow-900 bg-sand px-1 rounded">{ing.category}</span>
+                        <span className="text-xs font-semibold mt-6 text-maineBlue break-words text-center px-1">{ing.name}</span>
+                        <span className="absolute bottom-1 left-1/2 -translate-x-1/2 text-[10px] text-yellow-900 bg-sand px-1 rounded-sm font-medium">{ing.category}</span>
                       </div>
                       <button
                         className="mt-1 text-xs text-lobsterRed hover:text-maineBlue font-bold"
