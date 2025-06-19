@@ -137,7 +137,22 @@ const MarketDirectory: React.FC = () => {
               !BIG_BOX_RETAILERS.some(storeName => place.name.toLowerCase().includes(storeName))
           );
           
-          allPlaces = [...filteredPlaces];
+          // Apply distance filter safely - only include places within 15 miles
+          const placesWithinRadius = filteredPlaces.filter(place => {
+            // Skip places without valid geometry
+            if (!place.geometry || !place.geometry.location) return false;
+            
+            // Calculate distance and only include places within 15 miles
+            const distance = calculateDistance(
+              coordinates.lat,
+              coordinates.lng,
+              place.geometry.location.lat,
+              place.geometry.location.lng
+            );
+            return distance <= 15;
+          });
+          
+          allPlaces = [...placesWithinRadius];
         }
         
         // Additional searches for specialty categories
@@ -163,10 +178,23 @@ const MarketDirectory: React.FC = () => {
                     !BIG_BOX_RETAILERS.some(storeName => place.name.toLowerCase().includes(storeName))
                 );
                 
-                // Add to our collection, avoiding duplicates
+                // Add to our collection, avoiding duplicates and ensuring they're within 15 miles
                 for (const place of filteredSpecialtyPlaces) {
                   if (!allPlaces.some(p => p.place_id === place.place_id)) {
-                    allPlaces.push(place);
+                    // Only add places with valid geometry and within 15 miles
+                    if (place.geometry && place.geometry.location) {
+                      const distance = calculateDistance(
+                        coordinates.lat,
+                        coordinates.lng,
+                        place.geometry.location.lat,
+                        place.geometry.location.lng
+                      );
+                      
+                      // Only add places within 15 miles
+                      if (distance <= 15) {
+                        allPlaces.push(place);
+                      }
+                    }
                   }
                 }
               }
