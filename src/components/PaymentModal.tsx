@@ -46,7 +46,17 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ open, onClose, onDevBypass,
           ×
         </button>
         <h2 className="text-2xl font-bold mb-4 text-center">Complete Your Payment</h2>
-        <p className="mb-6 text-center">Choose Google Pay, Apple Pay, or enter your card to start your 7-day trial.</p>
+        
+        {/* Pricing display */}
+        <div className="mb-6 text-center">
+          <p className="text-xl font-bold text-maineBlue">
+            {plan === 'yearly' ? '$99.00' : '$10.99'}
+            <span className="text-base font-normal text-gray-600">/{plan === 'yearly' ? 'year' : 'month'} USD</span>
+          </p>
+          {plan === 'yearly' && (
+            <p className="text-sm text-green-600 mt-1">Save over 24% with annual billing</p>
+          )}
+        </div>
         {/* Payment buttons */}
         <div className="flex flex-col gap-4 mb-6">
           <button

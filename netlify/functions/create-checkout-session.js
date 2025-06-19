@@ -28,9 +28,6 @@ exports.handler = async function(event) {
       line_items: [
         { price: priceId, quantity: 1 }
       ],
-      subscription_data: {
-        trial_period_days: 7
-      },
       success_url: process.env.SUCCESS_URL,
       cancel_url: process.env.CANCEL_URL,
     });
