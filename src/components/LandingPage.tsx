@@ -16,21 +16,62 @@ const LandingPage: React.FC = () => {
           <span className="text-3xl font-bold text-lobsterRed tracking-wide font-retro">PorkChop</span>
         </div>
         <div className="flex gap-3">
-  <Link to="/signin" className="landing-nav-btn hover:bg-seafoam hover:text-maineBlue transition-colors">Log In</Link>
-  <Link to="/signup" className="landing-nav-btn primary bg-lobsterRed text-weatheredWhite hover:bg-seafoam hover:text-maineBlue transition-colors">Sign Up</Link>
-</div>
+          <Link to="/signin" className="landing-nav-btn hover:bg-seafoam hover:text-maineBlue transition-colors">Log In</Link>
+          <Link to="/signup" className="landing-nav-btn primary bg-lobsterRed text-weatheredWhite hover:bg-seafoam hover:text-maineBlue transition-colors">Sign Up</Link>
+        </div>
       </nav>
       <main className="landing-main flex-1 flex flex-col items-center justify-center px-4">
-        <div className="landing-hero text-center mt-16">
-          <h1 className="text-5xl font-bold text-maineBlue mb-3 font-retro">Level Up Your Cooking</h1>
-          <p className="landing-tagline text-xl text-navy mb-8 font-sans">
-            Discover new recipes, conquer weekly challenges, and track your culinary journey—all powered by AI.
+        {/* HERO SECTION */}
+        <section className="w-full max-w-3xl mx-auto text-center mt-20 mb-12">
+          <h1 className="text-5xl md:text-6xl font-bold text-maineBlue mb-4 font-retro leading-tight">
+            Your Kitchen. <span className="text-lobsterRed">Superpowered.</span>
+          </h1>
+          <p className="text-xl md:text-2xl text-navy font-sans mb-8">
+            PorkChop is your AI cooking sidekick—helping you plan, shop, and cook smarter every day. Discover recipes, conquer weekly challenges, and track your progress, all in one place.
           </p>
-          <div className="flex flex-col gap-4 items-center mb-8">
-  <InstallPWAButton />
-</div>
-          
-        </div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <Link to="/signup" className="px-8 py-3 rounded-full bg-lobsterRed text-weatheredWhite font-bold text-lg shadow hover:bg-seafoam hover:text-maineBlue transition-colors">
+              Get Started Free
+            </Link>
+            <Link to="/signin" className="px-8 py-3 rounded-full bg-seafoam text-maineBlue font-bold text-lg shadow hover:bg-lobsterRed hover:text-weatheredWhite transition-colors">
+              Log In
+            </Link>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-sm text-navy">No clutter. No ads. Cancel anytime.</span>
+            <InstallPWAButton />
+          </div>
+        </section>
+
+        {/* HOW IT WORKS / WHY PORKCHOP */}
+        <section className="w-full max-w-4xl mx-auto grid md:grid-cols-3 gap-8 mb-16">
+          <div className="bg-weatheredWhite rounded-2xl shadow-lg border border-seafoam p-6 flex flex-col items-center">
+            <span className="text-3xl mb-2">🍳</span>
+            <h2 className="text-lg font-bold text-maineBlue mb-2 font-retro">Cook With Confidence</h2>
+            <p className="text-navy font-sans text-center">Step-by-step interactive cooking mode, smart ingredient tracking, and instant answers from Chef Freddie.</p>
+          </div>
+          <div className="bg-weatheredWhite rounded-2xl shadow-lg border border-seafoam p-6 flex flex-col items-center">
+            <span className="text-3xl mb-2">🛒</span>
+            <h2 className="text-lg font-bold text-maineBlue mb-2 font-retro">Shop & Plan Smarter</h2>
+            <p className="text-navy font-sans text-center">Personalized shopping lists, pantry scanning, and meal planning that fits your real life and real kitchen.</p>
+          </div>
+          <div className="bg-weatheredWhite rounded-2xl shadow-lg border border-seafoam p-6 flex flex-col items-center">
+            <span className="text-3xl mb-2">🏆</span>
+            <h2 className="text-lg font-bold text-maineBlue mb-2 font-retro">Level Up & Have Fun</h2>
+            <p className="text-navy font-sans text-center">Weekly challenges, XP, badges, and a growing cookbook. Cooking is a game—get rewarded for learning and trying new things.</p>
+          </div>
+        </section>
+
+        {/* APP HIGHLIGHT SECTION */}
+        <section className="max-w-3xl mx-auto mb-12 px-6 py-8 bg-weatheredWhite rounded-2xl shadow-lg border-2 border-seafoam text-center">
+          <h2 className="text-2xl font-retro text-lobsterRed font-bold mb-3">Why PorkChop?</h2>
+          <p className="text-navy font-sans mb-2">
+            Tired of endless recipe lists and generic cooking apps? PorkChop is built for real home cooks who want to learn, experiment, and actually enjoy the process. No more guessing what’s for dinner—just open your digital kitchen and get inspired.
+          </p>
+          <p className="text-navy font-sans">
+            <span className="font-bold text-maineBlue">Secure, private, and ad-free.</span> Your data stays yours. Always.
+          </p>
+        </section>
         <section className="landing-features flex flex-col md:flex-row flex-wrap justify-center gap-8 mt-6">
   <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
     <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Weekly Challenges</h2>
