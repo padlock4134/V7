@@ -310,10 +310,21 @@ const MarketDirectory: React.FC = () => {
   return (
     <div className="my-8">
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 max-w-lg mx-auto">
-        {DEPARTMENT_TYPES.map(dep => (
+        {DEPARTMENT_TYPES.slice(0, 6).map(dep => (
           <button
             key={dep.key}
             className="flex flex-col items-center bg-white rounded-lg shadow-md p-6 hover:bg-sand transition cursor-pointer focus:outline-none"
+            onClick={() => openModal(dep)}
+          >
+            <span className="text-4xl mb-2">{dep.icon}</span>
+            <span className="font-retro text-lg">{dep.label}</span>
+          </button>
+        ))}
+        {/* Equipment button as full width */}
+        {DEPARTMENT_TYPES.slice(6, 7).map(dep => (
+          <button
+            key={dep.key}
+            className="col-span-2 sm:col-span-3 flex flex-col items-center bg-white rounded-lg shadow-md p-6 hover:bg-sand transition cursor-pointer focus:outline-none"
             onClick={() => openModal(dep)}
           >
             <span className="text-4xl mb-2">{dep.icon}</span>
