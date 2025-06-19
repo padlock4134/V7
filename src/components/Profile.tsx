@@ -218,6 +218,12 @@ const Profile = () => {
         >
           Manage Subscription
         </button>
+        <button
+          className="bg-lobsterRed text-weatheredWhite px-4 py-2 rounded font-bold w-full max-w-xs hover:bg-seafoam hover:text-maineBlue transition-colors"
+          onClick={() => alert('Cancel subscription functionality coming soon!')}
+        >
+          Cancel Subscription
+        </button>
 
         {/* Manage Subscription Modal */}
         {showSubModal && (
