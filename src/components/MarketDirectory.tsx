@@ -93,7 +93,7 @@ const MarketDirectory: React.FC = () => {
     );
   }, []);
 
-  // Calculate distance between two coordinates in miles
+  // Calculate distance between two points using Haversine formula
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
     const R = 3958.8; // Earth's radius in miles
     const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -137,19 +137,7 @@ const MarketDirectory: React.FC = () => {
               !BIG_BOX_RETAILERS.some(storeName => place.name.toLowerCase().includes(storeName))
           );
           
-          // Apply distance filter only to places with valid geometry
-          const placesWithinRadius = filteredPlaces.filter(place => {
-            if (!place.geometry || !place.geometry.location) return false;
-            
-            return calculateDistance(
-              coordinates.lat,
-              coordinates.lng,
-              place.geometry.location.lat,
-              place.geometry.location.lng
-            ) <= 15;
-          });
-          
-          allPlaces = [...placesWithinRadius];
+          allPlaces = [...filteredPlaces];
         }
         
         // Additional searches for specialty categories
@@ -175,23 +163,10 @@ const MarketDirectory: React.FC = () => {
                     !BIG_BOX_RETAILERS.some(storeName => place.name.toLowerCase().includes(storeName))
                 );
                 
-                // Add to our collection, avoiding duplicates and ensuring they're within 15 miles
+                // Add to our collection, avoiding duplicates
                 for (const place of filteredSpecialtyPlaces) {
                   if (!allPlaces.some(p => p.place_id === place.place_id)) {
-                    // Only add places with valid geometry and within 15 miles
-                    if (place.geometry && place.geometry.location) {
-                      const distance = calculateDistance(
-                        coordinates.lat,
-                        coordinates.lng,
-                        place.geometry.location.lat,
-                        place.geometry.location.lng
-                      );
-                      
-                      // Only add places within 15 miles
-                      if (distance <= 15) {
-                        allPlaces.push(place);
-                      }
-                    }
+                    allPlaces.push(place);
                   }
                 }
               }
@@ -269,7 +244,8 @@ const MarketDirectory: React.FC = () => {
       
       // Special handling for bakeries - make sure they're properly categorized
       if (nameLower.includes('bakery') || nameLower.includes('bakeries') || nameLower.includes('bread') || 
-          nameLower.includes('pastry') || nameLower.includes('cake') || place.types.includes('bakery')) {
+          nameLower.includes('pastry') || nameLower.includes('cake') || 
+          (place.types && place.types.includes('bakery'))) {
         place.assignedCategory = 'bakery';
         place.isSpecialized = true;
         return;
