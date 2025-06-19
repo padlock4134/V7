@@ -1,5 +1,34 @@
 // Anthropic Claude Haiku API integration for Chef Freddie
+import { supabase } from './supabaseClient';
+import { getCurrentUserId } from './userSession';
+
 export async function askChefFreddie(prompt: string): Promise<string> {
+  // --- Chat limit logic ---
+  const userId = getCurrentUserId && typeof getCurrentUserId === 'function' ? getCurrentUserId() : null;
+  if (!userId) {
+    return 'Error: User not found. Please sign in again.';
+  }
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('chat_count, last_chat_date')
+    .eq('id', userId)
+    .single();
+  if (error || !profile) {
+    return 'Error fetching user profile. Please try again.';
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  let chatCount = profile.chat_count || 0;
+  let lastChatDate = profile.last_chat_date ? profile.last_chat_date.toString().slice(0, 10) : null;
+  if (lastChatDate === today) {
+    if (chatCount >= 15) {
+      return 'You have reached your daily limit of 15 chats. Please come back tomorrow!';
+    }
+    await supabase.from('profiles').update({ chat_count: chatCount + 1 }).eq('id', userId);
+  } else {
+    await supabase.from('profiles').update({ chat_count: 1, last_chat_date: today }).eq('id', userId);
+  }
+  // --- End chat limit logic ---
+
   const systemPrompt = `You are Chef Freddie, a friendly and knowledgeable AI chef assistant for the PorkChop cooking app.
   You help users with recipe suggestions, cooking tips, and kitchen equipment advice.
   You know about common kitchen equipment like pots, pans, knives, cutting boards, mixers, blenders, etc.
