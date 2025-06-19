@@ -9,28 +9,14 @@ interface PaymentModalProps {
 }
 
 const PaymentModal: React.FC<PaymentModalProps> = ({ open, onClose, onDevBypass, plan, email }) => {
-  const handleStripeCheckout = async (e?: React.MouseEvent | React.FormEvent) => {
+  const handleStripeCheckout = (e?: React.MouseEvent | React.FormEvent) => {
     if (e) e.preventDefault();
-    const selectedPlan = plan || window.prompt('Plan (monthly/yearly)?', 'monthly') as 'monthly' | 'yearly';
-    const userEmail = email || window.prompt('Your email?');
-    if (!selectedPlan || !userEmail) {
-      alert('Missing plan or email');
-      return;
-    }
-    try {
-      const response = await fetch('/.netlify/functions/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: selectedPlan, email: userEmail }),
-      });
-      const data = await response.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert('Error: ' + (data.error || 'Unknown error'));
-      }
-    } catch (err) {
-      alert('Network error: ' + err);
+    
+    // Redirect to the appropriate payment link based on the selected plan
+    if (plan === 'yearly') {
+      window.location.href = 'https://buy.stripe.com/dRmeVddkU19lcT2fohfUQ03'; // Yearly plan - $99/year
+    } else {
+      window.location.href = 'https://buy.stripe.com/aFa9AT3Kk9FR4mw4JDfUQ02'; // Monthly plan - $10.99/month
     }
   };
   if (!open) return null;
