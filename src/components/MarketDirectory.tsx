@@ -87,6 +87,19 @@ const MarketDirectory: React.FC = () => {
     );
   }, []);
 
+  // Calculate distance between two coordinates in miles
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 3958.8; // Earth's radius in miles
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  };
+
   // Fetch places when coordinates are available
   useEffect(() => {
     if (!coordinates) return;
@@ -144,10 +157,21 @@ const MarketDirectory: React.FC = () => {
                     !BIG_BOX_RETAILERS.some(storeName => place.name.toLowerCase().includes(storeName))
                 );
                 
-                // Add to our collection, avoiding duplicates
+                // Add to our collection, avoiding duplicates and ensuring they're within 15 miles
                 for (const place of filteredSpecialtyPlaces) {
                   if (!allPlaces.some(p => p.place_id === place.place_id)) {
-                    allPlaces.push(place);
+                    // Calculate distance from user's location
+                    const distance = calculateDistance(
+                      coordinates.lat,
+                      coordinates.lng,
+                      place.geometry.location.lat,
+                      place.geometry.location.lng
+                    );
+                    
+                    // Only add places within 15 miles
+                    if (distance <= 15) {
+                      allPlaces.push(place);
+                    }
                   }
                 }
               }
@@ -210,6 +234,19 @@ const MarketDirectory: React.FC = () => {
         return;
       }
       
+      // Priority categorization for seafood and meat in name - these take precedence over other rules
+      if (nameLower.includes('seafood') || nameLower.includes('fish')) {
+        place.assignedCategory = 'seafood';
+        place.isSpecialized = true;
+        return;
+      }
+      
+      if (nameLower.includes('meat') || nameLower.includes('butcher')) {
+        place.assignedCategory = 'butcher';
+        place.isSpecialized = true;
+        return;
+      }
+      
       // Check if it's a generic grocery chain
       const isGenericChain = GENERIC_GROCERY_CHAINS.some(chain => nameLower.includes(chain));
       if (isGenericChain) {
@@ -230,12 +267,8 @@ const MarketDirectory: React.FC = () => {
       
       // Special handling for farms - farms are typically specialized
       if (nameLower.includes('farm')) {
-        if (nameLower.includes('meat') || nameLower.includes('beef') || nameLower.includes('poultry')) {
+        if (nameLower.includes('beef') || nameLower.includes('poultry')) {
           place.assignedCategory = 'butcher';
-          place.isSpecialized = true;
-          return;
-        } else if (nameLower.includes('seafood') || nameLower.includes('fish')) {
-          place.assignedCategory = 'seafood';
           place.isSpecialized = true;
           return;
         } else if (nameLower.includes('dairy') || nameLower.includes('milk') || nameLower.includes('cheese')) {
