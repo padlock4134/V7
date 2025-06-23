@@ -1,0 +1,75 @@
+.cookbook-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem auto;
+  background: var(--sand);
+  border-radius: 2rem;
+  box-shadow: 0 8px 32px rgba(42,77,105,0.13);
+  padding: 2rem 3rem;
+  min-width: 650px;
+  min-height: 380px;
+  transition: box-shadow 0.25s;
+}
+.cookbook-spine {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+  background: linear-gradient(90deg, #e94e3c 0%, #f5e9da 100%);
+  border-radius: 8px;
+  z-index: 2;
+  transform: translateX(-50%);
+  box-shadow: 0 0 12px #e94e3c33;
+}
+.cookbook-pages {
+  display: flex;
+  width: 600px;
+  min-height: 320px;
+  z-index: 1;
+}
+.cookbook-page {
+  flex: 1;
+  background: var(--weatheredWhite);
+  margin: 0 8px;
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 12px rgba(36,52,77,0.08);
+  padding: 2rem 1.5rem;
+  min-height: 320px;
+  font-family: 'Bree Serif', serif;
+  color: var(--maineBlue);
+  transition: box-shadow 0.25s;
+}
+.left-page {
+  border-right: 2px solid var(--seafoam);
+}
+.right-page {
+  border-left: 2px solid var(--seafoam);
+}
+.cookbook-page h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: var(--lobsterRed);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.cookbook-page ul, .cookbook-page p {
+  font-family: 'Inter', sans-serif;
+  color: var(--navy);
+  font-size: 1rem;
+}
+.cookbook-container:active, .cookbook-container:focus {
+  box-shadow: 0 0 0 4px var(--seafoam);
+}
+@media (max-width: 700px) {
+  .cookbook-container {
+    min-width: 90vw;
+    padding: 1rem 0.2rem;
+  }
+  .cookbook-pages {
+    width: 98vw;
+  }
+}

@@ -6,6 +6,7 @@ import TermsModal from './TermsModal';
 import { useTermsModal } from './useTermsModal';
 import InstallPWAButton from "./InstallPWAButton";
 
+import FlippableCookbook from "./FlippableCookbook";
 // Placeholder SVG for Freddie (replace with your vector when ready)
 const FreddieSVG = () => (
   <svg width="80" height="80" viewBox="0 0 80 80" aria-label="Grandpa Freddie" style={{marginBottom: '1rem'}}>
@@ -81,136 +82,8 @@ const LandingPage: React.FC = () => {
           <a href="#faq" className="toc-link text-maineBlue font-retro">Kitchen Tips</a>
         </section>
 
-        {/* Recipe Cards */}
-        <div className="w-full max-w-2xl">
-          <RecipeCard title="Prep Your Pantry" icon="🥞">
-            <ul>
-              <li><strong>Ingredients:</strong> Inventory, resourcefulness, a dash of curiosity</li>
-              <li><strong>Instructions:</strong> Take stock of what you have—just like Grandpa Fred did every Saturday morning before pancakes. Resourcefulness starts here.</li>
-            </ul>
-          </RecipeCard>
-          <RecipeCard title="Find What You Need" icon="🛍️">
-            <ul>
-              <li><strong>Ingredients:</strong> Local markets, specialty shops, community</li>
-              <li><strong>Instructions:</strong> Discover where to shop to fill in the gaps, prioritizing local and specialty shops. Support your community while filling your plate.</li>
-            </ul>
-          </RecipeCard>
-          <RecipeCard title="Plan & Plate" icon="🍽️">
-            <ul>
-              <li><strong>Ingredients:</strong> Meal planning, recipes, sharing</li>
-              <li><strong>Instructions:</strong> Use professional tools to plan meals, organize recipes, and bring it all together at your own table—honoring Grandpa Fred’s legacy of mentorship and good food.</li>
-            </ul>
-          </RecipeCard>
-          <RecipeCard title="Grow & Learn" icon="📚">
-            <ul>
-              <li><strong>Ingredients:</strong> Badges, achievements, tips, mentorship</li>
-              <li><strong>Instructions:</strong> Track your progress, learn new techniques, and earn badges as you grow your kitchen skills. Grandpa Fred believed everyone could learn something new.</li>
-            </ul>
-          </RecipeCard>
-        </div>
-
-        {/* Chef's Bio / About Freddie */}
-        <RecipeCard title="About Freddie" icon="👨‍🍳">
-          <p>
-            Every Saturday morning, Grandpa Fred would gather all the grandkids for a big pancake breakfast. The kitchen was always alive with laughter, the smell of fresh pancakes, and the feeling that everyone belonged.
-          </p>
-          <p>
-            Those mornings weren’t just about food—they were about mentorship, family, and the simple joy of sharing a meal together. Porkchop is our way of honoring Grandpa Fred, letting everyone experience a piece of his kitchen, no matter where they are.
-          </p>
-        </RecipeCard>
-
-        {/* FAQ as Kitchen Tips */}
-        <RecipeCard title="Kitchen Tips (FAQ)" icon="📝">
-          <ul>
-            <li><strong>Isn’t this just another recipe app?</strong><br />
-              Nope! Porkchop is a digitized commissary kitchen inspired by Grandpa Fred. It’s about making the most of what you have, discovering where to shop locally, and connecting with a food-loving community.
-            </li>
-            <li className="mt-2"><strong>Will this work for me if I don’t live near lots of markets?</strong><br />
-              Absolutely. Porkchop helps you find the best options wherever you are, and guides you to use what’s already in your fridge or pantry.
-            </li>
-            <li className="mt-2"><strong>Do I have to be a chef?</strong><br />
-              Porkchop is for everyone, from beginners to pros. Grandpa Fred believed good food is for all, and our platform guides you every step of the way.
-            </li>
-            <li className="mt-2"><strong>Is this expensive?</strong><br />
-              Not at all. Porkchop is about resourcefulness and creativity. Start with what you have, fill in the gaps locally, and enjoy real, affordable meals.
-            </li>
-          </ul>
-        </RecipeCard>
-      </main>
-
-        {/* APP HIGHLIGHT SECTION */}
-        <section className="max-w-3xl mx-auto mb-12 px-6 py-8 bg-weatheredWhite rounded-2xl shadow-lg border-2 border-seafoam text-center">
-  <h2 className="text-2xl font-retro text-lobsterRed font-bold mb-3">Why Porkchop?</h2>
-  <p className="text-navy font-sans mb-2">
-    Porkchop isn’t just another cooking app—it’s a digitized commissary kitchen inspired by Grandpa Fred. Here, resourcefulness, community, and creativity come together so you can make the most of every meal. We’re here to help you learn new skills, build confidence, and grow as a home cook. And as you cook, plan, and grow, you’ll earn badges and achievements along the way.
-  </p>
-  <p className="text-navy font-sans">
-    <span className="font-bold text-maineBlue">Secure, private, and ad-free.</span> Your data stays yours. Always.
-  </p>
-</section>
-        <section className="landing-features flex flex-col md:flex-row flex-wrap justify-center gap-8 mt-6">
-  <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
-    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Pantry Station</h2>
-    <p className="text-navy font-sans">Inventory what you have, reduce waste, and let Porkchop suggest how to make the most of it—just like Grandpa Fred did every Saturday morning.</p>
-  </div>
-  <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
-    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Market Station</h2>
-    <p className="text-navy font-sans">Find local and specialty shops to fill in the gaps, support your community, and discover new favorites.</p>
-  </div>
-  <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
-    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Recipe Station</h2>
-    <p className="text-navy font-sans">Organize and discover meals that fit your pantry and your style. Grandpa Fred believed every ingredient could find its purpose.</p>
-  </div>
-  <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
-    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Planning Station</h2>
-    <p className="text-navy font-sans">Build meal plans and shopping lists in one place, and bring it all together at your own table. Track your progress, learn new techniques, and earn badges as you grow your kitchen skills!</p>
-  </div>
-  
-  
-        </section>
-      {/* Objections & Answers Section */}
-<section className="max-w-3xl mx-auto mt-12 mb-8 px-6 py-8 bg-weatheredWhite rounded-2xl shadow-lg border-2 border-seafoam">
-  <h2 className="text-2xl font-retro text-lobsterRed font-bold mb-6 text-center">You Might Be Wondering…</h2>
-  <div className="space-y-6">
-    <div>
-      <div className="font-bold text-maineBlue">Isn’t this just another recipe app?</div>
-      <div className="text-navy font-sans mt-1 pl-2 border-l-4 border-seafoam italic">
-        Nope! Porkchop is a digitized commissary kitchen inspired by Grandpa Fred. It’s about making the most of what you have, discovering where to shop locally, and connecting with a food-loving community.
-      </div>
-    </div>
-    <div>
-      <div className="font-bold text-maineBlue">Will this work for me if I don’t live near lots of markets?</div>
-      <div className="text-navy font-sans mt-1 pl-2 border-l-4 border-seafoam italic">
-        Absolutely. Porkchop helps you find the best options wherever you are, and guides you to use what’s already in your fridge or pantry.
-      </div>
-    </div>
-    <div>
-      <div className="font-bold text-maineBlue">Do I have to be a chef?</div>
-      <div className="text-navy font-sans mt-1 pl-2 border-l-4 border-seafoam italic">
-        Porkchop is for everyone, from beginners to pros. Grandpa Fred believed good food is for all, and our platform guides you every step of the way.
-      </div>
-    </div>
-    <div>
-      <div className="font-bold text-maineBlue">Is this expensive?</div>
-      <div className="text-navy font-sans mt-1 pl-2 border-l-4 border-seafoam italic">
-        Not at all. Porkchop is about resourcefulness and creativity. Start with what you have, fill in the gaps locally, and enjoy real, affordable meals.
-      </div>
-    </div>
-  </div>
-</section>
-{/* Grandpa Fred Story Section */}
-<section className="max-w-3xl mx-auto mb-12 px-6 py-8 bg-seafoam/30 rounded-2xl shadow-lg border-2 border-seafoam text-center">
-  <h2 className="text-2xl font-retro text-maineBlue font-bold mb-3">Inspired by Grandpa Fred</h2>
-  <p className="text-navy font-sans mb-2">
-    Every Saturday morning, Grandpa Fred would gather all the grandkids for a big pancake breakfast. The kitchen was always alive with laughter, the smell of fresh pancakes, and the feeling that everyone belonged. After breakfast, I’d head out for a round of golf—always with a full belly and a heart full of Grandpa’s wisdom.
-  </p>
-  <p className="text-navy font-sans">
-    Those mornings weren’t just about food—they were about mentorship, family, and the simple joy of sharing a meal together. Porkchop is our way of honoring Grandpa Fred, letting everyone experience a piece of his kitchen, no matter where they are.
-  </p>
-  <p className="text-navy font-sans mt-4">
-    <span className="font-bold text-maineBlue">Welcome to Porkchop:</span> the digitized commissary kitchen inspired by Grandpa Fred’s legacy of resourcefulness, community, and love.
-  </p>
-</section>
+        {/* Flippable Cookbook */}
+        <FlippableCookbook />
       </main>
       <footer className="landing-footer bg-weatheredWhite/90 rounded-t-2xl text-center py-4 mt-12 text-navy font-sans text-base shadow-inner">
         <span> {new Date().getFullYear()} PorkChop. All rights reserved. |{' '}
