@@ -128,15 +128,17 @@ export const LEVEL_TITLES_AND_ICONS = [
 
 // XP per activity (example)
 export const XP_ACTIVITY_TABLE = {
-  scan_ingredient: 5,
+  create_account: 10,
+  confirm_email: 5,
+  complete_profile: 10,
+  complete_weekly_challenge: 40,
+  create_recipe: 15,
+  run_recipe: 20,         // "Cook Me"
+  add_to_cookbook: 5,
   view_recipe: 2,
+  scan_ingredient: 5,
   save_recipe: 3,
-  like_vendor: 3,
-  write_review: 10,
-  complete_cooking: 15,
-  share_market: 8,
-  complete_meal_kit: 30,
-  refer_user: 50,
+  achieve_streak: 20,
 };
 
 // Utility: Get level from total XP
