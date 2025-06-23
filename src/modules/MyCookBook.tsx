@@ -54,6 +54,10 @@ const MyCookBook = () => {
   const [recipes, setLocalRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recipesPerPage] = useState(2); // Changed from 6 to 2 to show just 1 row of 2 cards
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeCategory, setActiveCategory] = useState('All');
 
   // Load recipes and set page context on mount
   const { updateContext } = useFreddieContext();
@@ -83,6 +87,58 @@ const MyCookBook = () => {
     loadRecipes();
   }, [updateContext]);
 
+  // Filter recipes based on search term and category
+  const filteredRecipes = recipes.filter(recipe => {
+    const matchesSearch = recipe.name.toLowerCase().includes(searchTerm.toLowerCase());
+    if (activeCategory === 'All') return matchesSearch;
+    
+    // Simple category detection based on ingredients
+    // You can enhance this with more sophisticated categorization
+    const hasSeafood = recipe.ingredients?.some(i => 
+      ['fish', 'salmon', 'tuna', 'shrimp', 'lobster', 'crab', 'seafood'].some(term => 
+        i.toLowerCase().includes(term)
+      )
+    );
+    
+    const hasMeat = recipe.ingredients?.some(i => 
+      ['beef', 'chicken', 'pork', 'lamb', 'meat', 'steak', 'turkey'].some(term => 
+        i.toLowerCase().includes(term)
+      )
+    );
+    
+    const hasVegetable = recipe.ingredients?.some(i => 
+      ['vegetable', 'carrot', 'broccoli', 'spinach', 'kale', 'lettuce', 'vegan', 'vegetarian'].some(term => 
+        i.toLowerCase().includes(term)
+      )
+    );
+    
+    const hasDessert = recipe.ingredients?.some(i => 
+      ['sugar', 'chocolate', 'dessert', 'cake', 'cookie', 'sweet', 'pie', 'ice cream'].some(term => 
+        i.toLowerCase().includes(term)
+      )
+    );
+    
+    switch(activeCategory) {
+      case 'Seafood': return hasSeafood && matchesSearch;
+      case 'Meat': return hasMeat && matchesSearch;
+      case 'Vegetarian': return hasVegetable && !hasMeat && !hasSeafood && matchesSearch;
+      case 'Dessert': return hasDessert && matchesSearch;
+      default: return matchesSearch;
+    }
+  });
+
+  // Get current recipes for pagination
+  const indexOfLastRecipe = currentPage * recipesPerPage;
+  const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
+  const currentRecipes = filteredRecipes.slice(indexOfFirstRecipe, indexOfLastRecipe);
+  const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
+
+  // Change page
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  // Categories for filtering
+  const categories = ['All', 'Seafood', 'Meat', 'Vegetarian', 'Dessert'];
+
   if (loading) {
     return (
       <div className="max-w-2xl mx-auto mt-8 bg-weatheredWhite p-6 rounded shadow">
@@ -105,15 +161,62 @@ const MyCookBook = () => {
         </div>
       </div>
 
-      {/* Digital Cookbook Grid */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-retro">My Digital Cookbook</h2>
+      {/* Digital Cookbook Header with Search and Filters */}
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-retro">My Digital Cookbook</h2>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search recipes..."
+              className="pl-8 pr-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-seafoam"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1); // Reset to first page on search
+              }}
+            />
+            <div className="absolute left-2 top-2.5 text-gray-400">🔍</div>
+          </div>
+        </div>
+        
+        {/* Category Filters */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {categories.map(category => (
+            <button
+              key={category}
+              onClick={() => {
+                setActiveCategory(category);
+                setCurrentPage(1); // Reset to first page on category change
+              }}
+              className={`px-3 py-1 rounded-full text-sm ${
+                activeCategory === category
+                  ? 'bg-seafoam text-maineBlue font-medium'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              } transition-colors`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-        {recipes.length === 0 ? (
-          <div className="text-gray-400 italic">No recipes yet. Add your first recipe!</div>
-        ) : recipes.map((recipe, idx) => (
+      {/* Recipe Count */}
+      <div className="text-sm text-gray-500 mb-4">
+        {filteredRecipes.length === 0 
+          ? 'No recipes found' 
+          : `Showing ${indexOfFirstRecipe + 1}-${Math.min(indexOfLastRecipe, filteredRecipes.length)} of ${filteredRecipes.length} recipes`}
+      </div>
+
+      {/* Digital Cookbook Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        {currentRecipes.length === 0 ? (
+          <div className="col-span-2 text-gray-400 italic text-center py-8">
+            {recipes.length === 0 
+              ? 'No recipes yet. Add your first recipe!' 
+              : 'No recipes match your search criteria.'}
+          </div>
+        ) : currentRecipes.map((recipe, idx) => (
           <div key={idx} className="group h-[400px] [perspective:1000px]">
             <div className="relative h-full w-full rounded-xl transition-all duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
               {/* Front */}
@@ -208,6 +311,68 @@ const MyCookBook = () => {
           </div>
         ))}
       </div>
+      
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-8">
+          <nav className="flex items-center">
+            <button 
+              onClick={() => paginate(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className={`mx-1 px-3 py-1 rounded ${
+                currentPage === 1 
+                  ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
+                  : 'bg-seafoam text-maineBlue hover:bg-maineBlue hover:text-seafoam'
+              } transition-colors`}
+            >
+              ←
+            </button>
+            
+            {[...Array(totalPages)].map((_, i) => {
+              // Show limited page numbers with ellipsis for better UX
+              if (
+                i === 0 || // First page
+                i === totalPages - 1 || // Last page
+                (i >= currentPage - 2 && i <= currentPage) || // 2 pages before current
+                (i >= currentPage && i <= currentPage + 1) // 1 page after current
+              ) {
+                return (
+                  <button
+                    key={i}
+                    onClick={() => paginate(i + 1)}
+                    className={`mx-1 px-3 py-1 rounded ${
+                      currentPage === i + 1
+                        ? 'bg-maineBlue text-seafoam font-medium'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    } transition-colors`}
+                  >
+                    {i + 1}
+                  </button>
+                );
+              } else if (
+                (i === 1 && currentPage > 3) || 
+                (i === totalPages - 2 && currentPage < totalPages - 2)
+              ) {
+                // Show ellipsis
+                return <span key={i} className="mx-1">...</span>;
+              }
+              return null;
+            })}
+            
+            <button 
+              onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              className={`mx-1 px-3 py-1 rounded ${
+                currentPage === totalPages 
+                  ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
+                  : 'bg-seafoam text-maineBlue hover:bg-maineBlue hover:text-seafoam'
+              } transition-colors`}
+            >
+              →
+            </button>
+          </nav>
+        </div>
+      )}
     </div>
   );
 };
