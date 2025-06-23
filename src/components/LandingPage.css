@@ -157,6 +157,41 @@
 .font-retro {
   font-family: 'Bree Serif', serif;
 }
+.recipe-card {
+  background: var(--weatheredWhite);
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 16px rgba(42,77,105,0.09);
+  border: 2px solid var(--seafoam);
+  margin-bottom: 2rem;
+  padding: 2rem 1.5rem;
+  max-width: 36rem;
+  text-align: left;
+}
+.table-of-contents {
+  background: rgba(249,250,251,0.7);
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(42,77,105,0.06);
+  border: 1.5px solid var(--seafoam);
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+}
+.toc-link {
+  color: var(--maineBlue);
+  font-family: 'Bree Serif', serif;
+  font-size: 1.08rem;
+  padding: 0.35rem 1.1rem;
+  border-radius: 18px;
+  background: var(--weatheredWhite);
+  border: 1.5px solid var(--seafoam);
+  margin: 0.2rem 0.4rem;
+  text-decoration: none;
+  transition: background 0.18s, color 0.18s;
+}
+.toc-link:hover, .toc-link:focus {
+  background: var(--seafoam);
+  color: var(--lobsterRed);
+  border-color: var(--lobsterRed);
+}
 .font-sans {
   font-family: 'Inter', sans-serif;
 }
