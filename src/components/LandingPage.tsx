@@ -108,9 +108,9 @@ const LandingPage: React.FC = () => {
             </div>
           </div>
           <div>
-            <div className="font-bold text-maineBlue">Is PorkChop really free? What’s the catch?</div>
+            <div className="font-bold text-maineBlue">How much does PorkChop cost?</div>
             <div className="text-navy font-sans mt-1 pl-2 border-l-4 border-seafoam italic">
-              Chef Freddie: You get a full 7-day free trial to explore everything PorkChop offers. If you decide it’s not for you, just cancel before the trial ends—no charges, no worries! My goal is to help you cook and learn, not just collect recipes.
+              Chef Freddie: PorkChop is $10.99/month. One simple price, no ads, no hidden fees, and you can cancel anytime. There is no free trial.
             </div>
           </div>
           <div>
