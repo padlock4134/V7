@@ -39,7 +39,7 @@ const InstallPWAButton: React.FC = () => {
       onClick={handleClick}
       type="button"
     >
-      DOWNLOAD HERE
+      Install PorkChop App
     </button>
   );
 };

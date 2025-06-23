@@ -31,9 +31,14 @@ const LandingPage: React.FC = () => {
           </p>
           
           <div className="flex flex-col items-center gap-2">
-            <span className="text-sm text-navy">No clutter. No ads. Cancel anytime.</span>
-            <InstallPWAButton />
-          </div>
+  <span className="text-sm text-navy">
+    You can install PorkChop as an app on your phone or tablet—works on both Android and iOS!
+  </span>
+  <span className="text-xs text-navy">
+    On iPhone/iPad: Tap the Share icon and choose "Add to Home Screen". On Android: Tap "Install PorkChop App" below.
+  </span>
+  <InstallPWAButton />
+</div>
         </section>
 
         {/* HOW IT WORKS / WHY PORKCHOP */}
