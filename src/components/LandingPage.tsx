@@ -17,7 +17,17 @@ const LandingPage: React.FC = () => {
         </div>
         <div className="flex gap-3">
           <Link to="/signin" className="landing-nav-btn hover:bg-seafoam hover:text-maineBlue transition-colors">Log In</Link>
-          <Link to="/signup" className="landing-nav-btn primary bg-lobsterRed text-weatheredWhite hover:bg-seafoam hover:text-maineBlue transition-colors">Sign Up</Link>
+          <Link
+  to="/signup"
+  className="landing-nav-btn primary transition-colors"
+  style={{ backgroundColor: '#e94e3c', color: '#f9fafb', fontWeight: 700 }}
+  onMouseOver={e => { e.currentTarget.style.backgroundColor = '#63ace5'; e.currentTarget.style.color = '#2a4d69'; }}
+  onFocus={e => { e.currentTarget.style.backgroundColor = '#63ace5'; e.currentTarget.style.color = '#2a4d69'; }}
+  onMouseOut={e => { e.currentTarget.style.backgroundColor = '#e94e3c'; e.currentTarget.style.color = '#f9fafb'; }}
+  onBlur={e => { e.currentTarget.style.backgroundColor = '#e94e3c'; e.currentTarget.style.color = '#f9fafb'; }}
+>
+  Sign Up
+</Link>
         </div>
       </nav>
       <main className="landing-main flex-1 flex flex-col items-center justify-center px-4">
