@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import WeeklyChallengeRecipeModal from './WeeklyChallengeRecipeModal';
 import type { RecipeCard } from './RecipeMatcherModal';
 import { getWeeklyChallengeRecipe } from '../api/anthropicChallenge';
 import { getRecipeImage } from '../api/unsplash';
+import { supabase } from '../api/supabaseClient';
+import { getCurrentUserId } from '../api/userSession';
 
 // Pool of weekly challenges
 export const WEEKLY_CHALLENGES = [
@@ -313,6 +315,23 @@ const ChallengeOfTheWeek: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [weekNumber, setWeekNumber] = useState(getWeekNumber(new Date()));
   const [challenge, setChallenge] = useState(getCurrentWeeklyChallenge());
+  const [alreadyClaimed, setAlreadyClaimed] = useState(false);
+
+  // Fetch claim status for this user/week
+  useEffect(() => {
+    async function fetchClaimStatus() {
+      const userId = await getCurrentUserId();
+      if (!userId) return;
+      const { data } = await supabase
+        .from('weekly_challenge_claims')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('week_number', weekNumber)
+        .maybeSingle();
+      setAlreadyClaimed(!!data);
+    }
+    fetchClaimStatus();
+  }, [weekNumber]);
 
   // Fetch and persist the challenge recipe for this week only
   React.useEffect(() => {
@@ -350,15 +369,27 @@ const ChallengeOfTheWeek: React.FC = () => {
 
   return (
     <>
-      <button
-        className="relative flex items-center justify-center w-10 h-10 rounded-full bg-yellow-100 hover:bg-yellow-200 shadow text-2xl cursor-pointer transition-colors"
-        title={"Challenge of the Week: " + challenge.title}
-        aria-label={"Challenge of the Week: " + challenge.title}
-        onClick={() => setOpen(true)}
-        style={{ outline: 'none', border: 'none' }}
-      >
-        <span role="img" aria-label="Trophy">🏆</span>
-      </button>
+      {!alreadyClaimed ? (
+        <button
+          className="relative flex items-center justify-center w-10 h-10 rounded-full bg-yellow-100 hover:bg-yellow-200 shadow text-2xl cursor-pointer transition-colors"
+          title={"Challenge of the Week: " + challenge.title}
+          aria-label={"Challenge of the Week: " + challenge.title}
+          onClick={() => setOpen(true)}
+          style={{ outline: 'none', border: 'none' }}
+        >
+          <span role="img" aria-label="Trophy">🏆</span>
+        </button>
+      ) : (
+        <button
+          className="relative flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 cursor-not-allowed text-2xl"
+          title="You've already claimed this week's challenge!"
+          aria-label="Challenge already claimed"
+          disabled
+          style={{ outline: 'none', border: 'none' }}
+        >
+          <span role="img" aria-label="Trophy">🏆</span>
+        </button>
+      )}
       {open && (
         <div
           className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-40"
