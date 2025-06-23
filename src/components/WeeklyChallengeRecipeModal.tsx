@@ -128,8 +128,12 @@ const WeeklyChallengeRecipeModal: React.FC<WeeklyChallengeRecipeModalProps> = ({
                   <li key={idx}>{ingredient}</li>
                 ))}
               </ul>
-              <h3 className="font-semibold text-lg mt-2 mb-1">Instructions</h3>
-              <p className="mb-4 whitespace-pre-line">{recipe.instructions}</p>
+              {recipe.instructions && recipe.instructions.trim() !== "" && (
+                <>
+                  <h3 className="font-semibold text-lg mt-2 mb-1">Instructions</h3>
+                  <p className="mb-4 whitespace-pre-line">{recipe.instructions}</p>
+                </>
+              )}
               {recipe.equipment && recipe.equipment.length > 0 && (
                 <>
                   <h3 className="font-semibold text-lg mt-2 mb-1">Equipment</h3>
