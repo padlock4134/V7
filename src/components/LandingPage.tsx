@@ -23,115 +23,118 @@ const LandingPage: React.FC = () => {
       <main className="landing-main flex-1 flex flex-col items-center justify-center px-4">
         {/* HERO SECTION */}
         <section className="w-full max-w-3xl mx-auto text-center mt-20 mb-12">
-          <h1 className="text-5xl md:text-6xl font-bold text-maineBlue mb-4 font-retro leading-tight">
-            Your Kitchen. <span className="text-lobsterRed">Superpowered.</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-navy font-sans mb-8">
-            PorkChop is your AI cooking sidekick—helping you plan, shop, and cook smarter every day. Discover recipes, conquer weekly challenges, and track your progress, all in one place.
-          </p>
-          
-          <div className="flex flex-col items-center gap-2">
-  <span className="text-sm text-navy">
-    You can install PorkChop as an app on your phone or tablet—works on both Android and iOS!
-  </span>
-  <span className="text-xs text-navy">
-    On iPhone/iPad: Tap the Share icon and choose "Add to Home Screen". On Android: Tap "Install PorkChop App" below.
-  </span>
-  <InstallPWAButton />
-</div>
-        </section>
+  <h1 className="text-5xl md:text-6xl font-bold text-maineBlue mb-4 font-retro leading-tight">
+    Porkchop: The Digitized Commissary Kitchen
+  </h1>
+  <p className="text-xl md:text-2xl text-seafoam font-sans mb-8">
+    Inspired by Grandpa Fred’s legacy, Porkchop brings the spirit of the classic commissary kitchen—resourceful, communal, and creative—into the digital age. Plan, prep, and plate with what you have, and discover where to shop to support local.
+  </p>
+  <button className="bg-maineBlue text-white px-8 py-4 rounded-lg text-xl shadow-lg hover:bg-seafoam hover:text-maineBlue transition">
+    Start Your Fridge to Plate Journey
+  </button>
+  <div className="flex flex-col items-center gap-2 mt-4">
+    <span className="text-sm text-navy">
+      You can install PorkChop as an app on your phone or tablet—works on both Android and iOS!
+    </span>
+    <span className="text-xs text-navy">
+      On iPhone/iPad: Tap the Share icon and choose "Add to Home Screen". On Android: Tap "Install PorkChop App" below.
+    </span>
+    <InstallPWAButton />
+  </div>
+</section>
 
         {/* HOW IT WORKS / WHY PORKCHOP */}
         <section className="w-full max-w-4xl mx-auto grid md:grid-cols-3 gap-8 mb-16">
-          <div className="bg-weatheredWhite rounded-2xl shadow-lg border border-seafoam p-6 flex flex-col items-center">
-            <span className="text-3xl mb-2">🍳</span>
-            <h2 className="text-lg font-bold text-maineBlue mb-2 font-retro">Cook With Confidence</h2>
-            <p className="text-navy font-sans text-center">Step-by-step interactive cooking mode, smart ingredient tracking, and instant answers from Chef Freddie.</p>
-          </div>
-          <div className="bg-weatheredWhite rounded-2xl shadow-lg border border-seafoam p-6 flex flex-col items-center">
-            <span className="text-3xl mb-2">🛒</span>
-            <h2 className="text-lg font-bold text-maineBlue mb-2 font-retro">Shop & Plan Smarter</h2>
-            <p className="text-navy font-sans text-center">Personalized shopping lists, pantry scanning, and meal planning that fits your real life and real kitchen.</p>
-          </div>
-          <div className="bg-weatheredWhite rounded-2xl shadow-lg border border-seafoam p-6 flex flex-col items-center">
-            <span className="text-3xl mb-2">🏆</span>
-            <h2 className="text-lg font-bold text-maineBlue mb-2 font-retro">Level Up & Have Fun</h2>
-            <p className="text-navy font-sans text-center">Weekly challenges, XP, badges, and a growing cookbook. Cooking is a game—get rewarded for learning and trying new things.</p>
-          </div>
-        </section>
+  <div className="bg-weatheredWhite rounded-2xl shadow-lg border border-seafoam p-6 flex flex-col items-center">
+    <span className="text-3xl mb-2">🥞</span>
+    <h2 className="text-lg font-bold text-maineBlue mb-2 font-retro">Prep Your Pantry</h2>
+    <p className="text-navy font-sans text-center">Take stock of what you have—just like Grandpa Fred did every Saturday morning before pancakes. Resourcefulness starts here.</p>
+  </div>
+  <div className="bg-weatheredWhite rounded-2xl shadow-lg border border-seafoam p-6 flex flex-col items-center">
+    <span className="text-3xl mb-2">🛍️</span>
+    <h2 className="text-lg font-bold text-maineBlue mb-2 font-retro">Find What You Need</h2>
+    <p className="text-navy font-sans text-center">Discover where to shop to fill in the gaps, prioritizing local and specialty shops. Support your community while filling your plate.</p>
+  </div>
+  <div className="bg-weatheredWhite rounded-2xl shadow-lg border border-seafoam p-6 flex flex-col items-center">
+    <span className="text-3xl mb-2">🍽️</span>
+    <h2 className="text-lg font-bold text-maineBlue mb-2 font-retro">Plan & Plate</h2>
+    <p className="text-navy font-sans text-center">Use professional tools to plan meals, organize recipes, and bring it all together at your own table—honoring Grandpa Fred’s legacy of mentorship and good food.</p>
+  </div>
+</section>
 
         {/* APP HIGHLIGHT SECTION */}
         <section className="max-w-3xl mx-auto mb-12 px-6 py-8 bg-weatheredWhite rounded-2xl shadow-lg border-2 border-seafoam text-center">
-          <h2 className="text-2xl font-retro text-lobsterRed font-bold mb-3">Why PorkChop?</h2>
-          <p className="text-navy font-sans mb-2">
-            Tired of endless recipe lists and generic cooking apps? PorkChop is built for real home cooks who want to learn, experiment, and actually enjoy the process. No more guessing what’s for dinner—just open your digital kitchen and get inspired.
-          </p>
-          <p className="text-navy font-sans">
-            <span className="font-bold text-maineBlue">Secure, private, and ad-free.</span> Your data stays yours. Always.
-          </p>
-        </section>
+  <h2 className="text-2xl font-retro text-lobsterRed font-bold mb-3">Why Porkchop?</h2>
+  <p className="text-navy font-sans mb-2">
+    Porkchop isn’t just another cooking app—it’s a digitized commissary kitchen inspired by Grandpa Fred. Here, resourcefulness, community, and creativity come together so you can make the most of every meal.
+  </p>
+  <p className="text-navy font-sans">
+    <span className="font-bold text-maineBlue">Secure, private, and ad-free.</span> Your data stays yours. Always.
+  </p>
+</section>
         <section className="landing-features flex flex-col md:flex-row flex-wrap justify-center gap-8 mt-6">
   <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
-    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Weekly Challenges</h2>
-    <p className="text-navy font-sans">Test your skills with unique AI-generated cooking challenges every week. Earn XP and badges as you go!</p>
+    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Pantry Station</h2>
+    <p className="text-navy font-sans">Inventory what you have, reduce waste, and let Porkchop suggest how to make the most of it—just like Grandpa Fred did every Saturday morning.</p>
   </div>
   <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
-    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Recipe Discovery</h2>
-    <p className="text-navy font-sans">Get personalized recipe ideas based on your kitchen ingredients and preferences.</p>
+    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Market Station</h2>
+    <p className="text-navy font-sans">Find local and specialty shops to fill in the gaps, support your community, and discover new favorites.</p>
   </div>
   <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
-    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">My Kitchen</h2>
-    <p className="text-navy font-sans">Track what you have, reduce waste, and get suggestions for what to cook next.</p>
+    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Recipe Station</h2>
+    <p className="text-navy font-sans">Organize and discover meals that fit your pantry and your style. Grandpa Fred believed every ingredient could find its purpose.</p>
   </div>
   <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
-    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Cookbook & XP</h2>
-    <p className="text-navy font-sans">Save your favorite recipes, level up, and unlock achievements as you cook more!</p>
+    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Planning Station</h2>
+    <p className="text-navy font-sans">Build meal plans and shopping lists in one place, and bring it all together at your own table.</p>
   </div>
-  <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
-    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Smart Shopping Lists</h2>
-    <p className="text-navy font-sans">Automatically generate and manage grocery lists based on your planned recipes and kitchen inventory.</p>
-  </div>
-  <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
-    <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Step-by-Step Cooking Mode</h2>
-    <p className="text-navy font-sans">Follow interactive, distraction-free instructions while you cook, with voice and visual guidance.</p>
-  </div>
+  
+  
         </section>
-      {/* Chef Freddie Objections & Answers Section */}
-      <section className="max-w-3xl mx-auto mt-12 mb-8 px-6 py-8 bg-weatheredWhite rounded-2xl shadow-lg border-2 border-seafoam">
-        <h2 className="text-2xl font-retro text-lobsterRed font-bold mb-6 text-center">Chef Freddie Answers Your Questions</h2>
-        <div className="space-y-6">
-          <div>
-            <div className="font-bold text-maineBlue">Why wouldn’t I just use ChatGPT or Google for recipes?</div>
-            <div className="text-navy font-sans mt-1 pl-2 border-l-4 border-seafoam italic">
-              Chef Freddie: Those tools can give you recipes, but I’m here to help you actually cook them. Whether you’re new to the kitchen or just want to get better, I guide you step-by-step, answer your questions, and help you learn as you go. Recipes are just the start—real cooking is about support!
-            </div>
-          </div>
-          <div>
-            <div className="font-bold text-maineBlue">What makes PorkChop different from other cooking apps?</div>
-            <div className="text-navy font-sans mt-1 pl-2 border-l-4 border-seafoam italic">
-              Chef Freddie: Most apps give you a list of recipes and send you on your way. PorkChop is your kitchen companion! I help you build skills, tackle new challenges, and turn recipes into real meals—no matter your experience level.
-            </div>
-          </div>
-          <div>
-            <div className="font-bold text-maineBlue">How much does PorkChop cost?</div>
-            <div className="text-navy font-sans mt-1 pl-2 border-l-4 border-seafoam italic">
-              Chef Freddie: PorkChop is $10.99/month. One simple price, no ads, no hidden fees, and you can cancel anytime. There is no free trial.
-            </div>
-          </div>
-          <div>
-            <div className="font-bold text-maineBlue">How does Chef Freddie know what I have at home?</div>
-            <div className="text-navy font-sans mt-1 pl-2 border-l-4 border-seafoam italic">
-              Chef Freddie: When you scan your pantry or add ingredients, I remember them for you. That way, I can suggest recipes you can actually make—and I’m here to walk you through every step, so you’re never left guessing.
-            </div>
-          </div>
-          <div>
-            <div className="font-bold text-maineBlue">Is my data safe with PorkChop?</div>
-            <div className="text-navy font-sans mt-1 pl-2 border-l-4 border-seafoam italic">
-              Chef Freddie: Absolutely! Your privacy and security are top priorities. We never sell your data, and you control what you share. My job is to help you cook and learn, not to share your kitchen secrets!
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Objections & Answers Section */}
+<section className="max-w-3xl mx-auto mt-12 mb-8 px-6 py-8 bg-weatheredWhite rounded-2xl shadow-lg border-2 border-seafoam">
+  <h2 className="text-2xl font-retro text-lobsterRed font-bold mb-6 text-center">You Might Be Wondering…</h2>
+  <div className="space-y-6">
+    <div>
+      <div className="font-bold text-maineBlue">Isn’t this just another recipe app?</div>
+      <div className="text-navy font-sans mt-1 pl-2 border-l-4 border-seafoam italic">
+        Nope! Porkchop is a digitized commissary kitchen inspired by Grandpa Fred. It’s about making the most of what you have, discovering where to shop locally, and connecting with a food-loving community.
+      </div>
+    </div>
+    <div>
+      <div className="font-bold text-maineBlue">Will this work for me if I don’t live near lots of markets?</div>
+      <div className="text-navy font-sans mt-1 pl-2 border-l-4 border-seafoam italic">
+        Absolutely. Porkchop helps you find the best options wherever you are, and guides you to use what’s already in your fridge or pantry.
+      </div>
+    </div>
+    <div>
+      <div className="font-bold text-maineBlue">Do I have to be a chef?</div>
+      <div className="text-navy font-sans mt-1 pl-2 border-l-4 border-seafoam italic">
+        Porkchop is for everyone, from beginners to pros. Grandpa Fred believed good food is for all, and our platform guides you every step of the way.
+      </div>
+    </div>
+    <div>
+      <div className="font-bold text-maineBlue">Is this expensive?</div>
+      <div className="text-navy font-sans mt-1 pl-2 border-l-4 border-seafoam italic">
+        Not at all. Porkchop is about resourcefulness and creativity. Start with what you have, fill in the gaps locally, and enjoy real, affordable meals.
+      </div>
+    </div>
+  </div>
+</section>
+{/* Grandpa Fred Story Section */}
+<section className="max-w-3xl mx-auto mb-12 px-6 py-8 bg-seafoam/30 rounded-2xl shadow-lg border-2 border-seafoam text-center">
+  <h2 className="text-2xl font-retro text-maineBlue font-bold mb-3">Inspired by Grandpa Fred</h2>
+  <p className="text-navy font-sans mb-2">
+    Every Saturday morning, Grandpa Fred would gather all the grandkids for a big pancake breakfast. The kitchen was always alive with laughter, the smell of fresh pancakes, and the feeling that everyone belonged. After breakfast, I’d head out for a round of golf—always with a full belly and a heart full of Grandpa’s wisdom.
+  </p>
+  <p className="text-navy font-sans">
+    Those mornings weren’t just about food—they were about mentorship, family, and the simple joy of sharing a meal together. Porkchop is our way of honoring Grandpa Fred, letting everyone experience a piece of his kitchen, no matter where they are.
+  </p>
+  <p className="text-navy font-sans mt-4">
+    <span className="font-bold text-maineBlue">Welcome to Porkchop:</span> the digitized commissary kitchen inspired by Grandpa Fred’s legacy of resourcefulness, community, and love.
+  </p>
+</section>
       </main>
       <footer className="landing-footer bg-weatheredWhite/90 rounded-t-2xl text-center py-4 mt-12 text-navy font-sans text-base shadow-inner">
         <span> {new Date().getFullYear()} PorkChop. All rights reserved. |{' '}
