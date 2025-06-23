@@ -306,41 +306,45 @@ export const getCurrentWeeklyChallenge = () => {
 };
 
 const ChallengeOfTheWeek: React.FC = () => {
-  const challenge = getCurrentWeeklyChallenge();
   const [open, setOpen] = useState(false);
   const [recipeModalOpen, setRecipeModalOpen] = useState(false);
   const [modalRecipe, setModalRecipe] = useState<RecipeCard | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [weekNumber, setWeekNumber] = useState(getWeekNumber(new Date()));
+  const [challenge, setChallenge] = useState(getCurrentWeeklyChallenge());
 
-  // Fetch recipe and image from APIs
-  async function fetchRecipeAndImage() {
+  // Fetch and persist the challenge recipe for this week only
+  React.useEffect(() => {
+    setChallenge(getCurrentWeeklyChallenge());
     setLoading(true);
     setError(null);
-    try {
-      const prompt = `${challenge.title}: ${challenge.description}`;
-      const recipeData = await getWeeklyChallengeRecipe(prompt);
-      const image = await getRecipeImage(recipeData.title || challenge.title, recipeData.title || challenge.title, 'recipe');
-      const recipe: RecipeCard = {
-        id: `weekly-${challenge.title.replace(/\s+/g, '-').toLowerCase()}`,
-        title: recipeData.title || challenge.title,
-        image,
-        ingredients: recipeData.ingredients || [],
-        instructions: recipeData.instructions || '',
-        equipment: recipeData.equipment || [],
-      };
-      setModalRecipe(recipe);
-    } catch (e: any) {
-      setError(e.message || 'Failed to generate recipe');
-    } finally {
-      setLoading(false);
-    }
-  }
+    const fetchRecipeAndImage = async () => {
+      try {
+        const challenge = getCurrentWeeklyChallenge();
+        const prompt = `${challenge.title}: ${challenge.description}`;
+        const recipeData = await getWeeklyChallengeRecipe(prompt);
+        const image = await getRecipeImage(recipeData.title || challenge.title, recipeData.title || challenge.title, 'recipe');
+        const recipe: RecipeCard = {
+          id: `weekly-${challenge.title.replace(/\s+/g, '-').toLowerCase()}`,
+          title: recipeData.title || challenge.title,
+          image,
+          ingredients: recipeData.ingredients || [],
+          instructions: recipeData.instructions || '',
+          equipment: recipeData.equipment || [],
+        };
+        setModalRecipe(recipe);
+      } catch (e: any) {
+        setError(e.message || 'Failed to generate recipe');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRecipeAndImage();
+  }, [weekNumber]);
 
   function handleCookMe() {
-    setModalRecipe(null);
     setRecipeModalOpen(true);
-    fetchRecipeAndImage();
     setOpen(false);
   }
 
