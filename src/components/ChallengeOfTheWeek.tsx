@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLevelProgressContext } from './NavBar';
 import WeeklyChallengeRecipeModal from './WeeklyChallengeRecipeModal';
 import type { RecipeCard } from './RecipeMatcherModal';
 import { getWeeklyChallengeRecipe } from '../api/anthropicChallenge';
@@ -301,11 +302,12 @@ function getWeekNumber(date: Date): number {
   return Math.ceil((((d as any) - (yearStart as any)) / 86400000 + 1)/7);
 }
 
-export const getCurrentWeeklyChallenge = () => {
+// Get the current weekly challenge based on the current week number
+function getCurrentWeeklyChallenge() {
   const now = new Date();
   const week = getWeekNumber(now);
   return WEEKLY_CHALLENGES[week % WEEKLY_CHALLENGES.length];
-};
+}
 
 const ChallengeOfTheWeek: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -316,28 +318,26 @@ const ChallengeOfTheWeek: React.FC = () => {
   const [weekNumber, setWeekNumber] = useState(getWeekNumber(new Date()));
   const [challenge, setChallenge] = useState(getCurrentWeeklyChallenge());
   const [alreadyClaimed, setAlreadyClaimed] = useState(false);
+  const { refreshXP } = useLevelProgressContext();
 
   // Fetch claim status for this user/week
+  async function fetchClaimStatus() {
+    const userId = await getCurrentUserId();
+    if (!userId) return;
+    const { data } = await supabase
+      .from('weekly_challenge_claims')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('week_number', weekNumber)
+      .maybeSingle();
+    setAlreadyClaimed(!!data);
+  }
+
   useEffect(() => {
-    async function fetchClaimStatus() {
-      const userId = await getCurrentUserId();
-      if (!userId) return;
-      const { data } = await supabase
-        .from('weekly_challenge_claims')
-        .select('id')
-        .eq('user_id', userId)
-        .eq('week_number', weekNumber)
-        .maybeSingle();
-      setAlreadyClaimed(!!data);
-    }
     fetchClaimStatus();
   }, [weekNumber]);
 
-  // Fetch and persist the challenge recipe for this week only
-  React.useEffect(() => {
-    setChallenge(getCurrentWeeklyChallenge());
-    setLoading(true);
-    setError(null);
+  useEffect(() => {
     const fetchRecipeAndImage = async () => {
       try {
         const challenge = getCurrentWeeklyChallenge();

@@ -15,10 +15,10 @@ interface WeeklyChallengeRecipeModalProps {
   weekNumber?: number;
   xp?: number;
   badge?: string;
+  onClaimed?: () => void;
 }
 
-
-const WeeklyChallengeRecipeModal: React.FC<WeeklyChallengeRecipeModalProps> = ({ open, onClose, recipe, loading, error, challengeId, weekNumber, xp, badge }) => {
+const WeeklyChallengeRecipeModal: React.FC<WeeklyChallengeRecipeModalProps> = ({ open, onClose, recipe, loading, error, challengeId, weekNumber, xp, badge, onClaimed }) => {
   const [claiming, setClaiming] = useState(false);
   const [claimed, setClaimed] = useState(false);
   const [alreadyClaimed, setAlreadyClaimed] = useState(false);
@@ -91,8 +91,10 @@ const WeeklyChallengeRecipeModal: React.FC<WeeklyChallengeRecipeModalProps> = ({
 
       if (result.alreadyClaimed) {
         setAlreadyClaimed(true);
+        if (onClaimed) onClaimed();
       } else {
         setClaimed(true);
+        if (onClaimed) onClaimed();
       }
     } catch (e: any) {
       setClaimError(e.message || 'Failed to claim reward');

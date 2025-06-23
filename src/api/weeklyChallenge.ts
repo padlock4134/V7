@@ -1,6 +1,7 @@
 // Weekly Challenge XP/badge claim logic using Supabase
 // Prevents double-claiming by checking for an existing claim for the current user and week
 import { supabase } from './supabaseClient';
+import { awardBadge } from '../utils/badges';
 
 interface ClaimChallengeParams {
   userId: string;
@@ -56,15 +57,11 @@ export async function claimWeeklyChallenge({
 
   if (xpError) throw xpError;
 
-  const { error: badgeError } = await supabase
-    .from('user_badges')
-    .insert({
-      user_id: userId,
-      badge_name: badge,
-      awarded_at: new Date().toISOString(),
-    });
-
-  if (badgeError) throw badgeError;
+  // Award badge using the utility function
+  const badgeAwarded = await awardBadge(userId, badge);
+  if (!badgeAwarded) {
+    throw new Error('Failed to award badge');
+  }
 
   return { alreadyClaimed: false };
 }
