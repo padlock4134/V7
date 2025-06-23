@@ -44,13 +44,13 @@
   color: #2a4d69; /* maineBlue */
 }
 .landing-nav-btn.primary {
-  background: #ff7043;
+  background: #e94e3c; /* lobsterRed */
   color: #fff;
-  box-shadow: 0 2px 8px rgba(255,112,67,0.10);
+  box-shadow: 0 2px 8px rgba(233,78,60,0.10); /* lobsterRed shadow */
 }
 .landing-nav-btn:hover, .landing-cta-btn:hover {
-  background: #ffe0b2;
-  color: #ff7043;
+  background: #63ace5; /* seafoam */
+  color: #e94e3c; /* lobsterRed */
 }
 .landing-main {
   flex: 1;
