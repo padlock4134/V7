@@ -120,7 +120,7 @@ const WeeklyChallengeRecipeModal: React.FC<WeeklyChallengeRecipeModalProps> = ({
           )}
           {!loading && !error && recipe && (
             <>
-              <h2 className="text-2xl font-bold mb-4 text-center">{recipe.title}</h2>
+              <h2 className="text-2xl font-bold mb-4 text-center text-black">{recipe.title}</h2>
               {recipe.image && <img src={recipe.image} alt={recipe.title} className="w-full max-h-48 sm:max-h-64 object-cover rounded mb-6" />}
               {/* Photo Upload Section */}
               <div className="w-full mt-4 border-t pt-4">
