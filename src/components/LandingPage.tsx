@@ -29,9 +29,7 @@ const LandingPage: React.FC = () => {
   <p className="text-xl md:text-2xl text-seafoam font-sans mb-8">
     Inspired by Grandpa Fred’s legacy, Porkchop brings the spirit of the classic commissary kitchen—resourceful, communal, and creative—into the digital age. Plan, prep, and plate with what you have, and discover where to shop to support local.
   </p>
-  <button className="bg-maineBlue text-white px-8 py-4 rounded-lg text-xl shadow-lg hover:bg-seafoam hover:text-maineBlue transition">
-    Start Your Fridge to Plate Journey
-  </button>
+
   <div className="flex flex-col items-center gap-2 mt-4">
     <span className="text-sm text-navy">
       You can install PorkChop as an app on your phone or tablet—works on both Android and iOS!
@@ -66,7 +64,7 @@ const LandingPage: React.FC = () => {
         <section className="max-w-3xl mx-auto mb-12 px-6 py-8 bg-weatheredWhite rounded-2xl shadow-lg border-2 border-seafoam text-center">
   <h2 className="text-2xl font-retro text-lobsterRed font-bold mb-3">Why Porkchop?</h2>
   <p className="text-navy font-sans mb-2">
-    Porkchop isn’t just another cooking app—it’s a digitized commissary kitchen inspired by Grandpa Fred. Here, resourcefulness, community, and creativity come together so you can make the most of every meal.
+    Porkchop isn’t just another cooking app—it’s a digitized commissary kitchen inspired by Grandpa Fred. Here, resourcefulness, community, and creativity come together so you can make the most of every meal. We’re here to help you learn new skills, build confidence, and grow as a home cook. And as you cook, plan, and grow, you’ll earn badges and achievements along the way.
   </p>
   <p className="text-navy font-sans">
     <span className="font-bold text-maineBlue">Secure, private, and ad-free.</span> Your data stays yours. Always.
@@ -87,7 +85,7 @@ const LandingPage: React.FC = () => {
   </div>
   <div className="feature-card bg-weatheredWhite rounded-2xl shadow-lg p-7 w-full sm:w-72 border border-seafoam">
     <h2 className="text-xl font-bold text-maineBlue mb-2 font-retro">Planning Station</h2>
-    <p className="text-navy font-sans">Build meal plans and shopping lists in one place, and bring it all together at your own table.</p>
+    <p className="text-navy font-sans">Build meal plans and shopping lists in one place, and bring it all together at your own table. Track your progress, learn new techniques, and earn badges as you grow your kitchen skills!</p>
   </div>
   
   
