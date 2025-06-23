@@ -120,31 +120,8 @@ const WeeklyChallengeRecipeModal: React.FC<WeeklyChallengeRecipeModalProps> = ({
           )}
           {!loading && !error && recipe && (
             <>
-              {recipe.image && <img src={recipe.image} alt={recipe.title} className="w-full max-h-48 sm:max-h-64 object-cover rounded mb-4" />}
-              <h2 className="text-2xl font-bold mb-2 text-center">{recipe.title}</h2>
-              <h3 className="font-semibold text-lg mt-2 mb-1">Ingredients</h3>
-              <ul className="mb-3 list-disc list-inside">
-                {recipe.ingredients.map((ingredient, idx) => (
-                  <li key={idx}>{ingredient}</li>
-                ))}
-              </ul>
-              {recipe.instructions && recipe.instructions.trim() !== "" && (
-                <>
-                  <h3 className="font-semibold text-lg mt-2 mb-1">Instructions</h3>
-                  <p className="mb-4 whitespace-pre-line">{recipe.instructions}</p>
-                </>
-              )}
-              {recipe.equipment && recipe.equipment.length > 0 && (
-                <>
-                  <h3 className="font-semibold text-lg mt-2 mb-1">Equipment</h3>
-                  <ul className="mb-3 list-disc list-inside">
-                    {recipe.equipment.map((item, idx) => (
-                      <li key={idx}>{item}</li>
-                    ))}
-                  </ul>
-                </>
-              )}
-              
+              <h2 className="text-2xl font-bold mb-4 text-center">{recipe.title}</h2>
+              {recipe.image && <img src={recipe.image} alt={recipe.title} className="w-full max-h-48 sm:max-h-64 object-cover rounded mb-6" />}
               {/* Photo Upload Section */}
               <div className="w-full mt-4 border-t pt-4">
                 <h3 className="font-semibold text-lg mb-2">Submit Proof Photo</h3>
