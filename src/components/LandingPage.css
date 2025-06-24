@@ -69,21 +69,28 @@
     height: 100%;
   }
 
+  .landing-main {
+    transform: scale(0.8);
+    transform-origin: top center;
+    width: 100%;
+    padding-top: 20px;
+  }
+  
   .cookbook-container {
     transform: scale(0.6);
-    margin: -20px 0 0;
+    margin: -40px 0 0;
   }
   
   .landing-buttons {
     display: grid;
     grid-template-columns: repeat(3, auto);
     gap: 0.5rem;
-    margin: 0 0 10px;
-    padding: 0 1rem;
+    margin: 0 auto 5px;
+    padding: 0;
     justify-content: center;
     align-items: center;
     width: 100%;
-    max-width: 600px;
+    max-width: 500px;
   }
   
   .landing-buttons a,
