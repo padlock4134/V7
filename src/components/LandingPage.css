@@ -50,19 +50,42 @@
 
 /* Large desktops */
 @media (min-width: 1201px) {
-  .cookbook-container {
-    transform: scale(0.8);
+  .landing-main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1400px;
     margin: 0 auto;
+  }
+
+  .cookbook-wrapper {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .cookbook-container {
+    transform: scale(0.85);
+    margin: 0;
   }
   
   .landing-buttons {
-    margin: 2rem auto 1rem;
-    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 2rem;
+    min-width: 280px;
   }
   
   .landing-root {
-    padding: 1rem 0 0;
-    justify-content: flex-start;
+    padding: 1rem 0;
+    justify-content: center;
   }
 }
 
