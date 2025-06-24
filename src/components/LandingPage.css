@@ -1,10 +1,14 @@
 .landing-root {
   min-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   background: #f9fafb; /* weatheredWhite */
   font-family: 'Bree Serif', 'Inter', 'Segoe UI', 'Roboto', sans-serif;
   overflow-x: hidden;
+  padding: 1rem 0;
+  box-sizing: border-box;
 }
 
 /* Cookbook wrapper for responsive scaling */
@@ -47,7 +51,11 @@
 /* Large desktops */
 @media (min-width: 1201px) {
   .cookbook-container {
-    transform: scale(1);
+    transform: scale(0.9);
+  }
+  
+  .landing-buttons {
+    margin-top: 3rem;
   }
 }
 
