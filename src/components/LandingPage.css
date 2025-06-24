@@ -85,7 +85,7 @@
     display: grid;
     grid-template-columns: repeat(3, auto);
     gap: 0.5rem;
-    margin: 0 auto 5px;
+    margin: 0 auto 10px;
     padding: 0;
     justify-content: center;
     align-items: center;
@@ -93,11 +93,25 @@
     max-width: 500px;
   }
   
+  .terms-footer {
+    text-align: center;
+    margin: 5px 0 0;
+    font-size: 0.85rem;
+    color: #2a4d69;
+    width: 100%;
+  }
+  
+  .terms-footer span {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
   .landing-buttons a,
   .landing-buttons button {
-    font-size: 1.1rem !important;
-    padding: 0.5rem 1rem !important;
+    font-size: 1.2rem !important;
+    padding: 0.55rem 1.1rem !important;
     margin: 0;
+    transform: scale(1.09);
   }
   
   .cookbook-wrapper {
