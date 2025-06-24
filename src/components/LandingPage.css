@@ -50,35 +50,42 @@
 
 /* Large desktops */
 @media (min-width: 1201px) {
+  .landing-root {
+    min-height: 100vh;
+    height: 100%;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
   .landing-main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    padding: 1rem 2rem 2rem;
-    max-width: 1200px;
+    justify-content: center;
+    padding: 1rem;
     margin: 0 auto;
-    min-height: 100vh;
+    height: 100%;
   }
 
   .cookbook-container {
-    transform: scale(0.7);
-    margin: 0 auto;
+    transform: scale(0.6);
+    margin: -20px 0 0;
   }
   
   .landing-buttons {
     display: flex;
     flex-direction: row;
-    gap: 1.5rem;
-    margin: 0 0 1rem;
+    gap: 1rem;
+    margin: 0 0 10px;
     padding: 0;
     flex-wrap: wrap;
     justify-content: center;
   }
   
-  .landing-root {
-    padding: 1rem 0 0;
-    justify-content: flex-start;
+  .cookbook-wrapper {
+    margin-top: -30px;
   }
 }
 
