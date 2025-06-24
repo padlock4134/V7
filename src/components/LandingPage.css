@@ -51,11 +51,18 @@
 /* Large desktops */
 @media (min-width: 1201px) {
   .cookbook-container {
-    transform: scale(0.9);
+    transform: scale(0.8);
+    margin: 0 auto;
   }
   
   .landing-buttons {
-    margin-top: 3rem;
+    margin: 2rem auto 1rem;
+    padding: 0 1rem;
+  }
+  
+  .landing-root {
+    padding: 1rem 0 0;
+    justify-content: flex-start;
   }
 }
 
