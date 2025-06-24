@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./LandingPage.css";
-import logo from "../images/logo.png";
+
 import TermsModal from './TermsModal';
 import { useTermsModal } from './useTermsModal';
 import InstallPWAButton from "./InstallPWAButton";
@@ -30,67 +30,138 @@ const RecipeCard = ({ title, icon, children }: { title: string, icon?: string, c
   </section>
 );
 
+// Add deferredPrompt to Window interface
+declare global {
+  interface Window {
+    deferredPrompt: any;
+  }
+}
+
 const LandingPage: React.FC = () => {
   const { modalOpen, setModalOpen, termsContent } = useTermsModal();
+  const [deferredPrompt, setDeferredPrompt] = React.useState<any>(null);
+  
+  React.useEffect(() => {
+    const handler = (e: any) => {
+      e.preventDefault();
+      window.deferredPrompt = e;
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
   return (
     <div className="landing-root bg-sand font-retro min-h-screen flex flex-col">
-      <nav className="landing-nav bg-weatheredWhite/90 shadow-md rounded-b-2xl flex items-center justify-between px-8 py-4">
-        <div className="flex items-center gap-3">
-          <img src={logo} alt="PorkChop Logo" className="h-12 w-12 object-contain rounded-full border-2 border-seafoam bg-white" />
-          <span className="text-3xl font-bold text-lobsterRed tracking-wide font-retro">PorkChop</span>
-        </div>
-        <div className="flex gap-3">
-          <Link to="/signin" className="landing-nav-btn hover:bg-seafoam hover:text-maineBlue transition-colors">Log In</Link>
-          <Link
-  to="/signup"
-  className="landing-nav-btn primary transition-colors"
-  style={{ backgroundColor: '#e94e3c', color: '#f9fafb', fontWeight: 700 }}
-  onMouseOver={e => { e.currentTarget.style.backgroundColor = '#63ace5'; e.currentTarget.style.color = '#2a4d69'; }}
-  onFocus={e => { e.currentTarget.style.backgroundColor = '#63ace5'; e.currentTarget.style.color = '#2a4d69'; }}
-  onMouseOut={e => { e.currentTarget.style.backgroundColor = '#e94e3c'; e.currentTarget.style.color = '#f9fafb'; }}
-  onBlur={e => { e.currentTarget.style.backgroundColor = '#e94e3c'; e.currentTarget.style.color = '#f9fafb'; }}
->
-  Sign Up
-</Link>
-        </div>
-      </nav>
       <main className="landing-main flex-1 flex flex-col items-center justify-center px-4">
-        {/* Cookbook Cover */}
-        <section className="w-full max-w-2xl mx-auto text-center mt-16 mb-10">
-          <FreddieSVG />
-          <h1 className="text-5xl md:text-6xl font-bold text-maineBlue mb-2 font-retro leading-tight">Porkchop: The Digitized Commissary Kitchen</h1>
-          <p className="text-xl text-seafoam font-sans mb-2">A Family Cookbook for the Digital Age</p>
-          <p className="text-navy font-sans mb-6">Inspired by Grandpa Fred’s legacy, Porkchop brings the spirit of the classic commissary kitchen—resourceful, communal, and creative—into the digital age.</p>
-          <div className="flex flex-col items-center gap-2 mt-2">
-            <span className="text-sm text-navy">
-              You can install PorkChop as an app on your phone or tablet—works on both Android and iOS!
-            </span>
-            <span className="text-xs text-navy">
-              On iPhone/iPad: Tap the Share icon and choose "Add to Home Screen". On Android: Tap "Install PorkChop App" below.
-            </span>
-            <InstallPWAButton />
+        <section className="flex flex-col items-center justify-center w-full mb-2" style={{ marginTop: '1.5rem' }}>
+          <div className="cookbook-wrapper">
+            <FlippableCookbook />
           </div>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            gap: '2.5rem', 
+            marginTop: '6rem',
+            flexDirection: 'row',
+            flexWrap: 'wrap'
+          }} className="landing-buttons">
+            <Link
+              to="/signin"
+              style={{
+                fontFamily: 'Bree Serif, serif',
+                fontSize: 'clamp(1.2rem, 5vw, 2rem)',
+                background: '#e7c89e',
+                color: '#2a4d69',
+                padding: 'clamp(0.8rem, 2vw, 1.1rem) clamp(1.5rem, 4vw, 3.2rem)',
+                borderRadius: '1.4rem',
+                fontWeight: 700,
+                letterSpacing: '0.04em',
+                boxShadow: '0 2px 12px #2a4d6922',
+                border: '2px solid #e94e3c',
+                textDecoration: 'none',
+                transition: 'background 0.2s, color 0.2s',
+                marginBottom: '0.5rem',
+                outline: 'none',
+              }}
+              onMouseOver={e => { e.currentTarget.style.background = '#e94e3c'; e.currentTarget.style.color = '#fff'; }}
+              onMouseOut={e => { e.currentTarget.style.background = '#e7c89e'; e.currentTarget.style.color = '#2a4d69'; }}
+            >
+              Log In
+            </Link>
+            <Link
+              to="/signup"
+              style={{
+                fontFamily: 'Bree Serif, serif',
+                fontSize: 'clamp(1.2rem, 5vw, 2rem)',
+                background: '#63ace5',
+                color: '#fff',
+                padding: 'clamp(0.8rem, 2vw, 1.1rem) clamp(1.5rem, 4vw, 3.2rem)',
+                borderRadius: '1.4rem',
+                fontWeight: 700,
+                letterSpacing: '0.04em',
+                boxShadow: '0 2px 12px #2a4d6922',
+                border: '2px solid #2a4d69',
+                textDecoration: 'none',
+                transition: 'background 0.2s, color 0.2s',
+                marginBottom: '0.5rem',
+                outline: 'none',
+              }}
+              onMouseOver={e => { e.currentTarget.style.background = '#2a4d69'; e.currentTarget.style.color = '#fff'; }}
+              onMouseOut={e => { e.currentTarget.style.background = '#63ace5'; e.currentTarget.style.color = '#fff'; }}
+            >
+              Sign Up
+            </Link>
+            <button
+              style={{
+                fontFamily: 'Bree Serif, serif',
+                fontSize: 'clamp(1.2rem, 5vw, 2rem)',
+                background: '#e94e3c',
+                color: '#fff',
+                padding: 'clamp(0.8rem, 2vw, 1.1rem) clamp(1.5rem, 4vw, 3.2rem)',
+                borderRadius: '1.4rem',
+                fontWeight: 700,
+                letterSpacing: '0.04em',
+                boxShadow: '0 2px 12px #2a4d6922',
+                border: '2px solid #63ace5',
+                textDecoration: 'none',
+                transition: 'background 0.2s, color 0.2s',
+                marginBottom: '0.5rem',
+                outline: 'none',
+                cursor: 'pointer'
+              }}
+              onMouseOver={e => { e.currentTarget.style.background = '#63ace5'; e.currentTarget.style.color = '#fff'; }}
+              onMouseOut={e => { e.currentTarget.style.background = '#e94e3c'; e.currentTarget.style.color = '#fff'; }}
+              onClick={(e) => {
+                e.stopPropagation();
+                const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+                if (isIOS) {
+                  window.alert('To install PorkChop on iOS, tap the Share icon in Safari, then choose "Add to Home Screen".');
+                } else {
+                  // Try to show the install prompt
+                  if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then(() => {
+                      window.deferredPrompt = null;
+                      setDeferredPrompt(null);
+                    });
+                  } else {
+                    alert('Installation is only available when accessing this site directly in a compatible browser.');
+                  }
+                }
+              }}
+            >
+              Install App
+            </button>
+          </div>
+          <div style={{ marginTop: '4rem', textAlign: 'center', paddingBottom: '2rem' }}>
+            <span style={{ fontSize: '0.85rem', color: '#2a4d69' }}>
+              © {new Date().getFullYear()} PorkChop. All rights reserved. |{' '}
+              <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => setModalOpen(true)}>Terms of Service</span>
+            </span>
+          </div>
+          <TermsModal isOpen={modalOpen} onClose={() => setModalOpen(false)} termsContent={termsContent} />
         </section>
-
-        {/* Table of Contents */}
-        <section className="table-of-contents w-full max-w-xl mx-auto mb-10 bg-weatheredWhite/70 rounded-xl shadow p-4 flex flex-wrap justify-center gap-4 border border-seafoam">
-          <a href="#pantry" className="toc-link text-maineBlue font-retro">Prep Your Pantry</a>
-          <a href="#market" className="toc-link text-maineBlue font-retro">Find What You Need</a>
-          <a href="#plan" className="toc-link text-maineBlue font-retro">Plan & Plate</a>
-          <a href="#grow" className="toc-link text-maineBlue font-retro">Grow & Learn</a>
-          <a href="#freddie" className="toc-link text-maineBlue font-retro">About Freddie</a>
-          <a href="#faq" className="toc-link text-maineBlue font-retro">Kitchen Tips</a>
-        </section>
-
-        {/* Flippable Cookbook */}
-        <FlippableCookbook />
       </main>
-      <footer className="landing-footer bg-weatheredWhite/90 rounded-t-2xl text-center py-4 mt-12 text-navy font-sans text-base shadow-inner">
-        <span> {new Date().getFullYear()} PorkChop. All rights reserved. |{' '}
-          <span className="text-xs text-navy underline cursor-pointer hover:text-lobsterRed" onClick={() => setModalOpen(true)}>Terms of Service & Privacy Policy</span>
-        </span>
-        <TermsModal isOpen={modalOpen} onClose={() => setModalOpen(false)} termsContent={termsContent} />
-      </footer>
     </div>
   );
 };

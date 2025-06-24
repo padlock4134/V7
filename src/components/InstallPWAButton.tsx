@@ -24,7 +24,10 @@ const InstallPWAButton: React.FC = () => {
   // On iOS, show instructions instead (no prompt)
   const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    // Stop event propagation to prevent opening the book
+    e.stopPropagation();
+    
     if (isIOS) {
       window.alert('To install PorkChop on iOS, tap the Share icon in Safari, then choose "Add to Home Screen".');
     } else if (deferredPrompt) {

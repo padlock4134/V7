@@ -28,7 +28,7 @@ const chefQuotes = [
   { chef: 'Nigella Lawson', quote: 'I have always believed that what goes on in the kitchen should stay in the kitchen.' }
 ];
 
-function getChefQuoteOfTheDay() {
+export function getChefQuoteOfTheDay() {
   const now = new Date();
   const start = new Date(now.getFullYear(), 0, 0);
   const diff = now.getTime() - start.getTime();
