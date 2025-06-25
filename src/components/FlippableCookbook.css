@@ -6,8 +6,8 @@
   margin: 0 auto;
   width: 900px;
   max-width: 100%;
-  height: 600px;
-  max-height: 90vh;
+  height: 750px;
+  max-height: 98vh;
   perspective: 1500px;
   overflow: visible;
   outline: none;
@@ -406,27 +406,27 @@
 @media (max-width: 1200px) {
   .cookbook-container {
     width: 800px;
-    height: 533px;
+    height: 633px;
   }
   
   .cookbook-container.cover-only {
     width: 700px;
-    height: 500px;
+    height: 600px;
   }
   
   .cover-page {
     width: 700px;
-    height: 500px;
+    height: 600px;
   }
   
   .book-page {
     width: 700px;
-    height: 500px;
+    height: 600px;
   }
   
   .page {
     width: 700px;
-    height: 500px;
+    height: 600px;
     padding: 40px 50px;
   }
   
@@ -436,13 +436,13 @@
   
   .turning-page {
     width: 700px;
-    height: 500px;
+    height: 600px;
     padding: 30px 40px;
   }
   
   .turned-page {
     width: 700px;
-    height: 500px;
+    height: 600px;
   }
   
   .page-content.page h1 {
@@ -461,38 +461,38 @@
 @media (max-width: 992px) {
   .cookbook-container {
     width: 700px;
-    height: 466px;
+    height: 566px;
   }
   
   .cookbook-container.cover-only {
     width: 500px;
-    height: 400px;
+    height: 500px;
   }
   
   .cover-page {
     width: 500px;
-    height: 400px;
+    height: 500px;
   }
   
   .book-page {
     width: 500px;
-    height: 400px;
+    height: 500px;
   }
   
   .page {
     width: 500px;
-    height: 400px;
+    height: 500px;
     padding: 25px 15px;
   }
   
   .turning-page {
     width: 500px;
-    height: 400px;
+    height: 500px;
   }
   
   .turned-page {
     width: 500px;
-    height: 400px;
+    height: 500px;
   }
   
   .spiral-binding {
@@ -513,7 +513,7 @@
   .cookbook-container {
     width: 100% !important;
     height: auto !important;
-    aspect-ratio: 3/2.2 !important; /* Slightly taller aspect ratio */
+    aspect-ratio: 3/2.5 !important;
     max-height: 85vh !important;
     transform: none !important;
     margin: 0 auto !important;
@@ -619,7 +619,7 @@
     max-height: 80vh !important;
     width: 100% !important;
     transform: none !important;
-    aspect-ratio: 3/2.3 !important;
+    aspect-ratio: 3/2.8 !important;
   }
   
   .page-content.page {
@@ -664,7 +664,7 @@
     max-height: 75vh !important;
     width: 100% !important;
     transform: none !important;
-    aspect-ratio: 3/2.4 !important;
+    aspect-ratio: 3/3 !important;
   }
   
   .page-content.page {
@@ -705,35 +705,35 @@
   
   .cookbook-container.cover-only {
     width: 320px;
-    height: 300px;
+    height: 400px;
   }
   
   .cover-page {
     width: 320px;
-    height: 300px;
+    height: 400px;
     padding: 20px 15px;
   }
   
   .book-page {
     width: 320px;
-    height: 300px;
+    height: 400px;
   }
   
   .page {
     width: 320px;
-    height: 300px;
+    height: 400px;
     padding: 20px 10px;
     font-size: 0.9rem;
   }
   
   .turning-page {
     width: 320px;
-    height: 300px;
+    height: 400px;
   }
   
   .turned-page {
     width: 320px;
-    height: 300px;
+    height: 400px;
   }
   
   .spiral-binding {
@@ -1157,4 +1157,33 @@
   padding: 5px;
   background-color: white;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.iphone-device .cookbook-container {
+  height: auto !important;
+  aspect-ratio: 3/3 !important;
+  min-height: unset !important;
+  max-height: none !important;
+  overflow-x: hidden !important;
+  width: 100% !important;
+}
+
+.iphone-device .turned-page,
+.iphone-device .book-page {
+  height: auto !important;
+  min-height: 100% !important;
+}
+
+.iphone-device .page-content.page {
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+}
+
+.iphone-device .page-image-container {
+  height: 200px !important;
+}
+
+.iphone-device .page-screenshot {
+  max-height: 200px !important;
 }
