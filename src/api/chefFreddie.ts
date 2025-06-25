@@ -4,7 +4,7 @@ import { getCurrentUserId } from './userSession';
 
 export async function askChefFreddie(prompt: string): Promise<string> {
   // --- Chat limit logic ---
-  const userId = getCurrentUserId && typeof getCurrentUserId === 'function' ? getCurrentUserId() : null;
+  const userId = await getCurrentUserId();
   if (!userId) {
     return 'Error: User not found. Please sign in again.';
   }
