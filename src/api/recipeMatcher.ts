@@ -100,7 +100,6 @@ Return ONLY the JSON array, no other text.`;
       max_tokens: 1500, // Increased to handle equipment field
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.7,
-      timeout: 60000, // Add 60 second timeout
     }),
   });
 
@@ -184,7 +183,6 @@ Return ONLY the JSON array, no other text.`;
       max_tokens: 4096,
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.5,
-      timeout: 60000, // Add 60 second timeout
     }),
   });
   if (!anthropicRes.ok) {
