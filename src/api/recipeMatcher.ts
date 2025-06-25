@@ -15,7 +15,8 @@ const RECIPE_PROMPTS = {
     1. Use only 2-3 ingredients per recipe
     2. Only basic cooking methods (pan fry, boil, mix)
     3. Very detailed step-by-step instructions
-    4. Keep cook time under 20 minutes`,
+    4. Keep cook time under 20 minutes
+    5. Include necessary equipment for each recipe`,
 
   home_cook: (numRecipes: number, ingredients: string[]) => 
     `You are a helpful home cooking expert. Create ${numRecipes} recipes for someone comfortable with basic cooking using ingredients from: ${ingredients.join(", ")}.
@@ -23,7 +24,8 @@ const RECIPE_PROMPTS = {
     1. Use 3-4 ingredients per recipe
     2. Standard cooking methods
     3. Clear instructions
-    4. Keep cook time under 30 minutes`,
+    4. Keep cook time under 30 minutes
+    5. Include necessary equipment for each recipe`,
 
   kitchen_confident: (numRecipes: number, ingredients: string[]) => 
     `You are a professional chef. Create ${numRecipes} interesting recipes for an experienced home cook using ingredients from: ${ingredients.join(", ")}.
@@ -31,7 +33,8 @@ const RECIPE_PROMPTS = {
     1. Use 4+ ingredients per recipe
     2. Can include advanced techniques
     3. Professional-style instructions
-    4. Focus on flavor and technique`
+    4. Focus on flavor and technique
+    5. Include necessary equipment for each recipe`
 };
 
 async function getUserProfile() {
@@ -77,9 +80,11 @@ Format your response as a JSON array of recipe objects. Each recipe object MUST 
 {
   "title": "Recipe Name",
   "ingredients": ["ingredient 1", "ingredient 2", ...],
-  "instructions": ["step 1", "step 2", ...]
+  "instructions": ["step 1", "step 2", ...],
+  "equipment": ["equipment 1", "equipment 2", ...]
 }
 
+For equipment, list all necessary kitchen tools and appliances needed to prepare the recipe (e.g., "frying pan", "mixing bowl", "oven", "blender").
 Return ONLY the JSON array, no other text.`;
 
   // 3. Call Anthropic API
@@ -134,7 +139,8 @@ Return ONLY the JSON array, no other text.`;
     title: r.title,
     image: images[i],
     ingredients: Array.isArray(r.ingredients) ? r.ingredients : [],
-    instructions: Array.isArray(r.instructions) ? r.instructions.join('\n') : ''
+    instructions: Array.isArray(r.instructions) ? r.instructions.join('\n') : '',
+    equipment: Array.isArray(r.equipment) ? r.equipment : []
   }));
 }
 
@@ -148,9 +154,11 @@ Format your response as a JSON array of recipe objects. Each recipe object MUST 
 {
   "title": "Recipe Name",
   "ingredients": ["ingredient 1", "ingredient 2", ...],
-  "instructions": ["step 1", "step 2", ...]
+  "instructions": ["step 1", "step 2", ...],
+  "equipment": ["equipment 1", "equipment 2", ...]
 }
 
+For equipment, list all necessary kitchen tools and appliances needed to prepare the recipe (e.g., "frying pan", "mixing bowl", "oven", "blender").
 Return ONLY the JSON array, no other text.`;
 
   // 2. Call Anthropic API
@@ -232,6 +240,7 @@ Return ONLY the JSON array, no other text.`;
     title: r.title,
     image: images[i],
     ingredients: Array.isArray(r.ingredients) ? r.ingredients : [],
-    instructions: Array.isArray(r.instructions) ? r.instructions.join('\n') : ''
+    instructions: Array.isArray(r.instructions) ? r.instructions.join('\n') : '',
+    equipment: Array.isArray(r.equipment) ? r.equipment : []
   }));
 }

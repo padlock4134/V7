@@ -13,6 +13,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
-    storageKey: 'porkchop-auth-token',
+    storageKey: 'porkchop-session',
+    storage: localStorage,
   },
 });

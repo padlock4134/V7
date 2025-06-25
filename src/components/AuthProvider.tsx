@@ -31,20 +31,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // Try to recover session from localStorage first for immediate UI update
-    try {
-      const storedSession = localStorage.getItem('porkchop-session');
-      if (storedSession) {
-        const parsedSession = JSON.parse(storedSession);
-        if (parsedSession && new Date(parsedSession.expires_at) > new Date()) {
-          setSession(parsedSession);
-          setUser(parsedSession.user);
-        }
-      }
-    } catch (error) {
-      console.error('Error reading session from localStorage:', error);
-    }
-
     // Get the current session from Supabase
     const getInitialSession = async () => {
       try {
@@ -55,9 +41,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         if (data && data.session) {
           setSession(data.session);
           setUser(data.session.user);
-          
-          // Store session in localStorage for faster recovery on refresh
-          localStorage.setItem('porkchop-session', JSON.stringify(data.session));
         }
       } catch (error) {
         console.error('Error getting session:', error);
@@ -74,13 +57,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         console.log('Auth state changed:', event);
         setSession(newSession);
         setUser(newSession?.user ?? null);
-        
-        if (newSession) {
-          localStorage.setItem('porkchop-session', JSON.stringify(newSession));
-        } else {
-          localStorage.removeItem('porkchop-session');
-        }
-        
         setIsLoading(false);
       }
     );
@@ -94,7 +70,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Sign out function
   const signOut = async () => {
     await supabase.auth.signOut();
-    localStorage.removeItem('porkchop-session');
     setSession(null);
     setUser(null);
   };
