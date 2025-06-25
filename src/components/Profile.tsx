@@ -76,7 +76,7 @@ const Profile = () => {
           ...profile,
           email: authUser.email,
           initials: (authUser.email || 'U').slice(0, 2).toUpperCase(),
-          status: profile.is_premium ? 'Premium' : '7-day trial',
+          status: profile.is_premium ? 'Premium' : 'Active Account',
           joinDate: profile.created_at?.slice(0, 10) ?? '',
           trialEnds: profile.trial_ends_at?.slice(0, 10) ?? '',
           xp
@@ -117,9 +117,11 @@ const Profile = () => {
           <span className="bg-lobsterRed text-weatheredWhite px-3 py-1 rounded-full text-xs font-bold">{user.status}</span>
           <span className="text-xs text-gray-500">Joined: {user.joinDate}</span>
         </div>
-        <div className="text-xs text-gray-500">
-          Trial ends: <span className="font-bold text-seafoam">{user.trialEnds}</span>
-        </div>
+        {user.status !== 'Premium' && user.trialEnds && (
+          <div className="text-xs text-gray-500">
+            Account active since: <span className="font-bold text-seafoam">{user.trialEnds}</span>
+          </div>
+        )}
         <button
           className="mt-4 px-4 py-2 rounded bg-seafoam text-maineBlue font-bold hover:bg-maineBlue hover:text-seafoam transition-colors"
           onClick={() => setShowEdit(true)}
