@@ -13,6 +13,11 @@ interface ImportMetaEnv {
   readonly VITE_YOUTUBE_API_KEY: string;
 }
 
+// Add this to make TypeScript recognize import.meta.env
+declare interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+
 export async function searchYouTube(query: string): Promise<TutorialVideoResult | null> {
   const apiKey = (import.meta.env as ImportMetaEnv).VITE_YOUTUBE_API_KEY;
   const endpoint = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=3&q=${encodeURIComponent(query)}&key=${apiKey}`;

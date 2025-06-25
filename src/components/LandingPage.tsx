@@ -52,115 +52,151 @@ const LandingPage: React.FC = () => {
   }, []);
   return (
     <div className="landing-root bg-sand font-retro min-h-screen flex flex-col">
-      <main className="landing-main flex-1 flex flex-col items-center justify-center px-4">
-        <section className="flex flex-col items-center justify-center w-full mb-2" style={{ marginTop: '1.5rem' }}>
+      <main className="landing-main flex-1 flex flex-col items-center px-4">
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '1rem',
+          margin: '1.5rem 0',
+          width: '900px',
+          maxWidth: '100%',
+          padding: '0 1rem',
+          boxSizing: 'border-box',
+          marginLeft: 'auto',
+          marginRight: 'auto'
+        }} className="landing-buttons">
+          <style>{`
+            @media (max-width: 900px) {
+              .landing-buttons {
+                width: 100%;
+                padding: 0 0.5rem;
+              }
+            }
+            @media (max-width: 768px) {
+              .landing-buttons {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: nowrap;
+                gap: 0.25rem;
+              }
+              .landing-buttons a, .landing-buttons button {
+                font-size: 0.9rem !important;
+                padding: 0.4rem 0.8rem !important;
+                min-width: 100px !important;
+                margin: 0 !important;
+              }
+            }
+          `}</style>
+          <Link
+            to="/signin"
+            style={{
+              fontFamily: 'Bree Serif, serif',
+              fontSize: 'clamp(1rem, 3vw, 1.5rem)',
+              background: '#e7c89e',
+              color: '#2a4d69',
+              padding: '0.6rem 1.5rem',
+              borderRadius: '1.4rem',
+              fontWeight: 700,
+              letterSpacing: '0.04em',
+              boxShadow: '0 2px 12px #2a4d6922',
+              border: '2px solid #e94e3c',
+              textDecoration: 'none',
+              transition: 'all 0.2s',
+              outline: 'none',
+              flex: '0 0 auto',
+              minWidth: '140px',
+              textAlign: 'center',
+              margin: '0 1rem'
+            }}
+            onMouseOver={e => { e.currentTarget.style.background = '#e94e3c'; e.currentTarget.style.color = '#fff'; }}
+            onMouseOut={e => { e.currentTarget.style.background = '#e7c89e'; e.currentTarget.style.color = '#2a4d69'; }}
+          >
+            Log In
+          </Link>
+          <Link
+            to="/signup"
+            style={{
+              fontFamily: 'Bree Serif, serif',
+              fontSize: 'clamp(1rem, 3vw, 1.5rem)',
+              background: '#63ace5',
+              color: '#fff',
+              padding: '0.6rem 1.5rem',
+              borderRadius: '1.4rem',
+              fontWeight: 700,
+              letterSpacing: '0.04em',
+              boxShadow: '0 2px 12px #2a4d6922',
+              border: '2px solid #2a4d69',
+              textDecoration: 'none',
+              transition: 'all 0.2s',
+              outline: 'none',
+              flex: '0 0 auto',
+              minWidth: '140px',
+              textAlign: 'center',
+              margin: '0 1rem'
+            }}
+            onMouseOver={e => { e.currentTarget.style.background = '#2a4d69'; e.currentTarget.style.color = '#fff'; }}
+            onMouseOut={e => { e.currentTarget.style.background = '#63ace5'; e.currentTarget.style.color = '#fff'; }}
+          >
+            Sign Up
+          </Link>
+          <button
+            style={{
+              fontFamily: 'Bree Serif, serif',
+              fontSize: 'clamp(1rem, 3vw, 1.5rem)',
+              background: '#e94e3c',
+              color: '#fff',
+              padding: '0.6rem 1.5rem',
+              borderRadius: '1.4rem',
+              fontWeight: 700,
+              letterSpacing: '0.04em',
+              boxShadow: '0 2px 12px #2a4d6922',
+              border: '2px solid #63ace5',
+              textDecoration: 'none',
+              transition: 'all 0.2s',
+              outline: 'none',
+              cursor: 'pointer',
+              flex: '0 0 auto',
+              minWidth: '140px',
+              textAlign: 'center',
+              margin: '0 1rem'
+            }}
+            onMouseOver={e => { e.currentTarget.style.background = '#63ace5'; e.currentTarget.style.color = '#fff'; }}
+            onMouseOut={e => { e.currentTarget.style.background = '#e94e3c'; e.currentTarget.style.color = '#fff'; }}
+            onClick={(e) => {
+              e.stopPropagation();
+              const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+              if (isIOS) {
+                window.alert('To install PorkChop on iOS, tap the Share icon in Safari, then choose "Add to Home Screen".');
+              } else {
+                if (deferredPrompt) {
+                  deferredPrompt.prompt();
+                  deferredPrompt.userChoice.then(() => {
+                    window.deferredPrompt = null;
+                    setDeferredPrompt(null);
+                  });
+                } else {
+                  alert('Installation is only available when accessing this site directly in a compatible browser.');
+                }
+              }
+            }}
+          >
+            Install App
+          </button>
+        </div>
+        <section className="flex flex-col items-center justify-center w-full" style={{ margin: '5rem 0 1rem' }}>
           <div className="cookbook-wrapper">
             <FlippableCookbook />
           </div>
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            gap: '2.5rem', 
-            marginTop: '6rem',
-            flexDirection: 'row',
-            flexWrap: 'wrap'
-          }} className="landing-buttons">
-            <Link
-              to="/signin"
-              style={{
-                fontFamily: 'Bree Serif, serif',
-                fontSize: 'clamp(1.2rem, 5vw, 2rem)',
-                background: '#e7c89e',
-                color: '#2a4d69',
-                padding: 'clamp(0.8rem, 2vw, 1.1rem) clamp(1.5rem, 4vw, 3.2rem)',
-                borderRadius: '1.4rem',
-                fontWeight: 700,
-                letterSpacing: '0.04em',
-                boxShadow: '0 2px 12px #2a4d6922',
-                border: '2px solid #e94e3c',
-                textDecoration: 'none',
-                transition: 'background 0.2s, color 0.2s',
-                marginBottom: '0.5rem',
-                outline: 'none',
-              }}
-              onMouseOver={e => { e.currentTarget.style.background = '#e94e3c'; e.currentTarget.style.color = '#fff'; }}
-              onMouseOut={e => { e.currentTarget.style.background = '#e7c89e'; e.currentTarget.style.color = '#2a4d69'; }}
-            >
-              Log In
-            </Link>
-            <Link
-              to="/signup"
-              style={{
-                fontFamily: 'Bree Serif, serif',
-                fontSize: 'clamp(1.2rem, 5vw, 2rem)',
-                background: '#63ace5',
-                color: '#fff',
-                padding: 'clamp(0.8rem, 2vw, 1.1rem) clamp(1.5rem, 4vw, 3.2rem)',
-                borderRadius: '1.4rem',
-                fontWeight: 700,
-                letterSpacing: '0.04em',
-                boxShadow: '0 2px 12px #2a4d6922',
-                border: '2px solid #2a4d69',
-                textDecoration: 'none',
-                transition: 'background 0.2s, color 0.2s',
-                marginBottom: '0.5rem',
-                outline: 'none',
-              }}
-              onMouseOver={e => { e.currentTarget.style.background = '#2a4d69'; e.currentTarget.style.color = '#fff'; }}
-              onMouseOut={e => { e.currentTarget.style.background = '#63ace5'; e.currentTarget.style.color = '#fff'; }}
-            >
-              Sign Up
-            </Link>
-            <button
-              style={{
-                fontFamily: 'Bree Serif, serif',
-                fontSize: 'clamp(1.2rem, 5vw, 2rem)',
-                background: '#e94e3c',
-                color: '#fff',
-                padding: 'clamp(0.8rem, 2vw, 1.1rem) clamp(1.5rem, 4vw, 3.2rem)',
-                borderRadius: '1.4rem',
-                fontWeight: 700,
-                letterSpacing: '0.04em',
-                boxShadow: '0 2px 12px #2a4d6922',
-                border: '2px solid #63ace5',
-                textDecoration: 'none',
-                transition: 'background 0.2s, color 0.2s',
-                marginBottom: '0.5rem',
-                outline: 'none',
-                cursor: 'pointer'
-              }}
-              onMouseOver={e => { e.currentTarget.style.background = '#63ace5'; e.currentTarget.style.color = '#fff'; }}
-              onMouseOut={e => { e.currentTarget.style.background = '#e94e3c'; e.currentTarget.style.color = '#fff'; }}
-              onClick={(e) => {
-                e.stopPropagation();
-                const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
-                if (isIOS) {
-                  window.alert('To install PorkChop on iOS, tap the Share icon in Safari, then choose "Add to Home Screen".');
-                } else {
-                  // Try to show the install prompt
-                  if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then(() => {
-                      window.deferredPrompt = null;
-                      setDeferredPrompt(null);
-                    });
-                  } else {
-                    alert('Installation is only available when accessing this site directly in a compatible browser.');
-                  }
-                }
-              }}
-            >
-              Install App
-            </button>
-          </div>
-          <div style={{ marginTop: '4rem', textAlign: 'center', paddingBottom: '2rem' }}>
-            <span style={{ fontSize: '0.85rem', color: '#2a4d69' }}>
-              © {new Date().getFullYear()} PorkChop. All rights reserved. |{' '}
-              <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => setModalOpen(true)}>Terms of Service</span>
-            </span>
-          </div>
-          <TermsModal isOpen={modalOpen} onClose={() => setModalOpen(false)} termsContent={termsContent} />
         </section>
+        <div style={{ marginTop: '2rem', textAlign: 'center', paddingBottom: '2rem' }}>
+          <span style={{ fontSize: '0.85rem', color: '#2a4d69' }}>
+            {new Date().getFullYear()} PorkChop. All rights reserved. |{' '}
+            <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => setModalOpen(true)}>Terms of Service</span>
+          </span>
+        </div>
+        <TermsModal isOpen={modalOpen} onClose={() => setModalOpen(false)} termsContent={termsContent} />
       </main>
     </div>
   );

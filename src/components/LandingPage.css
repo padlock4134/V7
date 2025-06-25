@@ -3,12 +3,12 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  background: #f9fafb; /* weatheredWhite */
+  background: #f9fafb;
   font-family: 'Bree Serif', 'Inter', 'Segoe UI', 'Roboto', sans-serif;
   overflow-x: hidden;
-  padding: 1rem 0;
+  padding-top: 30vh;  /* Increased from 25vh */
   box-sizing: border-box;
+  background: linear-gradient(white 0%, white 30%, #f9fafb 30%, #f9fafb 100%);
 }
 
 /* Cookbook wrapper for responsive scaling */
@@ -76,21 +76,16 @@
     padding-top: 20px;
   }
   
-  .cookbook-container {
-    transform: scale(0.6);
-    margin: -40px 0 0;
-  }
-  
   .landing-buttons {
     display: grid;
     grid-template-columns: repeat(3, auto);
-    gap: 0.5rem;
+    gap: 1.25rem;
     margin: -15px auto 5px;
-    padding: 0;
-    justify-content: center;
+    padding: 0 1rem;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 550px;
+    max-width: 700px;
   }
   
   .terms-footer {
@@ -122,17 +117,6 @@
 
 /* Standard desktops */
 @media (max-width: 1200px) {
-  .cookbook-container {
-    transform: scale(0.9);
-  }
-}
-
-/* Small desktops and large tablets */
-@media (max-width: 992px) {
-  .cookbook-container {
-    transform: scale(0.8);
-  }
-  
   .landing-buttons {
     margin-top: 3rem;
     gap: 1.5rem;
@@ -143,10 +127,6 @@
 @media (max-width: 768px) {
   .cookbook-wrapper {
     padding: 1.5rem 0.5rem;
-  }
-  
-  .cookbook-container {
-    transform: scale(0.9);
   }
   
   .landing-buttons {
@@ -161,10 +141,6 @@
     padding: 1rem 0.25rem;
   }
   
-  .cookbook-container {
-    transform: scale(0.95);
-  }
-  
   .landing-buttons {
     margin-top: 2rem;
     gap: 1rem;
@@ -175,10 +151,6 @@
 
 /* Small phones */
 @media (max-width: 400px) {
-  .cookbook-container {
-    transform: scale(0.85);
-  }
-  
   .landing-buttons {
     margin-top: 1.5rem;
     gap: 0.75rem;
@@ -414,4 +386,3 @@
 .border-seafoam {
   border-color: var(--seafoam) !important;
 }
-

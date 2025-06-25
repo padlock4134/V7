@@ -8,7 +8,6 @@ const PAGES = [
     content: (
       <>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.5rem' }}>
-          {/* PorkChop Hero Logo */}
           <div 
             style={{ 
               marginBottom: '1rem',
@@ -46,287 +45,177 @@ const PAGES = [
     pageNumber: null,
     isCover: true
   },
-  // Page 1
+  // Page 1 - Table of Contents
   {
     title: "Table of Contents",
     content: (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', marginBottom: '45px' }}>
-        <p style={{ marginBottom: '5px', fontSize: '0.9rem' }}>Your guide to PorkChop:</p>
-        <div style={{ cursor: 'pointer' }}>
-          <p style={{ fontSize: '0.85rem', margin: '3px 0' }}><strong>Page 1:</strong> Table of Contents</p>
-        </div>
-        <div style={{ cursor: 'pointer' }}>
-          <p style={{ fontSize: '0.85rem', margin: '3px 0' }}><strong>Page 2:</strong> Inspiration</p>
-        </div>
-        <div style={{ cursor: 'pointer' }}>
-          <p style={{ fontSize: '0.85rem', margin: '3px 0' }}><strong>Page 3:</strong> AI Chef</p>
-        </div>
-        <div style={{ cursor: 'pointer' }}>
-          <p style={{ fontSize: '0.85rem', margin: '3px 0' }}><strong>Page 4:</strong> My Kitchen</p>
-        </div>
-        <div style={{ cursor: 'pointer' }}>
-          <p style={{ fontSize: '0.85rem', margin: '3px 0' }}><strong>Page 5:</strong> Culinary School</p>
-        </div>
-        <div style={{ cursor: 'pointer' }}>
-          <p style={{ fontSize: '0.85rem', margin: '3px 0' }}><strong>Page 6:</strong> Chefs Corner</p>
-        </div>
-        <div style={{ cursor: 'pointer' }}>
-          <p style={{ fontSize: '0.85rem', margin: '3px 0' }}><strong>Page 7:</strong> Pricing</p>
-        </div>
-        <div style={{ cursor: 'pointer' }}>
-          <p style={{ fontSize: '0.85rem', margin: '3px 0' }}><strong>Page 8:</strong> Objections</p>
-        </div>
+      <div className="toc-content">
+        <ul className="toc-list">
+          <li>Inspiration (Page 2)</li>
+          <li>My Kitchen (Page 3)</li>
+          <li>My Cook Book (Page 4)</li>
+          <li>Culinary School (Page 5)</li>
+          <li>Chefs Corner (Page 6)</li>
+          <li>Chef Freddie (Page 7)</li>
+          <li>Common Questions (Page 8)</li>
+          <li>Pricing (Page 9)</li>
+        </ul>
       </div>
     ),
     pageNumber: 1
   },
-  // Page 2
+  // Page 2 - Inspiration
   {
     title: "Inspiration",
     content: (
-      <div style={{ textAlign: 'center' }}>
-
-        <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center' }}>
-          <div style={{ 
-            width: '100px', 
-            height: '100px', 
-            borderRadius: '50%', 
-            backgroundColor: '#e94e3c', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            fontSize: '2.5rem'
-          }}>
-            📖
-          </div>
+      <>
+        <div className="inspiration-logo-container">
+          <img src="/logo.png" alt="Chef Freddie" className="inspiration-logo" />
         </div>
-        <p style={{ fontSize: '1.1rem', marginBottom: '15px', maxWidth: '90%' }}>
-          PorkChop began with my grandfather Fred's handwritten recipe cards—treasures that connected generations through food.
+        <p className="page-content-text">
+          We created PorkChop because my grandfather Frederick would always know what to make when he's looking in his fridge. 
+          Everyone loved Pancake Saturdays cause everyone got to eat - even friends we brought with us.
+          He taught us that it's important to always be as nice as you can and help people if you can - food is the best way to make sure no one goes hungry.
         </p>
-        <p style={{ fontSize: '1.1rem', marginBottom: '15px', maxWidth: '90%' }}>
-          His philosophy was simple: cooking should be intuitive, personal, and bring joy. When those cards started to fade, I realized the need to preserve not just recipes, but the wisdom behind them.
-        </p>
-        <p style={{ fontSize: '1.1rem', maxWidth: '90%' }}>
-          PorkChop honors his legacy by making cooking accessible, adaptable, and deeply personal—just like he taught me.
-        </p>
-      </div>
+      </>
     ),
     pageNumber: 2
   },
-  // Page 3
-  {
-    title: "AI Chef",
-    content: (
-      <div style={{ textAlign: 'center' }}>
-
-        <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center' }}>
-          <div style={{ 
-            width: '100px', 
-            height: '100px', 
-            borderRadius: '50%', 
-            backgroundColor: '#63ace5', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            fontSize: '2.5rem'
-          }}>
-            🤖
-          </div>
-        </div>
-        <p style={{ fontSize: '1.1rem', marginBottom: '15px', maxWidth: '90%' }}>
-          Meet your personal AI Chef—trained on thousands of recipes and cooking techniques to help you create delicious meals with whatever ingredients you have on hand.
-        </p>
-        <p style={{ fontSize: '1.1rem', marginBottom: '15px', maxWidth: '90%' }}>
-          Unlike rigid recipe apps, our AI adapts to your preferences, dietary needs, and available ingredients. It suggests substitutions, scaling, and modifications in real-time.
-        </p>
-        <p style={{ fontSize: '1.1rem', maxWidth: '90%' }}>
-          The more you use it, the more it learns your taste preferences—creating a truly personalized cooking experience.
-        </p>
-      </div>
-    ),
-    pageNumber: 3
-  },
-  // Page 4
+  // Page 3 - My Kitchen
   {
     title: "My Kitchen",
     content: (
-      <div style={{ textAlign: 'center' }}>
-
-        <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center' }}>
-          <div style={{ 
-            width: '100px', 
-            height: '100px', 
-            borderRadius: '50%', 
-            backgroundColor: '#f5e9da', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            fontSize: '2.5rem'
-          }}>
-            🍳
-          </div>
+      <>
+        <p className="page-content-text">
+          Your digital pantry that tracks ingredients and suggests perfect recipes to reduce waste.
+        </p>
+        <div className="page-image-container page-3-image">
+          <img src="/my-kitchen-screenshot.png" alt="My Kitchen Screenshot" className="page-screenshot" />
         </div>
-        <p style={{ fontSize: '1.1rem', marginBottom: '15px', maxWidth: '90%' }}>
-          Your digital pantry and recipe collection, organized your way. Track ingredients you have on hand and get notified when staples are running low.
+      </>
+    ),
+    pageNumber: 3
+  },
+  // Page 4 - My Cook Book
+  {
+    title: "My Cook Book",
+    content: (
+      <>
+        <p className="page-content-text">
+          Your personal recipe collection that grows with you, organized and searchable in one place.
         </p>
-        <p style={{ fontSize: '1.1rem', marginBottom: '15px', maxWidth: '90%' }}>
-          Import recipes from anywhere on the web with a single click, or create your own with our intuitive editor. Add notes, variations, and photos to make them truly yours.
-        </p>
-        <p style={{ fontSize: '1.1rem', maxWidth: '90%' }}>
-          Meal planning becomes effortless with smart suggestions based on your ingredients, preferences, and schedule.
-        </p>
-      </div>
+        <div className="page-image-container page-4-image">
+          <img src="/my-cookbook-screenshot.png" alt="My Cookbook Screenshot" className="page-screenshot" />
+        </div>
+      </>
     ),
     pageNumber: 4
   },
-  // Page 5
+  // Page 5 - Culinary School
   {
     title: "Culinary School",
     content: (
-      <div style={{ textAlign: 'center' }}>
-
-        <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center' }}>
-          <div style={{ 
-            width: '100px', 
-            height: '100px', 
-            borderRadius: '50%', 
-            backgroundColor: '#e7c89e', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            fontSize: '2.5rem'
-          }}>
-            🎓
-          </div>
+      <>
+        <p className="page-content-text">
+          Master techniques with step-by-step video lessons tailored to your skill level.
+        </p>
+        <div className="page-image-container page-5-image">
+          <img src="/culinary-school-screenshot.png" alt="Culinary School Screenshot" className="page-screenshot" />
         </div>
-        <p style={{ fontSize: '1.1rem', marginBottom: '15px', maxWidth: '90%' }}>
-          Learn essential cooking techniques through interactive lessons and bite-sized tutorials—designed for busy home cooks.
-        </p>
-        <p style={{ fontSize: '1.1rem', marginBottom: '15px', maxWidth: '90%' }}>
-          From knife skills to flavor pairing, our curriculum builds confidence in the kitchen one skill at a time. Each lesson includes practice recipes that reinforce what you've learned.
-        </p>
-        <p style={{ fontSize: '1.1rem', maxWidth: '90%' }}>
-          Grandpa Fred believed anyone could cook with the right guidance. Our Culinary School brings that philosophy to life with personalized learning paths.
-        </p>
-      </div>
+      </>
     ),
     pageNumber: 5
   },
-  // Page 6
+  // Page 6 - Chefs Corner
   {
     title: "Chefs Corner",
     content: (
-      <div style={{ textAlign: 'center' }}>
-
-        <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center' }}>
-          <div style={{ 
-            width: '100px', 
-            height: '100px', 
-            borderRadius: '50%', 
-            backgroundColor: '#f5e9da', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            fontSize: '2.5rem'
-          }}>
-            👨‍🍳
-          </div>
+      <>
+        <p className="page-content-text">
+          Find ingredients from your cookbook at local specialty shops like butchers, farms, fish markets, and regional grocery chains.
+        </p>
+        <div className="page-image-container page-6-image">
+          <img src="/chefs-corner-screenshot.png" alt="Chefs Corner Screenshot" className="page-screenshot" />
         </div>
-        <p style={{ fontSize: '1.1rem', marginBottom: '15px', maxWidth: '90%' }}>
-          Connect with a community of home cooks and professional chefs who share your passion for food. Exchange recipes, tips, and culinary adventures.
-        </p>
-        <p style={{ fontSize: '1.1rem', marginBottom: '15px', maxWidth: '90%' }}>
-          Participate in monthly cooking challenges, themed events, and live Q&A sessions with renowned chefs who bring fresh perspectives to your kitchen.
-        </p>
-        <p style={{ fontSize: '1.1rem', maxWidth: '90%' }}>
-          Grandpa Fred always said cooking is better when shared. Chefs Corner creates a virtual table where everyone is welcome.
-        </p>
-      </div>
+      </>
     ),
     pageNumber: 6
   },
-  // Page 7
+  // Page 7 - Chef Freddie
   {
-    title: "Pricing",
+    title: "Chef Freddie",
     content: (
-      <div style={{ textAlign: 'center' }}>
-
-        <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center', gap: '30px' }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ 
-              padding: '15px 25px', 
-              backgroundColor: '#63ace5', 
-              borderRadius: '10px',
-              marginBottom: '10px',
-              color: '#fff',
-              fontWeight: 'bold'
-            }}>
-              Monthly
-            </div>
-            <p style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#2a4d69' }}>$10.99<span style={{ fontSize: '1rem' }}>/mo</span></p>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ 
-              padding: '15px 25px', 
-              backgroundColor: '#e94e3c', 
-              borderRadius: '10px',
-              marginBottom: '10px',
-              color: '#fff',
-              fontWeight: 'bold'
-            }}>
-              Annual
-            </div>
-            <p style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#2a4d69' }}>$99.00<span style={{ fontSize: '1rem' }}>/year</span></p>
-            <p style={{ fontSize: '0.9rem', color: '#555', fontStyle: 'italic' }}>Save over 24%</p>
-          </div>
+      <>
+        <p className="page-content-text">
+          Your AI cooking assistant, ready to help with meal planning, substitutions, and troubleshooting.
+        </p>
+        <div className="page-image-container page-7-image">
+          <img src="/chef-freddie-screenshot.png" alt="Chef Freddie Screenshot" className="page-screenshot" />
         </div>
-        <p style={{ fontSize: '1.1rem', marginBottom: '15px', maxWidth: '90%' }}>
-          Unlock the full PorkChop experience with either of our flexible subscription options. Both plans include unlimited recipes, advanced AI features, and exclusive content.
-        </p>
-        <p style={{ fontSize: '1.1rem', maxWidth: '90%' }}>
-          No contracts, cancel anytime. Grandpa Fred believed quality cooking tools were worth investing in—we think you'll agree.
-        </p>
-      </div>
+      </>
     ),
     pageNumber: 7
   },
-  // Page 8
+  // Page 8 - Common Questions
   {
     title: "Common Questions",
     content: (
-      <div style={{ textAlign: 'center' }}>
-
-        <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center' }}>
-          <div style={{ 
-            width: '100px', 
-            height: '100px', 
-            borderRadius: '50%', 
-            backgroundColor: '#e7c89e', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            fontSize: '2.5rem'
-          }}>
-            ❓
-          </div>
+      <>
+        <div className="faq-content">
+          <ul className="faq-list">
+            <li><strong>Why not use ChatGPT?</strong><br />
+            PorkChop is your personal culinary ecosystem - specialized for cooking with real-time pantry tracking and kitchen-aware suggestions.</li>
+            
+            <li><strong>Are you just a recipe app?</strong><br />
+            We're your complete pocket kitchen - combining smart inventory, meal planning, and cooking education in one ecosystem.</li>
+            
+            <li><strong>How is this different?</strong><br />
+            It's like having a chef in your pocket - adapting to your actual ingredients, skill level, and tastes in real-time.</li>
+          </ul>
         </div>
-        <div style={{ textAlign: 'left', maxWidth: '90%', margin: '0 auto' }}>
-          <p style={{ fontSize: '1.1rem', marginBottom: '10px', maxWidth: '90%' }}>
-            <strong>"I already have recipe apps. Why switch?"</strong><br/>
-            Unlike static recipe collections, PorkChop adapts to you—learning your preferences and working with what you have.
-          </p>
-          <p style={{ fontSize: '1.1rem', marginBottom: '10px', maxWidth: '90%' }}>
-            <strong>"Is my data private?"</strong><br/>
-            Absolutely. Your recipes and preferences are yours alone. We never sell your data or share it with third parties.
-          </p>
-          <p style={{ fontSize: '1.1rem', maxWidth: '90%' }}>
-            <strong>"What if I'm a beginner?"</strong><br/>
-            Grandpa Fred believed cooking should be accessible to everyone. Our app grows with you, from simple meals to advanced techniques.
-          </p>
+      </>
+    ),
+    pageNumber: 8
+  },
+  // Page 9 - Pricing
+  {
+    title: "Pricing",
+    content: (
+      <div className="pricing-container">
+        <div className="pricing-card">
+          <div className="pricing-header">
+            <h3>Monthly Plan</h3>
+            <div className="pricing-badge">Most Flexible</div>
+          </div>
+          <div className="pricing-amount">
+            $10.99<span className="pricing-period">/month</span>
+          </div>
+          <ul className="pricing-features">
+            <li>Full access to all features</li>
+            <li>Unlimited recipe storage</li>
+            <li>Priority support</li>
+          </ul>
+        </div>
+        
+        <div className="pricing-card pricing-highlight">
+          <div className="pricing-header">
+            <h3>Annual Plan</h3>
+            <div className="pricing-badge pricing-best">Best Value</div>
+          </div>
+          <div className="pricing-amount">
+            $99.00<span className="pricing-period">/year</span>
+          </div>
+          <div className="pricing-savings">Save 25% vs monthly</div>
+          <ul className="pricing-features">
+            <li>All Monthly features</li>
+            <li>Sake Secret Menu Recipes</li>
+            <li>Cocktail Pairing Suggestions</li>
+            <li>Meal Kit Delivery (Coming Soon)</li>
+          </ul>
         </div>
       </div>
     ),
-    pageNumber: 8
+    pageNumber: 9
   }
 ];
 
@@ -381,9 +270,9 @@ const FlippableCookbook: React.FC = () => {
             {pageNum === 0 ? (
               PAGES[0].content
             ) : (
-              <>
-                <h2>{PAGES[pageNum].title}</h2>
-                <div>{PAGES[pageNum].content}</div>
+              <div>
+                <h1 className="page-title">{PAGES[pageNum].title}</h1>
+                {PAGES[pageNum].content}
                 {PAGES[pageNum].pageNumber && (
                   <div className="page-number">
                     <span className="page-arrow left-arrow">←</span>
@@ -391,7 +280,7 @@ const FlippableCookbook: React.FC = () => {
                     <span className="page-arrow right-arrow">→</span>
                   </div>
                 )}
-              </>
+              </div>
             )}
           </div>
         </div>
@@ -408,9 +297,9 @@ const FlippableCookbook: React.FC = () => {
           {pageNumber === 0 ? (
             PAGES[0].content
           ) : (
-            <>
-              <h2>{PAGES[pageNumber].title}</h2>
-              <div>{PAGES[pageNumber].content}</div>
+            <div>
+              <h1 className="page-title">{PAGES[pageNumber].title}</h1>
+              {PAGES[pageNumber].content}
               {PAGES[pageNumber].pageNumber && (
                 <div className="page-number">
                   <span className="page-arrow left-arrow">←</span>
@@ -418,7 +307,7 @@ const FlippableCookbook: React.FC = () => {
                   <span className="page-arrow right-arrow">→</span>
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
       </div>
@@ -447,8 +336,8 @@ const FlippableCookbook: React.FC = () => {
           <div className="turning-page">
             {turnDirection === 'forward' ? (
               <div className="page-content">
-                <h2>{PAGES[currentTurningPage].title}</h2>
-                <div>{PAGES[currentTurningPage].content}</div>
+                <h1 className="page-title">{PAGES[currentTurningPage].title}</h1>
+                {PAGES[currentTurningPage].content}
                 {PAGES[currentTurningPage].pageNumber && (
                   <div className="page-number">
                     <span className="page-arrow left-arrow">←</span>
@@ -459,8 +348,8 @@ const FlippableCookbook: React.FC = () => {
               </div>
             ) : (
               <div className="page-content">
-                <h2>{PAGES[currentTurningPage].title}</h2>
-                <div>{PAGES[currentTurningPage].content}</div>
+                <h1 className="page-title">{PAGES[currentTurningPage].title}</h1>
+                {PAGES[currentTurningPage].content}
                 {PAGES[currentTurningPage].pageNumber && (
                   <div className="page-number">
                     <span className="page-arrow left-arrow">←</span>

@@ -107,7 +107,7 @@ export const BADGES: BadgeDefinition[] = [
       { suffix: '_25', desc: 'Cooked 25', n: 25 },
       { suffix: '_50', desc: 'Cooked 50', n: 50 },
     ];
-    const out = [];
+    const out: BadgeDefinition[] = [];
     for (const theme of themes) {
       for (const tier of tiers) {
         out.push({
