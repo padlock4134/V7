@@ -112,10 +112,19 @@ Return ONLY the JSON array, no other text.`;
   let recipes;
   try {
     const content = anthropicData.content[0].text;
-    recipes = JSON.parse(content);
+    
+    // Extract JSON array using regex in case there's additional text
+    const jsonMatch = content.match(/\[\s*\{[\s\S]*\}\s*\]/); 
+    if (jsonMatch) {
+      recipes = JSON.parse(jsonMatch[0]);
+    } else {
+      recipes = JSON.parse(content);
+    }
+    
     if (!Array.isArray(recipes)) throw new Error('Response not an array');
   } catch (err) {
     console.error('Failed to parse recipes:', err);
+    console.log('Raw content:', anthropicData.content[0].text);
     return generateFallbackRecipes(ingredients, numRecipes);
   }
 
@@ -197,14 +206,15 @@ Return ONLY the JSON array, no other text.`;
     const responseText = anthropicData.content[0].text;
     console.log('Raw Anthropic response:', responseText);
     
+    // More robust JSON extraction
     const match = responseText.match(/\[\s*\{[\s\S]*\}\s*\]/);
-    if (!match) {
+    if (match) {
+      recipes = JSON.parse(match[0]);
+      console.log('Parsed recipes:', recipes);
+    } else {
       console.error('No JSON array found in response:', responseText);
       throw new Error('No recipe data found in API response');
     }
-    
-    recipes = JSON.parse(match[0]);
-    console.log('Parsed recipes:', recipes);
   } catch (error) {
     console.error('Error parsing recipe data:', error);
     throw new Error('Failed to parse recipe data from API response');
