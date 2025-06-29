@@ -9,6 +9,7 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
   const navigate = useNavigate();
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -61,6 +62,33 @@ const SignIn = () => {
     }
   };
 
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setError('Please enter your email address first');
+      return;
+    }
+    
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/signin',
+      });
+      
+      if (error) {
+        setError(error.message);
+      } else {
+        setResetSent(true);
+      }
+    } catch (err) {
+      setError('Failed to send password reset email. Please try again.');
+      console.error('Password reset error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-sand">
       <div className="w-full max-w-sm">
@@ -69,7 +97,14 @@ const SignIn = () => {
         </div>
         <form onSubmit={handleSignIn} className="bg-white p-8 rounded-b-lg shadow max-w-sm w-full">
           <h2 className="text-2xl font-bold mb-6 text-maineBlue">Sign In</h2>
-        {error && <div className="mb-4 text-red-500">{error}</div>}
+          
+          {resetSent && (
+            <div className="mb-4 p-2 bg-green-100 text-green-700 rounded">
+              Password reset link sent! Check your email.
+            </div>
+          )}
+          
+          {error && <div className="mb-4 text-red-500">{error}</div>}
         <input
           type="email"
           placeholder="Email"
@@ -94,6 +129,17 @@ const SignIn = () => {
           {isLoading ? 'Signing In...' : 'Sign In'}
         </button>
         <div className="mt-4 text-center text-sm">
+          <button 
+            type="button" 
+            onClick={handleForgotPassword}
+            className="text-maineBlue underline"
+            disabled={isLoading}
+          >
+            Forgot Password?
+          </button>
+        </div>
+        
+        <div className="mt-2 text-center text-sm">
           Don't have an account? <Link to="/signup" className="text-maineBlue underline">Sign Up</Link>
         </div>
       </form>
