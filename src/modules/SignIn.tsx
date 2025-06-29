@@ -61,8 +61,6 @@ const SignIn = () => {
     }
   };
 
-
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-sand">
       <div className="w-full max-w-sm">
