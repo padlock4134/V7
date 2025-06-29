@@ -21,7 +21,36 @@ const SignIn = () => {
       if (error) {
         setError(error.message);
       } else {
-        // Auth state will be handled by AuthProvider
+        // Check if user has an active subscription
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (user) {
+          // Check if email is confirmed
+          if (!user.email_confirmed_at) {
+            setError('Please confirm your email before signing in. Check your inbox for a confirmation link.');
+            await supabase.auth.signOut();
+            setIsLoading(false);
+            return;
+          }
+          
+          // Check for active subscription
+          const { data, error: subscriptionError } = await supabase
+            .from('user_subscriptions')
+            .select('status')
+            .eq('user_id', user.id)
+            .eq('status', 'active')
+            .single();
+          
+          if (subscriptionError || !data) {
+            // No active subscription found
+            setError('Access denied. Please purchase a subscription to continue.');
+            await supabase.auth.signOut(); // Sign them out
+            setIsLoading(false);
+            return;
+          }
+        }
+        
+        // User has confirmed email and active subscription, proceed to app
         navigate('/my-kitchen');
       }
     } catch (err) {

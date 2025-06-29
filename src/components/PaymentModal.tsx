@@ -50,7 +50,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ open, onClose, onDevBypass,
           onClick={handleStripeCheckout}
           className="w-full py-3 rounded bg-seafoam text-maineBlue font-bold text-lg hover:bg-maineBlue hover:text-seafoam transition-colors"
         >
-          Subscribe Now
+          Subscribe
         </button>
         
         <p className="mt-4 text-xs text-gray-500 text-center">

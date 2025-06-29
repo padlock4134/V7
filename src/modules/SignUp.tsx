@@ -137,7 +137,8 @@ const SignUp = () => {
           setShowPaymentModal(false);
           navigate('/my-kitchen'); // Ensure this goes to dashboard, not sign-in
         }}
-        // Pass selectedPlan as a prop if you want to use it for payment logic later
+        plan={selectedPlan || 'monthly'}
+        email={email}
       />
     </>
   );

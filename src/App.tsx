@@ -15,10 +15,11 @@ import { RecipeProvider } from './components/RecipeContext';
 import LandingPage from './components/LandingPage';
 import './components/LandingPage.css';
 import AuthProvider, { useAuth } from './components/AuthProvider';
+import ConfirmEmail from './modules/ConfirmEmail';
 
 const AppRoutes = () => {
   const location = useLocation();
-  const hideOnPublic = ['/', '/signup', '/signin'].includes(location.pathname);
+  const hideOnPublic = ['/', '/signup', '/signin', '/confirm-email'].includes(location.pathname);
   const { user, isLoading } = useAuth();
 
   // Show loading state while checking authentication
@@ -37,6 +38,7 @@ const AppRoutes = () => {
         <Routes>
           <Route path="/signin" element={!user ? <SignIn /> : <Navigate to="/dashboard" />} />
           <Route path="/signup" element={!user ? <SignUp /> : <Navigate to="/dashboard" />} />
+          <Route path="/confirm-email" element={<ConfirmEmail />} />
           {/* Protected routes */}
           <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/signin" />} />
           <Route path="/my-kitchen" element={user ? <MyKitchen /> : <Navigate to="/signin" />} />
