@@ -16,7 +16,7 @@
   to = "/index.html"
   status = 200
 
-# Fix for ES modules MIME type issue - expanded for all JavaScript files
+# Fix for ES modules MIME type issue - minimal required headers
 [[headers]]
   for = "/*.js"
   [headers.values]
@@ -26,12 +26,6 @@
   for = "/assets/*.js"
   [headers.values]
     Content-Type = "application/javascript"
-
-# Additional headers for strict mobile browsers
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Content-Type-Options = "nosniff"
 
 # Standard SPA redirect
 [[redirects]]
