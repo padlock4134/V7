@@ -1,10 +1,9 @@
 // PorkChop Service Worker
-const CACHE_NAME = 'porkchop-v1';
+const CACHE_NAME = 'porkchop-v2';
 const urlsToCache = [
-  '/',
-  '/index.html',
   '/manifest.json',
   '/logo.png'
+  // Removed root and index.html to prevent landing page caching issues
 ];
 
 // Install event - cache core assets
@@ -32,8 +31,15 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch event - serve from cache if available, otherwise fetch from network
+// Fetch event - never cache root page, serve other cached assets when available
 self.addEventListener('fetch', event => {
+  // Never cache the landing page (root URL) to prevent stale content
+  if (event.request.url.endsWith('/') || event.request.url.endsWith('/index.html')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+  
+  // For other assets, try cache first, then network
   event.respondWith(
     caches.match(event.request)
       .then(response => {
