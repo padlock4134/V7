@@ -4,7 +4,9 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './styles/index.css';
 
-// Register service worker for PWA support on Android and iOS
+// Temporarily disable service worker during debugging
+// Will re-enable after fixing module loading issues
+/*
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
@@ -16,6 +18,7 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
+*/
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
