@@ -4,7 +4,6 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  base: './',
   server: {
     port: 3000,
     open: true,
@@ -12,15 +11,13 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
-    sourcemap: false,
-    outDir: 'dist',
-    assetsDir: '',
-    emptyOutDir: true,
+    sourcemap: true,
     rollupOptions: {
       output: {
-        entryFileNames: '[name].js',
-        chunkFileNames: '[name].js',
-        assetFileNames: '[name].[ext]'
+        manualChunks: undefined,
+        entryFileNames: 'assets/[name].[hash].js',
+        chunkFileNames: 'assets/[name].[hash].js',
+        assetFileNames: 'assets/[name].[hash].[ext]'
       }
     }
   },
