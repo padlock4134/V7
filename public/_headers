@@ -1,0 +1,12 @@
+# All JavaScript files should be served with correct MIME type
+/*.js
+  Content-Type: application/javascript
+
+# All CSS files should be served with correct MIME type
+/*.css
+  Content-Type: text/css
+
+# Global headers
+/*
+  X-Frame-Options: DENY
+  X-XSS-Protection: 1; mode=block
