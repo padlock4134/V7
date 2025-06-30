@@ -10,12 +10,19 @@
   framework = "vite"
   targetPort = 3000
 
+# Fix for the root URL to bypass asset handling
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
 # Fix for ES modules MIME type issue
 [[headers]]
   for = "/assets/*.js"
   [headers.values]
     Content-Type = "application/javascript"
 
+# Standard SPA redirect
 [[redirects]]
   from = "/*"
   to = "/index.html"
