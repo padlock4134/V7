@@ -70,22 +70,22 @@ const SignIn = () => {
         <form onSubmit={handleSignIn} className="bg-white p-8 rounded-b-lg shadow max-w-sm w-full">
           <h2 className="text-2xl font-bold mb-6 text-maineBlue">Sign In</h2>
           {error && <div className="mb-4 text-red-500">{error}</div>}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          className="w-full mb-3 p-2 border rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          className="w-full mb-4 p-2 border rounded"
-          required
-        />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            className="w-full mb-3 p-2 border rounded"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            className="w-full mb-4 p-2 border rounded"
+            required
+          />
         <button 
           type="submit" 
           className="w-full bg-maineBlue text-seafoam py-2 rounded font-semibold hover:bg-seafoam hover:text-maineBlue transition-colors"
