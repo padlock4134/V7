@@ -46,12 +46,7 @@ const AppRoutes = () => {
           <Route path="/chefs-corner" element={user ? <ChefsCorner /> : <Navigate to="/signin" />} />
           <Route path="/culinary-school" element={user ? <CulinarySchool /> : <Navigate to="/signin" />} />
           <Route path="/profile" element={user ? <Profile /> : <Navigate to="/signin" />} />
-          <Route path="/" element={
-            <>
-              {user && <Navigate to="/dashboard" />}
-              {!user && <LandingPage />}
-            </>
-          } />
+          <Route path="/" element={<LandingPage />} />
         </Routes>
       </main>
       {!hideOnPublic && <ChefFreddieWidget />}
