@@ -22,8 +22,8 @@ const AppRoutes = () => {
   const hideOnPublic = ['/', '/signup', '/signin', '/confirm-email'].includes(location.pathname);
   const { user, isLoading } = useAuth();
 
-  // Show loading state while checking authentication
-  if (isLoading) {
+  // Only show loading for protected routes, skip for landing page
+  if (isLoading && !hideOnPublic) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-sand">
         <div className="text-maineBlue text-xl">Loading...</div>
@@ -46,7 +46,12 @@ const AppRoutes = () => {
           <Route path="/chefs-corner" element={user ? <ChefsCorner /> : <Navigate to="/signin" />} />
           <Route path="/culinary-school" element={user ? <CulinarySchool /> : <Navigate to="/signin" />} />
           <Route path="/profile" element={user ? <Profile /> : <Navigate to="/signin" />} />
-          <Route path="/" element={user ? <Navigate to="/dashboard" /> : <LandingPage />} />
+          <Route path="/" element={
+            <>
+              {user && <Navigate to="/dashboard" />}
+              {!user && <LandingPage />}
+            </>
+          } />
         </Routes>
       </main>
       {!hideOnPublic && <ChefFreddieWidget />}
