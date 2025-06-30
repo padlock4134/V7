@@ -1,18 +1,2 @@
-# Ensure JavaScript files are served correctly
-/assets/*.js  /assets/:splat  200
-/assets/*.*js  /assets/:splat  200
-/*.js  /:splat  200
-
-# Ensure CSS files are served correctly
-/assets/*.css  /assets/:splat  200
-/assets/*.*css  /assets/:splat  200
-/*.css  /:splat  200
-
-# Ensure images are served correctly
-/*.png  /:splat  200
-
-# Do NOT redirect JS requests to index.html
-/assets/*  /assets/:splat  200!
-
-# For all other routes, serve index.html as fallback
-/*  /index.html  200
+# SPA fallback for client-side routing
+/*    /index.html   200

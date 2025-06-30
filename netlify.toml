@@ -10,42 +10,6 @@
   framework = "vite"
   targetPort = 3000
 
-[[headers]]
-  for = "/assets/*.js"
-  [headers.values]
-    Content-Type = "application/javascript"
-
-[[headers]]
-  for = "/assets/*.*js"
-  [headers.values]
-    Content-Type = "application/javascript"
-
-[[headers]]
-  for = "/assets/*.css"
-  [headers.values]
-    Content-Type = "text/css"
-
-[[headers]]
-  for = "/assets/*.*css"
-  [headers.values]
-    Content-Type = "text/css"
-
-[[headers]]
-  for = "/assets/*.*js"
-  [headers.values]
-    Content-Type = "application/javascript; charset=utf-8"
-    Cache-Control = "no-cache, no-store, must-revalidate"
-    Pragma = "no-cache"
-    X-Content-Type-Options = "nosniff"
-
-[[headers]]
-  for = "/assets/*.*css"
-  [headers.values]
-    Content-Type = "text/css; charset=utf-8"
-    Cache-Control = "no-cache, no-store, must-revalidate"
-    Pragma = "no-cache"
-    X-Content-Type-Options = "nosniff"
-
 [[redirects]]
   from = "/*"
   to = "/index.html"
