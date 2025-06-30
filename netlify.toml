@@ -10,6 +10,26 @@
   framework = "vite"
   targetPort = 3000
 
+# Serve correct file types first
+[[redirects]]
+  from = "/*.js"
+  to = "/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*.css"
+  to = "/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*.png"
+  to = "/:splat"
+  status = 200
+  force = true
+
+# Then fallback to index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
